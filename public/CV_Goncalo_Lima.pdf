@@ -1,0 +1,98 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /Resources 4 0 R /MediaBox [0 0 612 792] /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >>
+endobj
+5 0 obj
+<< /Length 1815 >>
+stream
+BT
+/F1 16 Tf
+50 740 Td
+(GONCALO MARTINS DE LIMA) Tj
+0 -16 Td
+(Estudante de Ciberseguranca, Redes e Sistemas Informaticos) Tj
+0 -16 Td
+(--------------------------------------------------------------------------------) Tj
+0 -16 Td
+(Email: goncalomartinslima2007@gmail.com) Tj
+0 -16 Td
+(GitHub: https://github.com/YvlLima) Tj
+0 -16 Td
+(LinkedIn: https://www.linkedin.com/in/goncalo-lima-532318428/) Tj
+0 -16 Td
+() Tj
+/F1 12 Tf
+0 -22 Td
+(FORMACAO ACADEMICA) Tj
+/F1 10 Tf
+0 -16 Td
+(--------------------------------------------------------------------------------) Tj
+0 -16 Td
+(- CTeSP em Ciberseguranca, Redes e Sistemas Informaticos \(2025 - Presente\)) Tj
+0 -16 Td
+(  Escola Superior de Tecnologia e Gestao \(ESTG - P.PORTO\)) Tj
+0 -16 Td
+(- Tecnico de Gestao e Programacao de Sistemas Informaticos - GPSI \(2022 - 2025\)) Tj
+0 -16 Td
+(  Escola Secundaria de Felgueiras \(ESF\)) Tj
+0 -16 Td
+() Tj
+/F1 12 Tf
+0 -22 Td
+(COMPETENCIAS TECNICAS) Tj
+/F1 10 Tf
+0 -16 Td
+(--------------------------------------------------------------------------------) Tj
+0 -16 Td
+(- Frontend: HTML5, CSS3, JavaScript \(ES6+\), React) Tj
+0 -16 Td
+(- Backend & BD: SQL / Databases, Node.js, C#, Python) Tj
+0 -16 Td
+(- CMS & Ferramentas: WordPress, Git & GitHub) Tj
+0 -16 Td
+(- Sistemas: Ciberseguranca & Administracao de Redes) Tj
+0 -16 Td
+() Tj
+/F1 12 Tf
+0 -22 Td
+(PROJETOS EM DESTAQUE) Tj
+/F1 10 Tf
+0 -16 Td
+(--------------------------------------------------------------------------------) Tj
+0 -16 Td
+(1. Music Hub \(React, JavaScript, CSS3, Cloudflare Pages\)) Tj
+0 -16 Td
+(   Demo: https://musichub-9hu.pages.dev/) Tj
+0 -16 Td
+(   GitHub: https://github.com/YvlLima/MusicHub) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(2. Galeria Piso Dois - PAP \(WordPress, CMS, PHP, Web Design\)) Tj
+0 -16 Td
+(   Demo: https://galeriapisodois.esfelgueiras.pt/) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000219 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+2178
+%%EOF
