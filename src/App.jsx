@@ -1264,19 +1264,11 @@ export default function App() {
 
               <div className="skills-grid">
                 {skillsList.map((skill, index) => (
-                  <SpotlightCard
-                    key={index}
-                    className="skill-card"
-                    onClick={() => setSelectedInfoModal(getSkillModalData(skill))}
-                    title={lang === 'pt' ? 'Clique para ver detalhes da tecnologia' : 'Click to view tech details'}
-                  >
+                  <SpotlightCard key={index} className="skill-card">
                     <div className="skill-icon-wrapper">
                       {skill.icon}
                     </div>
                     <span className="skill-name">{skill.name}</span>
-                    <span className="card-click-hint" style={{ fontSize: '0.72rem', marginTop: '0.2rem' }}>
-                      {lang === 'pt' ? 'Ver detalhes' : 'Details'} <ChevronRight size={10} />
-                    </span>
                   </SpotlightCard>
                 ))}
               </div>
