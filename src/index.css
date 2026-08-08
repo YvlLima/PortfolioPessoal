@@ -962,6 +962,16 @@ a, button, input, textarea, select {
     margin-bottom: 2rem;
   }
 
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .about-highlights {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+
   .skills-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 1rem;
@@ -1008,6 +1018,24 @@ a, button, input, textarea, select {
 
   .section-title span.number {
     font-size: 1.1rem;
+  }
+
+  .about-grid {
+    gap: 1.5rem;
+  }
+
+  .about-highlights {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .about-text {
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+
+  .stat-card {
+    padding: 1.25rem 1rem;
   }
 
   .hero-cta {
