@@ -461,6 +461,7 @@ export default function App() {
   // Contact Form State
   const [formState, setFormState] = useState({ name: '', email: '', subject: '', message: '' });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const t = contentTranslations[lang];
 
@@ -499,12 +500,39 @@ export default function App() {
     setLang((prev) => (prev === 'pt' ? 'en' : 'pt'));
   };
 
-  // Handle Form Submit
-  const handleFormSubmit = (e) => {
+  // Handle Form Submit (Real Email Delivery via FormSubmit)
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
-    setFormState({ name: '', email: '', subject: '', message: '' });
-    setTimeout(() => setFormSubmitted(false), 5000);
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${userEmail}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formState.name,
+          email: formState.email,
+          _subject: `[Portfólio Web] ${formState.subject || 'Nova Mensagem de Contacto'}`,
+          message: formState.message
+        })
+      });
+
+      if (response.ok) {
+        setFormSubmitted(true);
+        setFormState({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => setFormSubmitted(false), 6000);
+      } else {
+        // Fallback: Se falhar a API, abre mailto pré-preenchido
+        window.location.href = `mailto:${userEmail}?subject=${encodeURIComponent(formState.subject)}&body=${encodeURIComponent(`Nome: ${formState.name}\nEmail: ${formState.email}\n\nMensagem:\n${formState.message}`)}`;
+      }
+    } catch (error) {
+      console.error('Erro ao enviar mensagem:', error);
+      window.location.href = `mailto:${userEmail}?subject=${encodeURIComponent(formState.subject)}&body=${encodeURIComponent(`Nome: ${formState.name}\nEmail: ${formState.email}\n\nMensagem:\n${formState.message}`)}`;
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Click Ripple Effect
@@ -1526,8 +1554,19 @@ export default function App() {
                       />
                     </div>
 
-                    <button type="submit" className="btn btn-primary form-submit-btn">
-                      <Send size={16} /> {t.contact.formSubmit}
+                    <button
+                      type="submit"
+                      className="btn btn-primary form-submit-btn"
+                      disabled={isSubmitting}
+                      style={{ opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? 'wait' : 'pointer' }}
+                    >
+                      {isSubmitting ? (
+                        <span>{lang === 'pt' ? 'A enviar...' : 'Sending...'}</span>
+                      ) : (
+                        <>
+                          <Send size={16} /> {t.contact.formSubmit}
+                        </>
+                      )}
                     </button>
                   </form>
                 </SpotlightCard>
