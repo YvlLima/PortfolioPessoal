@@ -253,8 +253,16 @@ const SimpleCursor = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
+    // Check if user is on a touch device / coarse pointer
+    const touchCheck = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+    if (touchCheck) {
+      setIsTouch(true);
+      return;
+    }
+
     const handleMouseMove = (e) => {
       setIsVisible(true);
       setPosition({ x: e.clientX, y: e.clientY });
@@ -285,6 +293,7 @@ const SimpleCursor = () => {
 
   // Fast snappy lerp factor (0.35) so it feels zero-lag
   useEffect(() => {
+    if (isTouch) return;
     let animationFrameId;
     const followMouse = () => {
       setRingPosition((prev) => ({
@@ -295,9 +304,9 @@ const SimpleCursor = () => {
     };
     animationFrameId = requestAnimationFrame(followMouse);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [position]);
+  }, [position, isTouch]);
 
-  if (!isVisible) return null;
+  if (isTouch || !isVisible) return null;
 
   return (
     <>
@@ -319,14 +328,23 @@ const SimpleCursor = () => {
 // --------------------------------------------------------------------------
 const AmbientFollowerLight = () => {
   const [pos, setPos] = useState({ x: -300, y: -300 });
+  const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
+    const touchCheck = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+    if (touchCheck) {
+      setIsTouch(true);
+      return;
+    }
+
     const handleMouseMove = (e) => {
       setPos({ x: e.clientX, y: e.clientY });
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  if (isTouch) return null;
 
   return (
     <div
@@ -452,11 +470,24 @@ export default function App() {
       if (e.key === 'Escape') {
         setSelectedProject(null);
         setSelectedInfoModal(null);
+        setMobileMenuOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // Lock body scroll when mobile menu or modal is open
+  useEffect(() => {
+    if (mobileMenuOpen || selectedProject || selectedInfoModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen, selectedProject, selectedInfoModal]);
 
   // Email & Links do Gonçalo
   const userEmail = "goncalomartinslima2007@gmail.com";
@@ -1013,6 +1044,17 @@ export default function App() {
     }
   ];
 
+  const getSkillModalData = (skill) => ({
+    title: skill.name,
+    badge: t.skills.categories[skill.catKey] || skill.catKey,
+    icon: skill.icon,
+    desc: skill.desc,
+    highlights: {
+      pt: skill.highlights,
+      en: skill.highlights
+    }
+  });
+
   return (
     <div className="portfolio-app">
       {/* Minimalist Dot + Soft Ring Cursor */}
@@ -1028,6 +1070,13 @@ export default function App() {
         />
       ))}
 
+      {/* Mobile Menu Overlay Backdrop */}
+      <div
+        className={`nav-backdrop ${mobileMenuOpen ? 'open' : ''}`}
+        onClick={() => setMobileMenuOpen(false)}
+        aria-hidden="true"
+      />
+
       {/* ------------------- HEADER / NAV ------------------- */}
       <header className="header">
         <div className="container nav-container">
@@ -1036,9 +1085,23 @@ export default function App() {
             <span>dev<span className="accent">.lima</span></span>
           </a>
 
-          {/* Desktop Nav */}
+          {/* Desktop & Mobile Nav */}
           <nav>
             <ul className={`nav-menu ${mobileMenuOpen ? 'open' : ''}`}>
+              <li className="mobile-drawer-header">
+                <span className="logo" style={{ fontSize: '1.1rem' }}>
+                  <Terminal size={18} className="accent" />
+                  <span>dev<span className="accent">.lima</span></span>
+                </span>
+                <button
+                  className="mobile-close-icon"
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Fechar Menu"
+                >
+                  <X size={20} />
+                </button>
+              </li>
+
               {navLinks.map((link) => (
                 <li key={link.id}>
                   <a
@@ -1052,7 +1115,7 @@ export default function App() {
               ))}
 
               {/* Selector / Switcher de Idioma PT / EN */}
-              <li>
+              <li className="nav-lang-item">
                 <button
                   onClick={toggleLanguage}
                   className="lang-toggle"
@@ -1065,11 +1128,11 @@ export default function App() {
                 </button>
               </li>
 
-              <li>
+              <li className="nav-cta-item">
                 <a
                   href={`mailto:${userEmail}`}
-                  className="btn btn-outline"
-                  style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
+                  className="btn btn-outline nav-cta-btn"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   {t.nav.ctaBtn}
                 </a>
@@ -1081,7 +1144,8 @@ export default function App() {
           <button
             className="mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Abrir Menu"
+            aria-label={mobileMenuOpen ? "Fechar Menu" : "Abrir Menu"}
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
@@ -1200,11 +1264,19 @@ export default function App() {
 
               <div className="skills-grid">
                 {skillsList.map((skill, index) => (
-                  <SpotlightCard key={index} className="skill-card">
+                  <SpotlightCard
+                    key={index}
+                    className="skill-card"
+                    onClick={() => setSelectedInfoModal(getSkillModalData(skill))}
+                    title={lang === 'pt' ? 'Clique para ver detalhes da tecnologia' : 'Click to view tech details'}
+                  >
                     <div className="skill-icon-wrapper">
                       {skill.icon}
                     </div>
                     <span className="skill-name">{skill.name}</span>
+                    <span className="card-click-hint" style={{ fontSize: '0.72rem', marginTop: '0.2rem' }}>
+                      {lang === 'pt' ? 'Ver detalhes' : 'Details'} <ChevronRight size={10} />
+                    </span>
                   </SpotlightCard>
                 ))}
               </div>
