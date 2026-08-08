@@ -177,6 +177,8 @@ button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .logo .accent {
@@ -192,8 +194,9 @@ button {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.75rem;
   list-style: none;
+  flex-wrap: nowrap;
 }
 
 .nav-link {
@@ -203,6 +206,7 @@ button {
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  white-space: nowrap;
 }
 
 .nav-link span.num {
@@ -813,30 +817,22 @@ a, button, input, textarea, select {
   border-color: var(--accent);
 }
 
-/* ------------------- Breakpoint: 1024px (Laptops / Large Tablets) ------------------- */
-@media (max-width: 1024px) {
-  :root {
-    --container-max: 920px;
+/* ------------------- Breakpoint: 961px - 1100px (Medium Laptops / Tablets Landscape) ------------------- */
+@media (max-width: 1100px) and (min-width: 961px) {
+  .nav-menu {
+    gap: 1.1rem;
   }
-  .about-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+  .nav-link {
+    font-size: 0.84rem;
   }
-}
-
-/* ------------------- Breakpoint: 868px (Tablets Portrait) ------------------- */
-@media (max-width: 868px) {
-  .about-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  .projects-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  .lang-toggle {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
   }
 }
 
-/* ------------------- Breakpoint: 768px (Mobile & Small Tablets) ------------------- */
-@media (max-width: 768px) {
+/* ------------------- Breakpoint: 960px & Below (Tablets & Mobile Drawer) ------------------- */
+@media (max-width: 960px) {
   :root {
     --nav-height: 64px;
   }
