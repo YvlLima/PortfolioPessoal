@@ -512,10 +512,14 @@ export default function App() {
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          name: formState.name,
-          email: formState.email,
-          _subject: `[Portfólio Web] ${formState.subject || 'Nova Mensagem de Contacto'}`,
-          message: formState.message
+          _template: 'box',
+          _replyto: formState.email,
+          _subject: `📬 [Portfólio Web] ${formState.subject || 'Nova Mensagem'} (de ${formState.name})`,
+          _autoresponse: `Olá ${formState.name}!\n\nObrigado por entrares em contacto através do meu portfólio (goncalolima.pt).\nRecebi a tua mensagem com o assunto "${formState.subject || 'Contacto'}" e irei responder com a maior brevidade possível.\n\nCom os melhores cumprimentos,\nGonçalo Martins de Lima`,
+          'Nome do Remetente': formState.name,
+          'Email do Remetente': formState.email,
+          'Assunto da Mensagem': formState.subject,
+          'Conteúdo da Mensagem': formState.message
         })
       });
 
