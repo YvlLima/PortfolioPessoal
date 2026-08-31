@@ -14,8 +14,9 @@ export const Navbar = ({
     { id: 'sobre', label: t.nav.sobre, num: '01.' },
     { id: 'skills', label: t.nav.skills, num: '02.' },
     { id: 'projetos', label: t.nav.projetos, num: '03.' },
-    { id: 'educacao', label: t.nav.educacao, num: '04.' },
-    { id: 'contacto', label: t.nav.contacto, num: '05.' },
+    { id: 'agora', label: t.nav.agora, num: '04.' },
+    { id: 'educacao', label: t.nav.educacao, num: '05.' },
+    { id: 'contacto', label: t.nav.contacto, num: '06.' },
   ];
 
   return (

@@ -9,6 +9,7 @@ import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import GitHubLive from './components/GitHubLive';
+import Now from './components/Now';
 import Education from './components/Education';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
@@ -19,6 +20,7 @@ import { contentTranslations } from './data/translations';
 import { getAboutStatsList } from './data/aboutStats';
 import { skillsList, getSoftSkills } from './data/skills';
 import { getProjects } from './data/projects';
+import { getNowProjects } from './data/nowProjects';
 import { getTimelineItems, getCertifications } from './data/timeline';
 import { getRecommendationLetters } from './data/recommendations';
 
@@ -211,7 +213,7 @@ export default function App() {
   // Active section spy
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['hero', 'sobre', 'skills', 'projetos', 'educacao', 'contacto'];
+      const sections = ['hero', 'sobre', 'skills', 'projetos', 'agora', 'educacao', 'contacto'];
       const scrollY = window.scrollY;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -254,6 +256,7 @@ export default function App() {
   const aboutStatsList = getAboutStatsList(t);
   const softSkills = getSoftSkills(lang);
   const projects = getProjects(t);
+  const nowProjects = getNowProjects(lang, t);
   const timelineItems = getTimelineItems(t);
   const certifications = getCertifications(lang);
   const recommendationLetters = getRecommendationLetters(lang);
@@ -329,7 +332,15 @@ export default function App() {
           />
         </div>
 
-        {/* 5. Educação, Estágios & Certificações */}
+        {/* 5. Agora (Now) - Projetos Atuais */}
+        <Now
+          t={t}
+          lang={lang}
+          nowProjects={nowProjects}
+          onSelectModal={(data) => setSelectedInfoModal(data)}
+        />
+
+        {/* 6. Educação, Estágios & Certificações */}
         <Education
           t={t}
           lang={lang}
@@ -339,7 +350,7 @@ export default function App() {
           onSelectModal={(data) => setSelectedInfoModal(data)}
         />
 
-        {/* 6. Contacto Section & Form */}
+        {/* 7. Contacto Section & Form */}
         <ContactForm
           t={t}
           lang={lang}

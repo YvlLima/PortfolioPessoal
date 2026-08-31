@@ -18,7 +18,7 @@ export const Education = ({
       <div className="container">
         <FadeInSection>
           <h2 className="section-title">
-            <span className="number">04.</span> {t.education.title}
+            <span className="number">05.</span> {t.education.title}
           </h2>
 
           {/* Timeline */}

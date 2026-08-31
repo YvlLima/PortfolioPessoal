@@ -111,7 +111,7 @@ export const ContactForm = ({
       <div className="container">
         <FadeInSection>
           <h2 className="section-title" style={{ justifyContent: 'center' }}>
-            <span className="number">05.</span> {t.contact.title}
+            <span className="number">06.</span> {t.contact.title}
           </h2>
 
           <div className="contact-container">

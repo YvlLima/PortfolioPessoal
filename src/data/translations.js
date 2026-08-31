@@ -5,9 +5,18 @@ export const contentTranslations = {
       sobre: 'Sobre mim',
       skills: 'Skills',
       projetos: 'Projetos',
+      agora: 'Agora',
       educacao: 'Educação & Estágios',
       contacto: 'Contacto',
       ctaBtn: 'Contactar'
+    },
+    now: {
+      title: 'Agora',
+      subtitle: 'Projetos e explorações tecnológicas em desenvolvimento ativo neste momento.',
+      statusInDevelopment: 'Em desenvolvimento',
+      statusExploring: 'A explorar',
+      btnCode: 'Ver no GitHub',
+      btnDetails: 'Detalhes'
     },
     hero: {
       badge: 'A concluir CTeSP para ingressar em Licenciatura em Segurança Informática em Redes de Computadores',
@@ -128,9 +137,18 @@ export const contentTranslations = {
       sobre: 'About me',
       skills: 'Skills',
       projetos: 'Projects',
+      agora: 'Now',
       educacao: 'Education & Internships',
       contacto: 'Contact',
       ctaBtn: 'Get in touch'
+    },
+    now: {
+      title: 'Now',
+      subtitle: 'Projects, explorations, and technologies currently in active development.',
+      statusInDevelopment: 'In Development',
+      statusExploring: 'Exploring',
+      btnCode: 'View on GitHub',
+      btnDetails: 'Details'
     },
     hero: {
       badge: 'Completing CTeSP to pursue a B.Sc. in Information Security in Computer Networks',
