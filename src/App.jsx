@@ -10,6 +10,8 @@ import Skills from './components/Skills';
 import Projects from './components/Projects';
 import GitHubLive from './components/GitHubLive';
 import Now from './components/Now';
+import Blog from './components/Blog';
+import BlogPost from './components/BlogPost';
 import Education from './components/Education';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
@@ -18,7 +20,7 @@ import Modal from './components/Modal';
 // Hooks
 import useTheme from './hooks/useTheme';
 
-// Static Data
+// Static Data & Utilities
 import { contentTranslations } from './data/translations';
 import { getAboutStatsList } from './data/aboutStats';
 import { skillsList, getSoftSkills } from './data/skills';
@@ -26,6 +28,7 @@ import { getProjects } from './data/projects';
 import { getNowProjects } from './data/nowProjects';
 import { getTimelineItems, getCertifications } from './data/timeline';
 import { getRecommendationLetters } from './data/recommendations';
+import { getAllPosts } from './utils/blog';
 
 export default function App() {
   const { theme, toggleTheme, isDark } = useTheme();
@@ -35,9 +38,10 @@ export default function App() {
   const [ripples, setRipples] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [selectedInfoModal, setSelectedInfoModal] = useState(null);
+  const [selectedBlogPost, setSelectedBlogPost] = useState(null);
 
   // GitHub Live Activity State
-  const [githubTab, setGithubTab] = useState('repos'); // 'repos' | 'activity' | 'stats'
+  const [githubTab, setGithubTab] = useState('repos'); // 'repos' | 'activity' | 'stats' | 'contributions'
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState(null);
   const [githubUser, setGithubUser] = useState({
@@ -189,12 +193,13 @@ export default function App() {
 
   const t = contentTranslations[lang];
 
-  // Fechar modals ao premir Escape
+  // Fechar modals e artigo de blog ao premir Escape
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         setSelectedProject(null);
         setSelectedInfoModal(null);
+        setSelectedBlogPost(null);
         setMobileMenuOpen(false);
       }
     };
@@ -216,8 +221,10 @@ export default function App() {
 
   // Active section spy
   useEffect(() => {
+    if (selectedBlogPost) return;
+
     const handleScroll = () => {
-      const sections = ['hero', 'sobre', 'skills', 'projetos', 'agora', 'educacao', 'contacto'];
+      const sections = ['hero', 'sobre', 'skills', 'projetos', 'agora', 'blog', 'educacao', 'contacto'];
       const scrollY = window.scrollY;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -234,7 +241,7 @@ export default function App() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [selectedBlogPost]);
 
   // Email & Links do Gonçalo
   const userEmail = "goncalomartinslima2007@gmail.com";
@@ -256,11 +263,12 @@ export default function App() {
     setRipples((prev) => [...prev.slice(-4), newRipple]);
   };
 
-  // Data instances derived from active language
+  // Data instances derived from active language and files
   const aboutStatsList = getAboutStatsList(t);
   const softSkills = getSoftSkills(lang);
   const projects = getProjects(t);
   const nowProjects = getNowProjects(lang, t);
+  const blogPosts = getAllPosts();
   const timelineItems = getTimelineItems(t);
   const certifications = getCertifications(lang);
   const recommendationLetters = getRecommendationLetters(lang);
@@ -282,7 +290,7 @@ export default function App() {
 
       {/* Navigation Header */}
       <Navbar
-        activeSection={activeSection}
+        activeSection={selectedBlogPost ? 'blog' : activeSection}
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
         lang={lang}
@@ -295,82 +303,109 @@ export default function App() {
       />
 
       <main>
-        {/* 1. Hero Section */}
-        <Hero
-          t={t}
-          lang={lang}
-          userEmail={userEmail}
-          githubUrl={githubUrl}
-          linkedinUrl={linkedinUrl}
-        />
-
-        {/* 2. Sobre Mim Section */}
-        <About
-          t={t}
-          lang={lang}
-          aboutStatsList={aboutStatsList}
-          softSkills={softSkills}
-          onSelectModal={(data) => setSelectedInfoModal(data)}
-        />
-
-        {/* 3. Skills Section */}
-        <Skills
-          t={t}
-          lang={lang}
-          skillsList={skillsList}
-          onSelectModal={(data) => setSelectedInfoModal(data)}
-        />
-
-        {/* 4. Projetos & GitHub Live Activity */}
-        <Projects
-          t={t}
-          lang={lang}
-          projects={projects}
-          onSelectProject={(proj) => setSelectedProject(proj)}
-        />
-
-        <div className="container">
-          <GitHubLive
+        {selectedBlogPost ? (
+          /* Vista de Artigo Individual */
+          <BlogPost
+            post={selectedBlogPost}
+            onBack={() => {
+              setSelectedBlogPost(null);
+              setTimeout(() => {
+                const el = document.getElementById('blog');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }, 50);
+            }}
             t={t}
             lang={lang}
-            githubUser={githubUser}
-            githubRepos={githubRepos}
-            githubEvents={githubEvents}
-            githubTab={githubTab}
-            setGithubTab={setGithubTab}
-            isSyncing={isSyncing}
-            lastSyncTime={lastSyncTime}
-            fetchGitHubLive={fetchGitHubLive}
-            githubUrl={githubUrl}
           />
-        </div>
+        ) : (
+          /* Vista Principal da Página */
+          <>
+            {/* 1. Hero Section */}
+            <Hero
+              t={t}
+              lang={lang}
+              userEmail={userEmail}
+              githubUrl={githubUrl}
+              linkedinUrl={linkedinUrl}
+            />
 
-        {/* 5. Agora (Now) - Projetos Atuais */}
-        <Now
-          t={t}
-          lang={lang}
-          nowProjects={nowProjects}
-          onSelectModal={(data) => setSelectedInfoModal(data)}
-        />
+            {/* 2. Sobre Mim Section */}
+            <About
+              t={t}
+              lang={lang}
+              aboutStatsList={aboutStatsList}
+              softSkills={softSkills}
+              onSelectModal={(data) => setSelectedInfoModal(data)}
+            />
 
-        {/* 6. Educação, Estágios & Certificações */}
-        <Education
-          t={t}
-          lang={lang}
-          timelineItems={timelineItems}
-          recommendationLetters={recommendationLetters}
-          certifications={certifications}
-          onSelectModal={(data) => setSelectedInfoModal(data)}
-        />
+            {/* 3. Skills Section */}
+            <Skills
+              t={t}
+              lang={lang}
+              skillsList={skillsList}
+              onSelectModal={(data) => setSelectedInfoModal(data)}
+            />
 
-        {/* 7. Contacto Section & Form */}
-        <ContactForm
-          t={t}
-          lang={lang}
-          userEmail={userEmail}
-          githubUrl={githubUrl}
-          linkedinUrl={linkedinUrl}
-        />
+            {/* 4. Projetos & GitHub Live Activity */}
+            <Projects
+              t={t}
+              lang={lang}
+              projects={projects}
+              onSelectProject={(proj) => setSelectedProject(proj)}
+            />
+
+            <div className="container">
+              <GitHubLive
+                t={t}
+                lang={lang}
+                githubUser={githubUser}
+                githubRepos={githubRepos}
+                githubEvents={githubEvents}
+                githubTab={githubTab}
+                setGithubTab={setGithubTab}
+                isSyncing={isSyncing}
+                lastSyncTime={lastSyncTime}
+                fetchGitHubLive={fetchGitHubLive}
+                githubUrl={githubUrl}
+              />
+            </div>
+
+            {/* 5. Agora (Now) - Projetos Atuais */}
+            <Now
+              t={t}
+              lang={lang}
+              nowProjects={nowProjects}
+              onSelectModal={(data) => setSelectedInfoModal(data)}
+            />
+
+            {/* 6. Blog & Artigos em Markdown */}
+            <Blog
+              posts={blogPosts}
+              onSelectPost={(post) => setSelectedBlogPost(post)}
+              t={t}
+              lang={lang}
+            />
+
+            {/* 7. Educação, Estágios & Certificações */}
+            <Education
+              t={t}
+              lang={lang}
+              timelineItems={timelineItems}
+              recommendationLetters={recommendationLetters}
+              certifications={certifications}
+              onSelectModal={(data) => setSelectedInfoModal(data)}
+            />
+
+            {/* 8. Contacto Section & Form */}
+            <ContactForm
+              t={t}
+              lang={lang}
+              userEmail={userEmail}
+              githubUrl={githubUrl}
+              linkedinUrl={linkedinUrl}
+            />
+          </>
+        )}
       </main>
 
       {/* Footer */}

@@ -17,8 +17,9 @@ export const Navbar = ({
     { id: 'skills', label: t.nav.skills, num: '02.' },
     { id: 'projetos', label: t.nav.projetos, num: '03.' },
     { id: 'agora', label: t.nav.agora, num: '04.' },
-    { id: 'educacao', label: t.nav.educacao, num: '05.' },
-    { id: 'contacto', label: t.nav.contacto, num: '06.' },
+    { id: 'blog', label: t.nav.blog, num: '05.' },
+    { id: 'educacao', label: t.nav.educacao, num: '06.' },
+    { id: 'contacto', label: t.nav.contacto, num: '07.' },
   ];
 
   const themeLabel = lang === 'pt'

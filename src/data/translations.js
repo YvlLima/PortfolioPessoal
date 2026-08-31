@@ -6,6 +6,7 @@ export const contentTranslations = {
       skills: 'Skills',
       projetos: 'Projetos',
       agora: 'Agora',
+      blog: 'Blog',
       educacao: 'Educação & Estágios',
       contacto: 'Contacto',
       ctaBtn: 'Contactar'
@@ -17,6 +18,17 @@ export const contentTranslations = {
       statusExploring: 'A explorar',
       btnCode: 'Ver no GitHub',
       btnDetails: 'Detalhes'
+    },
+    blog: {
+      title: 'Blog & Artigos',
+      subtitle: 'Artigos técnicos sobre cibersegurança, redes de computadores e experiências práticas de desenvolvimento web.',
+      readMore: 'Ler artigo completo',
+      backBtn: '← Voltar a todos os artigos',
+      readTime: 'min de leitura',
+      publishedOn: 'Publicado em',
+      author: 'Por',
+      tagsLabel: 'Tópicos',
+      empty: 'Nenhum artigo publicado de momento.'
     },
     hero: {
       badge: 'A concluir CTeSP para ingressar em Licenciatura em Segurança Informática em Redes de Computadores',
@@ -143,6 +155,7 @@ export const contentTranslations = {
       skills: 'Skills',
       projetos: 'Projects',
       agora: 'Now',
+      blog: 'Blog',
       educacao: 'Education & Internships',
       contacto: 'Contact',
       ctaBtn: 'Get in touch'
@@ -154,6 +167,17 @@ export const contentTranslations = {
       statusExploring: 'Exploring',
       btnCode: 'View on GitHub',
       btnDetails: 'Details'
+    },
+    blog: {
+      title: 'Blog & Articles',
+      subtitle: 'Technical articles on cybersecurity, computer networks, and practical web development lessons.',
+      readMore: 'Read full article',
+      backBtn: '← Back to all articles',
+      readTime: 'min read',
+      publishedOn: 'Published on',
+      author: 'By',
+      tagsLabel: 'Topics',
+      empty: 'No articles published yet.'
     },
     hero: {
       badge: 'Completing CTeSP to pursue a B.Sc. in Information Security in Computer Networks',
