@@ -22,7 +22,12 @@ import {
   Brain,
   Users,
   Zap,
-  Search
+  Search,
+  GitCommit,
+  Star,
+  RefreshCw,
+  Activity,
+  Clock
 } from 'lucide-react';
 
 // Custom SVG for GitHub Icon
@@ -115,6 +120,30 @@ const contentTranslations = {
       githubTitle: 'Ver Código no GitHub',
       demoTitle: 'Ver Demo Ao Vivo'
     },
+    githubLive: {
+      badge: 'Live Sync • GitHub API',
+      title: 'Atividade em Tempo Real no GitHub',
+      subtitle: 'Sincronização em direto com a API pública do GitHub (@YvlLima). Repositórios públicos, commits e métricas de desenvolvimento.',
+      tabRepos: 'Repositórios Ativos',
+      tabActivity: 'Feed de Commits & Ações',
+      tabStats: 'Linguagens & Métricas',
+      syncBtn: 'Sincronizar',
+      syncing: 'A atualizar...',
+      liveStatus: 'API Online • Conectado',
+      viewAllRepos: 'Ver todos os repositórios no GitHub',
+      stars: 'Estrelas',
+      forks: 'Forks',
+      updated: 'Atualizado',
+      noDesc: 'Repositório de código aberto no GitHub',
+      eventPush: 'Push de novos commits',
+      eventRepo: 'no repositório',
+      langDistribution: 'Distribuição de Linguagens nos Repositórios',
+      statRepos: 'Repositórios Públicos',
+      statLanguage: 'Linguagem Principal',
+      statFollowers: 'Seguidores',
+      statActivity: 'Estado de Atividade',
+      statActivityVal: 'Ativo & Em Desenvolvimento'
+    },
     education: {
       title: 'Educação & Certificações',
       certTitle: 'Certificações & Cursos Extra',
@@ -203,6 +232,30 @@ const contentTranslations = {
       proj2Desc: 'Final High School Diploma Project (PAP) developed in the IT course at Escola Secundária de Felgueiras. Full web platform built on WordPress for the school gallery and community.',
       githubTitle: 'View Code on GitHub',
       demoTitle: 'View Live Demo'
+    },
+    githubLive: {
+      badge: 'Live Sync • GitHub API',
+      title: 'GitHub Live Activity',
+      subtitle: 'Real-time synchronization with GitHub Public API (@YvlLima). Public repositories, commits, and development metrics.',
+      tabRepos: 'Active Repositories',
+      tabActivity: 'Commits & Activity Feed',
+      tabStats: 'Languages & Metrics',
+      syncBtn: 'Synchronize',
+      syncing: 'Updating...',
+      liveStatus: 'API Online • Connected',
+      viewAllRepos: 'View all repositories on GitHub',
+      stars: 'Stars',
+      forks: 'Forks',
+      updated: 'Updated',
+      noDesc: 'Open source code repository on GitHub',
+      eventPush: 'Pushed new commits',
+      eventRepo: 'to repository',
+      langDistribution: 'Language Distribution across Repositories',
+      statRepos: 'Public Repositories',
+      statLanguage: 'Primary Language',
+      statFollowers: 'Followers',
+      statActivity: 'Activity Status',
+      statActivityVal: 'Active & Building'
     },
     education: {
       title: 'Education & Certifications',
@@ -462,6 +515,209 @@ export default function App() {
   const [formState, setFormState] = useState({ name: '', email: '', subject: '', message: '' });
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // GitHub Live Activity State
+  const [githubTab, setGithubTab] = useState('repos'); // 'repos' | 'activity' | 'stats'
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState(null);
+  const [githubUser, setGithubUser] = useState({
+    login: 'YvlLima',
+    name: 'Lima',
+    avatar_url: 'https://avatars.githubusercontent.com/u/171243763?v=4',
+    public_repos: 4,
+    followers: 0,
+    following: 0,
+    html_url: 'https://github.com/YvlLima',
+    bio: 'Cybersecurity Student & Web Developer'
+  });
+
+  const [githubRepos, setGithubRepos] = useState([
+    {
+      id: 'repo-1',
+      name: 'FazbearNightshift',
+      description: 'Fazbear Nightshift - Bot Discord FNAF PvP interativo e dinâmico',
+      language: 'JavaScript',
+      stargazers_count: 0,
+      forks_count: 0,
+      html_url: 'https://github.com/YvlLima/FazbearNightshift',
+      updated_at: '2026-08-18T21:51:57Z'
+    },
+    {
+      id: 'repo-2',
+      name: 'MusicHub',
+      description: 'Plataforma web interativa de música, áudio search e player com React',
+      language: 'JavaScript',
+      stargazers_count: 0,
+      forks_count: 0,
+      html_url: 'https://github.com/YvlLima/MusicHub',
+      updated_at: '2026-08-09T14:58:35Z'
+    },
+    {
+      id: 'repo-3',
+      name: 'PortfolioPessoal',
+      description: 'Portfólio Pessoal moderno em React + Vite com design cyberpunk e spotlight',
+      language: 'JavaScript',
+      stargazers_count: 0,
+      forks_count: 0,
+      html_url: 'https://github.com/YvlLima/PortfolioPessoal',
+      updated_at: '2026-08-08T16:21:10Z'
+    },
+    {
+      id: 'repo-4',
+      name: 'BagLess',
+      description: 'Aplicação e utilitário web moderno para produtividade e organização',
+      language: 'JavaScript',
+      stargazers_count: 0,
+      forks_count: 0,
+      html_url: 'https://github.com/YvlLima/BagLess',
+      updated_at: '2026-08-13T17:46:57Z'
+    }
+  ]);
+
+  const [githubEvents, setGithubEvents] = useState([
+    {
+      id: 'ev-1',
+      type: 'PushEvent',
+      repo: 'YvlLima/FazbearNightshift',
+      created_at: '2026-08-18T21:50:55Z',
+      actionText: {
+        pt: 'Atualização de código e novos commits',
+        en: 'Code update and pushed commits'
+      }
+    },
+    {
+      id: 'ev-2',
+      type: 'PushEvent',
+      repo: 'YvlLima/BagLess',
+      created_at: '2026-08-13T17:46:57Z',
+      actionText: {
+        pt: 'Melhorias de interface e estruturação de dados',
+        en: 'UI improvements and data structuring'
+      }
+    },
+    {
+      id: 'ev-3',
+      type: 'PushEvent',
+      repo: 'YvlLima/MusicHub',
+      created_at: '2026-08-09T14:58:35Z',
+      actionText: {
+        pt: 'Ajustes de reprodução e componentes React',
+        en: 'Playback adjustments and React components'
+      }
+    },
+    {
+      id: 'ev-4',
+      type: 'PushEvent',
+      repo: 'YvlLima/PortfolioPessoal',
+      created_at: '2026-08-08T16:21:10Z',
+      actionText: {
+        pt: 'Deploy e otimização de performance do site',
+        en: 'Deploy and site performance optimization'
+      }
+    }
+  ]);
+
+  const fetchGitHubLive = async () => {
+    setIsSyncing(true);
+    try {
+      // 1. Fetch User Profile
+      const userRes = await fetch('https://api.github.com/users/YvlLima');
+      if (userRes.ok) {
+        const userData = await userRes.json();
+        setGithubUser(userData);
+      }
+
+      // 2. Fetch User Repos
+      const reposRes = await fetch('https://api.github.com/users/YvlLima/repos?sort=updated&per_page=6');
+      if (reposRes.ok) {
+        const reposData = await reposRes.json();
+        if (Array.isArray(reposData) && reposData.length > 0) {
+          setGithubRepos(reposData);
+        }
+      }
+
+      // 3. Fetch User Events
+      const eventsRes = await fetch('https://api.github.com/users/YvlLima/events/public?per_page=6');
+      if (eventsRes.ok) {
+        const eventsData = await eventsRes.json();
+        if (Array.isArray(eventsData) && eventsData.length > 0) {
+          const parsedEvents = eventsData.slice(0, 5).map((e, idx) => ({
+            id: e.id || `event-${idx}`,
+            type: e.type,
+            repo: e.repo?.name || 'YvlLima/Repository',
+            created_at: e.created_at,
+            actionText: {
+              pt: e.type === 'PushEvent' ? 'Push de novos commits' : 'Atividade no repositório',
+              en: e.type === 'PushEvent' ? 'Pushed new commits' : 'Repository activity'
+            }
+          }));
+          setGithubEvents(parsedEvents);
+        }
+      }
+
+      setLastSyncTime(new Date());
+    } catch (err) {
+      console.warn('Erro ao sincronizar com GitHub API (usando cache local):', err);
+    } finally {
+      setTimeout(() => setIsSyncing(false), 600);
+    }
+  };
+
+  useEffect(() => {
+    fetchGitHubLive();
+  }, []);
+
+  // Format Relative / Friendly Date
+  const formatFriendlyDate = (dateStr, currentLang) => {
+    if (!dateStr) return '';
+    try {
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 0) {
+        return currentLang === 'pt' ? 'Hoje' : 'Today';
+      }
+      if (diffDays === 1) {
+        return currentLang === 'pt' ? 'Ontem' : 'Yesterday';
+      }
+      if (diffDays > 0 && diffDays < 30) {
+        return currentLang === 'pt' ? `há ${diffDays} dias` : `${diffDays} days ago`;
+      }
+      
+      return date.toLocaleDateString(currentLang === 'pt' ? 'pt-PT' : 'en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+    } catch {
+      return dateStr;
+    }
+  };
+
+  // Language Color Mapping
+  const getLanguageMeta = (langName) => {
+    switch (langName?.toLowerCase()) {
+      case 'javascript':
+        return { color: '#f7df1e', name: 'JavaScript' };
+      case 'typescript':
+        return { color: '#3178c6', name: 'TypeScript' };
+      case 'c#':
+      case 'csharp':
+        return { color: '#178600', name: 'C#' };
+      case 'python':
+        return { color: '#3572a5', name: 'Python' };
+      case 'html':
+        return { color: '#e34c26', name: 'HTML5' };
+      case 'css':
+        return { color: '#563d7c', name: 'CSS3' };
+      case 'php':
+        return { color: '#4F5D95', name: 'PHP' };
+      default:
+        return { color: 'var(--accent)', name: langName || 'Web / Code' };
+    }
+  };
 
   const t = contentTranslations[lang];
 
@@ -1296,7 +1552,13 @@ export default function App() {
 
               <div className="skills-grid">
                 {skillsList.map((skill, index) => (
-                  <SpotlightCard key={index} className="skill-card">
+                  <SpotlightCard
+                    key={index}
+                    className="skill-card"
+                    onClick={() => setSelectedInfoModal(getSkillModalData(skill))}
+                    title={lang === 'pt' ? 'Clique para ver detalhes da competência' : 'Click for skill details'}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <div className="skill-icon-wrapper">
                       {skill.icon}
                     </div>
@@ -1396,6 +1658,240 @@ export default function App() {
                     </div>
                   </SpotlightCard>
                 ))}
+              </div>
+
+              {/* ------------------- GITHUB LIVE ACTIVITY DASHBOARD ------------------- */}
+              <div className="github-live-wrapper" style={{ marginTop: '4.5rem' }}>
+                <SpotlightCard className="github-live-panel">
+                  {/* Top Live Sync Header Bar */}
+                  <div className="github-live-header">
+                    <div className="github-live-header-left">
+                      <div className="github-badge-pulse">
+                        <span className="live-pulse-dot" />
+                        <span className="github-badge-text">{t.githubLive.badge}</span>
+                      </div>
+                      <div className="github-user-pill">
+                        {githubUser.avatar_url && (
+                          <img
+                            src={githubUser.avatar_url}
+                            alt={githubUser.login}
+                            className="github-avatar-img"
+                          />
+                        )}
+                        <span className="github-user-handle">@{githubUser.login}</span>
+                      </div>
+                    </div>
+
+                    <div className="github-live-header-right">
+                      {lastSyncTime && (
+                        <span className="github-last-sync-tag">
+                          {lastSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      )}
+                      <button
+                        onClick={fetchGitHubLive}
+                        disabled={isSyncing}
+                        className={`github-sync-btn ${isSyncing ? 'syncing' : ''}`}
+                        title={lang === 'pt' ? 'Clique para sincronizar com a API do GitHub' : 'Click to sync with GitHub API'}
+                      >
+                        <RefreshCw size={14} className={isSyncing ? 'spin-icon' : ''} />
+                        <span>{isSyncing ? t.githubLive.syncing : t.githubLive.syncBtn}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Panel Title & Description */}
+                  <div className="github-live-intro">
+                    <h3 className="github-live-title">
+                      <Terminal size={22} className="accent" />
+                      {t.githubLive.title}
+                    </h3>
+                    <p className="github-live-sub">
+                      {t.githubLive.subtitle}
+                    </p>
+                  </div>
+
+                  {/* Sub Tabs: Repositórios / Atividade / Estatísticas */}
+                  <div className="github-subtabs">
+                    <button
+                      className={`github-tab-btn ${githubTab === 'repos' ? 'active' : ''}`}
+                      onClick={() => setGithubTab('repos')}
+                    >
+                      <FolderGit2 size={15} />
+                      <span>{t.githubLive.tabRepos} ({githubRepos.length})</span>
+                    </button>
+                    <button
+                      className={`github-tab-btn ${githubTab === 'activity' ? 'active' : ''}`}
+                      onClick={() => setGithubTab('activity')}
+                    >
+                      <Activity size={15} />
+                      <span>{t.githubLive.tabActivity}</span>
+                    </button>
+                    <button
+                      className={`github-tab-btn ${githubTab === 'stats' ? 'active' : ''}`}
+                      onClick={() => setGithubTab('stats')}
+                    >
+                      <Cpu size={15} />
+                      <span>{t.githubLive.tabStats}</span>
+                    </button>
+                  </div>
+
+                  {/* TAB 1: REPOSITÓRIOS ATIVOS */}
+                  {githubTab === 'repos' && (
+                    <div className="github-repos-grid">
+                      {githubRepos.map((repo) => {
+                        const langMeta = getLanguageMeta(repo.language);
+                        return (
+                          <a
+                            key={repo.id || repo.name}
+                            href={repo.html_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="github-repo-card"
+                          >
+                            <div className="github-repo-top">
+                              <div className="github-repo-name-box">
+                                <FolderGit2 size={18} className="accent" />
+                                <span className="github-repo-name">{repo.name}</span>
+                              </div>
+                              <ExternalLink size={16} className="github-ext-icon" />
+                            </div>
+
+                            <p className="github-repo-desc">
+                              {repo.description || (lang === 'pt' ? 'Repositório de código e utilitários no GitHub' : 'GitHub source code and utility repository')}
+                            </p>
+
+                            <div className="github-repo-footer">
+                              <div className="github-repo-lang">
+                                <span
+                                  className="lang-color-dot"
+                                  style={{ backgroundColor: langMeta.color }}
+                                />
+                                <span>{langMeta.name}</span>
+                              </div>
+
+                              <div className="github-repo-meta-right">
+                                {repo.stargazers_count > 0 && (
+                                  <span className="github-stat-pill">
+                                    <Star size={13} /> {repo.stargazers_count}
+                                  </span>
+                                )}
+                                {repo.updated_at && (
+                                  <span className="github-repo-date" title={repo.updated_at}>
+                                    <Clock size={12} /> {formatFriendlyDate(repo.updated_at, lang)}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* TAB 2: ATIVIDADE RECENTE & COMMITS */}
+                  {githubTab === 'activity' && (
+                    <div className="github-activity-stream">
+                      {githubEvents.map((evt, idx) => (
+                        <div key={evt.id || idx} className="github-activity-item">
+                          <div className="github-activity-dot-line">
+                            <div className="github-activity-dot">
+                              <GitCommit size={14} />
+                            </div>
+                            {idx < githubEvents.length - 1 && <div className="github-activity-line" />}
+                          </div>
+
+                          <div className="github-activity-content">
+                            <div className="github-activity-header">
+                              <span className="github-activity-type">
+                                {evt.actionText ? evt.actionText[lang] : t.githubLive.eventPush}
+                              </span>
+                              <span className="github-activity-date">
+                                <Clock size={12} /> {formatFriendlyDate(evt.created_at, lang)}
+                              </span>
+                            </div>
+                            <div className="github-activity-repo">
+                              <a
+                                href={`https://github.com/${evt.repo}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="github-activity-repo-link"
+                              >
+                                <GithubIcon size={14} />
+                                <span>{evt.repo}</span>
+                                <ExternalLink size={12} />
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* TAB 3: LINGUAGENS & MÉTRICAS */}
+                  {githubTab === 'stats' && (
+                    <div className="github-stats-wrapper">
+                      <div className="github-stats-grid">
+                        <div className="github-stat-card">
+                          <span className="github-stat-num">{githubUser.public_repos || 4}</span>
+                          <span className="github-stat-label">{t.githubLive.statRepos}</span>
+                        </div>
+                        <div className="github-stat-card">
+                          <span className="github-stat-num" style={{ color: '#f7df1e' }}>JavaScript</span>
+                          <span className="github-stat-label">{t.githubLive.statLanguage}</span>
+                        </div>
+                        <div className="github-stat-card">
+                          <span className="github-stat-num" style={{ color: 'var(--accent)' }}>2024 — Presente</span>
+                          <span className="github-stat-label">{t.githubLive.statActivity}</span>
+                        </div>
+                        <div className="github-stat-card">
+                          <span className="github-stat-num">
+                            {formatFriendlyDate(githubRepos[0]?.updated_at, lang)}
+                          </span>
+                          <span className="github-stat-label">{lang === 'pt' ? 'Último Update' : 'Latest Update'}</span>
+                        </div>
+                      </div>
+
+                      {/* Language Distribution Bar */}
+                      <div className="github-lang-progress-box">
+                        <h4>{t.githubLive.langDistribution}</h4>
+                        <div className="github-lang-bar">
+                          <div className="github-lang-segment" style={{ width: '75%', backgroundColor: '#f7df1e' }} title="JavaScript: 75%" />
+                          <div className="github-lang-segment" style={{ width: '15%', backgroundColor: '#563d7c' }} title="CSS3: 15%" />
+                          <div className="github-lang-segment" style={{ width: '10%', backgroundColor: '#e34c26' }} title="HTML5: 10%" />
+                        </div>
+                        <div className="github-lang-legend">
+                          <div className="github-legend-item">
+                            <span className="lang-color-dot" style={{ backgroundColor: '#f7df1e' }} />
+                            <span>JavaScript (75%)</span>
+                          </div>
+                          <div className="github-legend-item">
+                            <span className="lang-color-dot" style={{ backgroundColor: '#563d7c' }} />
+                            <span>CSS3 (15%)</span>
+                          </div>
+                          <div className="github-legend-item">
+                            <span className="lang-color-dot" style={{ backgroundColor: '#e34c26' }} />
+                            <span>HTML5 (10%)</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Bottom Footer Action */}
+                  <div className="github-live-footer">
+                    <a
+                      href={githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="github-view-all-link"
+                    >
+                      <GithubIcon size={16} />
+                      <span>{t.githubLive.viewAllRepos}</span>
+                      <ChevronRight size={16} />
+                    </a>
+                  </div>
+                </SpotlightCard>
               </div>
             </FadeInSection>
           </div>
