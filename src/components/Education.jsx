@@ -47,6 +47,7 @@ export const Education = ({
                   key={idx}
                   className="cert-card"
                   onClick={() => onSelectModal(cert.modalData)}
+                  aria-label={`${lang === 'pt' ? 'Ver detalhes da certificação' : 'View certification details for'} ${cert.title}`}
                   title={lang === 'pt' ? 'Clique para ver detalhes do certificado' : 'Click for certificate details'}
                 >
                   <Award size={24} className="cert-icon" />

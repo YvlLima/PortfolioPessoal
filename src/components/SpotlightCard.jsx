@@ -1,6 +1,15 @@
 import React, { useRef, useEffect } from 'react';
 
-export const SpotlightCard = ({ children, className = '', style = {}, ...props }) => {
+export const SpotlightCard = ({
+  children,
+  className = '',
+  style = {},
+  onClick,
+  onKeyDown,
+  role,
+  tabIndex,
+  ...props
+}) => {
   const cardRef = useRef(null);
   const rafIdRef = useRef(null);
   const latestEventRef = useRef(null);
@@ -43,6 +52,22 @@ export const SpotlightCard = ({ children, className = '', style = {}, ...props }
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (onKeyDown) {
+      onKeyDown(e);
+    }
+    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+      // If the target is an inner button/link, let it handle its own key
+      if (e.target !== cardRef.current && e.target.closest('a, button, input, textarea')) {
+        return;
+      }
+      if (e.key === ' ') {
+        e.preventDefault(); // Prevent page scroll on Space key
+      }
+      onClick(e);
+    }
+  };
+
   useEffect(() => {
     return () => {
       if (rafIdRef.current) {
@@ -51,10 +76,16 @@ export const SpotlightCard = ({ children, className = '', style = {}, ...props }
     };
   }, []);
 
+  const isClickable = Boolean(onClick);
+
   return (
     <div
       ref={cardRef}
+      role={role ?? (isClickable ? 'button' : undefined)}
+      tabIndex={tabIndex ?? (isClickable ? 0 : undefined)}
       className={`spotlight-card ${className}`}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{

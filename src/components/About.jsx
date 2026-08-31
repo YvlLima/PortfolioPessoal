@@ -31,6 +31,7 @@ export const About = ({
                   key={stat.id}
                   className="stat-card"
                   onClick={() => onSelectModal(stat.modalData)}
+                  aria-label={`${lang === 'pt' ? 'Ver informações sobre' : 'View details about'} ${stat.title}`}
                   title={lang === 'pt' ? 'Clique para ver mais informações' : 'Click for details'}
                 >
                   {stat.icon}
@@ -55,6 +56,7 @@ export const About = ({
                   key={idx}
                   className="soft-skill-card"
                   onClick={() => onSelectModal(ss.modalData)}
+                  aria-label={`${lang === 'pt' ? 'Ver detalhes de valor pessoal' : 'View details for personal value'} ${ss.title}`}
                   title={lang === 'pt' ? 'Clique para ver mais informações' : 'Click for details'}
                 >
                   <div className="soft-skill-icon">

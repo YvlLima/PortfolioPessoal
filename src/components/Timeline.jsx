@@ -11,6 +11,7 @@ export const Timeline = ({ timelineItems, lang, onSelectModal }) => {
           <SpotlightCard
             className="timeline-content"
             onClick={() => onSelectModal(item.modalData)}
+            aria-label={`${lang === 'pt' ? 'Ver detalhes da formação' : 'View education details for'} ${item.degree}`}
             title={lang === 'pt' ? 'Clique para ver detalhes do curso' : 'Click to view course details'}
           >
             <span className="timeline-date">{item.period}</span>

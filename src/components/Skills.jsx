@@ -33,6 +33,7 @@ export const Skills = ({
                 key={index}
                 className="skill-card"
                 onClick={() => onSelectModal(getSkillModalData(skill))}
+                aria-label={`${lang === 'pt' ? 'Ver detalhes da competência' : 'View skill details for'} ${skill.name}`}
                 title={lang === 'pt' ? 'Clique para ver detalhes da competência' : 'Click for skill details'}
                 style={{ cursor: 'pointer' }}
               >

@@ -63,6 +63,7 @@ export const Projects = ({
                 key={proj.id}
                 className="project-card-v2"
                 onClick={() => onSelectProject(proj)}
+                aria-label={`${lang === 'pt' ? 'Ver detalhes e arquitetura do projeto' : 'View details and architecture of project'} ${proj.title}`}
                 title={lang === 'pt' ? 'Clique para ver arquitetura e detalhes completos' : 'Click to view full architecture & details'}
               >
                 {/* Terminal Window Header */}

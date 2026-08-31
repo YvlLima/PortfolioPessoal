@@ -25,6 +25,7 @@ export const Recommendations = ({
             key={rec.id}
             className="recommendation-card"
             onClick={() => onSelectModal(rec.modalData)}
+            aria-label={`${lang === 'pt' ? 'Ver carta de recomendação de' : 'View recommendation letter for'} ${rec.company} (${rec.year})`}
             title={lang === 'pt' ? 'Clique para ver a carta e pontos-chave' : 'Click to view recommendation details'}
           >
             <div className="rec-card-header">
