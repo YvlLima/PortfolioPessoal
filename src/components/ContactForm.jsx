@@ -31,8 +31,10 @@ export const ContactForm = ({
 }) => {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [formState, setFormState] = useState({ name: '', email: '', subject: '', message: '' });
+  const [honeypot, setHoneypot] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationError, setValidationError] = useState('');
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(userEmail);
@@ -42,6 +44,33 @@ export const ContactForm = ({
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setValidationError('');
+
+    // 1. Honeypot check: If bot filled the hidden field, pretend to succeed silently
+    if (honeypot.trim() !== '') {
+      setFormSubmitted(true);
+      setFormState({ name: '', email: '', subject: '', message: '' });
+      setHoneypot('');
+      setTimeout(() => setFormSubmitted(false), 6000);
+      return;
+    }
+
+    // 2. Sanitize & trim values
+    const trimmedName = formState.name.trim();
+    const trimmedEmail = formState.email.trim();
+    const trimmedSubject = formState.subject.trim();
+    const trimmedMessage = formState.message.trim();
+
+    // 3. Minimum length validation
+    if (trimmedMessage.length < 10) {
+      setValidationError(
+        lang === 'pt'
+          ? 'Por favor escreve uma mensagem com pelo menos 10 caracteres.'
+          : 'Please enter a message with at least 10 characters.'
+      );
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const response = await fetch(`https://formsubmit.co/ajax/${userEmail}`, {
@@ -52,13 +81,13 @@ export const ContactForm = ({
         },
         body: JSON.stringify({
           _template: 'box',
-          _replyto: formState.email,
-          _subject: `📬 [Portfólio Web] ${formState.subject || 'Nova Mensagem'} (de ${formState.name})`,
-          _autoresponse: `Olá ${formState.name}!\n\nObrigado por entrares em contacto através do meu portfólio (goncalolima.pt).\nRecebi a tua mensagem com o assunto "${formState.subject || 'Contacto'}" e irei responder com a maior brevidade possível.\n\nCom os melhores cumprimentos,\nGonçalo Martins de Lima`,
-          'Nome do Remetente': formState.name,
-          'Email do Remetente': formState.email,
-          'Assunto da Mensagem': formState.subject,
-          'Conteúdo da Mensagem': formState.message
+          _replyto: trimmedEmail,
+          _subject: `📬 [Portfólio Web] ${trimmedSubject || 'Nova Mensagem'} (de ${trimmedName})`,
+          _autoresponse: `Olá ${trimmedName}!\n\nObrigado por entrares em contacto através do meu portfólio (goncalolima.pt).\nRecebi a tua mensagem com o assunto "${trimmedSubject || 'Contacto'}" e irei responder com a maior brevidade possível.\n\nCom os melhores cumprimentos,\nGonçalo Martins de Lima`,
+          'Nome do Remetente': trimmedName,
+          'Email do Remetente': trimmedEmail,
+          'Assunto da Mensagem': trimmedSubject,
+          'Conteúdo da Mensagem': trimmedMessage
         })
       });
 
@@ -67,11 +96,11 @@ export const ContactForm = ({
         setFormState({ name: '', email: '', subject: '', message: '' });
         setTimeout(() => setFormSubmitted(false), 6000);
       } else {
-        window.location.href = `mailto:${userEmail}?subject=${encodeURIComponent(formState.subject)}&body=${encodeURIComponent(`Nome: ${formState.name}\nEmail: ${formState.email}\n\nMensagem:\n${formState.message}`)}`;
+        window.location.href = `mailto:${userEmail}?subject=${encodeURIComponent(trimmedSubject)}&body=${encodeURIComponent(`Nome: ${trimmedName}\nEmail: ${trimmedEmail}\n\nMensagem:\n${trimmedMessage}`)}`;
       }
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
-      window.location.href = `mailto:${userEmail}?subject=${encodeURIComponent(formState.subject)}&body=${encodeURIComponent(`Nome: ${formState.name}\nEmail: ${formState.email}\n\nMensagem:\n${formState.message}`)}`;
+      window.location.href = `mailto:${userEmail}?subject=${encodeURIComponent(trimmedSubject)}&body=${encodeURIComponent(`Nome: ${trimmedName}\nEmail: ${trimmedEmail}\n\nMensagem:\n${trimmedMessage}`)}`;
     } finally {
       setIsSubmitting(false);
     }
@@ -126,13 +155,57 @@ export const ContactForm = ({
                 </div>
               )}
 
+              {validationError && (
+                <div
+                  style={{
+                    backgroundColor: 'rgba(255, 95, 86, 0.1)',
+                    border: '1px solid rgba(255, 95, 86, 0.3)',
+                    color: '#ff7b72',
+                    padding: '0.65rem 1rem',
+                    borderRadius: 'var(--radius-sm)',
+                    fontSize: '0.85rem',
+                    marginBottom: '1rem',
+                    fontFamily: 'var(--font-code)'
+                  }}
+                >
+                  {validationError}
+                </div>
+              )}
+
               <form className="contact-form" onSubmit={handleFormSubmit}>
+                {/* Honeypot field (hidden from legitimate users, catches automated spam bots) */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    opacity: 0,
+                    pointerEvents: 'none',
+                    left: '-9999px',
+                    top: '-9999px',
+                    height: 0,
+                    width: 0,
+                    zIndex: -1
+                  }}
+                  aria-hidden="true"
+                >
+                  <label htmlFor="user_website_url">Website</label>
+                  <input
+                    id="user_website_url"
+                    type="text"
+                    name="website_url"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
+
                 <div className="form-row">
                   <div className="form-group">
                     <label>{t.contact.formName}</label>
                     <input
                       type="text"
                       required
+                      maxLength={80}
                       className="form-input"
                       placeholder={t.contact.formNamePlaceholder}
                       value={formState.name}
@@ -144,6 +217,7 @@ export const ContactForm = ({
                     <input
                       type="email"
                       required
+                      maxLength={120}
                       className="form-input"
                       placeholder={t.contact.formEmailPlaceholder}
                       value={formState.email}
@@ -157,6 +231,7 @@ export const ContactForm = ({
                   <input
                     type="text"
                     required
+                    maxLength={120}
                     className="form-input"
                     placeholder={t.contact.formSubjectPlaceholder}
                     value={formState.subject}
@@ -165,9 +240,16 @@ export const ContactForm = ({
                 </div>
 
                 <div className="form-group">
-                  <label>{t.contact.formMessage}</label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <label>{t.contact.formMessage}</label>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-code)' }}>
+                      {formState.message.length}/2000
+                    </span>
+                  </div>
                   <textarea
                     required
+                    minLength={10}
+                    maxLength={2000}
                     className="form-textarea"
                     placeholder={t.contact.formMessagePlaceholder}
                     value={formState.message}
