@@ -1,5 +1,5 @@
 import React from 'react';
-import { Terminal, X, Globe, Menu, Sun, Moon } from 'lucide-react';
+import { Terminal, X, Globe, Menu, Sun, Moon, Download } from 'lucide-react';
 
 export const Navbar = ({
   activeSection,
@@ -95,6 +95,22 @@ export const Navbar = ({
                 >
                   {isDark ? <Sun size={17} /> : <Moon size={17} />}
                 </button>
+              </li>
+
+              {/* Download CV Compact Button */}
+              <li className="nav-cv-item">
+                <a
+                  href="/goncalolima-cv.pdf"
+                  download="Goncalo_Lima_CV.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="theme-toggle"
+                  title={t.hero.btnCv}
+                  aria-label={t.hero.btnCv}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Download size={17} />
+                </a>
               </li>
 
               <li className="nav-cta-item">

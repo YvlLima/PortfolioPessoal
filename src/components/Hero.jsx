@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ChevronRight, FileText } from 'lucide-react';
+import { Sparkles, ChevronRight, Download } from 'lucide-react';
 import FadeInSection from './FadeInSection';
 
 export const Hero = ({ t }) => {
@@ -28,8 +28,15 @@ export const Hero = ({ t }) => {
             <a href="#projetos" className="btn btn-primary">
               {t.hero.btnProjects} <ChevronRight size={18} />
             </a>
-            <a href="/CV_Goncalo_Lima.pdf" download className="btn btn-outline">
-              <FileText size={18} /> {t.hero.btnCv}
+            <a
+              href="/goncalolima-cv.pdf"
+              download="Goncalo_Lima_CV.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-outline"
+              aria-label={t.hero.btnCv}
+            >
+              <Download size={18} /> {t.hero.btnCv}
             </a>
             <a href="#contacto" className="btn btn-outline" style={{ borderStyle: 'dashed' }}>
               {t.hero.btnContact}
