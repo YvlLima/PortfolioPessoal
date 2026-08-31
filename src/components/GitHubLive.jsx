@@ -91,20 +91,28 @@ export const GitHubLive = ({
               <span className="live-pulse-dot" />
               <span className="github-badge-text">{t.githubLive.badge}</span>
             </div>
-            <div className="github-user-pill">
-              {githubUser.avatar_url && (
-                <img
-                  src={githubUser.avatar_url}
-                  alt={githubUser.login}
-                  className="github-avatar-img"
-                />
-              )}
-              <span className="github-user-handle">@{githubUser.login}</span>
-            </div>
+
+            {isSyncing ? (
+              <div className="github-user-pill">
+                <div className="skeleton-box" style={{ width: 22, height: 22, borderRadius: '50%' }} />
+                <div className="skeleton-box" style={{ width: 70, height: 14 }} />
+              </div>
+            ) : (
+              <div className="github-user-pill">
+                {githubUser.avatar_url && (
+                  <img
+                    src={githubUser.avatar_url}
+                    alt={githubUser.login}
+                    className="github-avatar-img"
+                  />
+                )}
+                <span className="github-user-handle">@{githubUser.login}</span>
+              </div>
+            )}
           </div>
 
           <div className="github-live-header-right">
-            {lastSyncTime && (
+            {lastSyncTime && !isSyncing && (
               <span className="github-last-sync-tag">
                 {lastSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
@@ -166,144 +174,194 @@ export const GitHubLive = ({
 
         {/* TAB 1: REPOSITÓRIOS ATIVOS */}
         {githubTab === 'repos' && (
-          <div className="github-repos-grid">
-            {githubRepos.map((repo) => {
-              const langMeta = getLanguageMeta(repo.language);
-              return (
-                <a
-                  key={repo.id || repo.name}
-                  href={repo.html_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="github-repo-card"
-                >
-                  <div className="github-repo-top">
-                    <div className="github-repo-name-box">
-                      <FolderGit2 size={18} className="accent" />
-                      <span className="github-repo-name">{repo.name}</span>
-                    </div>
-                    <ExternalLink size={16} className="github-ext-icon" />
+          isSyncing ? (
+            <div className="github-repos-grid">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="skeleton-repo-card">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="skeleton-box" style={{ width: '55%', height: 18 }} />
+                    <div className="skeleton-box" style={{ width: 16, height: 16, borderRadius: 4 }} />
                   </div>
-
-                  <p className="github-repo-desc">
-                    {repo.description || (lang === 'pt' ? 'Repositório de código e utilitários no GitHub' : 'GitHub source code and utility repository')}
-                  </p>
-
-                  <div className="github-repo-footer">
-                    <div className="github-repo-lang">
-                      <span
-                        className="lang-color-dot"
-                        style={{ backgroundColor: langMeta.color }}
-                      />
-                      <span>{langMeta.name}</span>
-                    </div>
-
-                    <div className="github-repo-meta-right">
-                      {repo.stargazers_count > 0 && (
-                        <span className="github-stat-pill">
-                          <Star size={13} /> {repo.stargazers_count}
-                        </span>
-                      )}
-                      {repo.updated_at && (
-                        <span className="github-repo-date" title={repo.updated_at}>
-                          <Clock size={12} /> {formatFriendlyDate(repo.updated_at, lang)}
-                        </span>
-                      )}
-                    </div>
+                  <div className="skeleton-box" style={{ width: '90%', height: 14, marginTop: 4 }} />
+                  <div className="skeleton-box" style={{ width: '70%', height: 14 }} />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 8 }}>
+                    <div className="skeleton-box" style={{ width: 60, height: 12 }} />
+                    <div className="skeleton-box" style={{ width: 50, height: 12 }} />
                   </div>
-                </a>
-              );
-            })}
-          </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="github-repos-grid">
+              {githubRepos.map((repo) => {
+                const langMeta = getLanguageMeta(repo.language);
+                return (
+                  <a
+                    key={repo.id || repo.name}
+                    href={repo.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="github-repo-card"
+                  >
+                    <div className="github-repo-top">
+                      <div className="github-repo-name-box">
+                        <FolderGit2 size={18} className="accent" />
+                        <span className="github-repo-name">{repo.name}</span>
+                      </div>
+                      <ExternalLink size={16} className="github-ext-icon" />
+                    </div>
+
+                    <p className="github-repo-desc">
+                      {repo.description || (lang === 'pt' ? 'Repositório de código e utilitários no GitHub' : 'GitHub source code and utility repository')}
+                    </p>
+
+                    <div className="github-repo-footer">
+                      <div className="github-repo-lang">
+                        <span
+                          className="lang-color-dot"
+                          style={{ backgroundColor: langMeta.color }}
+                        />
+                        <span>{langMeta.name}</span>
+                      </div>
+
+                      <div className="github-repo-meta-right">
+                        {repo.stargazers_count > 0 && (
+                          <span className="github-stat-pill">
+                            <Star size={13} /> {repo.stargazers_count}
+                          </span>
+                        )}
+                        {repo.updated_at && (
+                          <span className="github-repo-date" title={repo.updated_at}>
+                            <Clock size={12} /> {formatFriendlyDate(repo.updated_at, lang)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          )
         )}
 
         {/* TAB 2: ATIVIDADE RECENTE & COMMITS */}
         {githubTab === 'activity' && (
-          <div className="github-activity-stream">
-            {githubEvents.map((evt, idx) => (
-              <div key={evt.id || idx} className="github-activity-item">
-                <div className="github-activity-dot-line">
-                  <div className="github-activity-dot">
-                    <GitCommit size={14} />
+          isSyncing ? (
+            <div className="github-activity-stream">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="skeleton-activity-item">
+                  <div className="skeleton-box" style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0 }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+                    <div className="skeleton-box" style={{ width: '45%', height: 15 }} />
+                    <div className="skeleton-box" style={{ width: '30%', height: 12 }} />
                   </div>
-                  {idx < githubEvents.length - 1 && <div className="github-activity-line" />}
                 </div>
+              ))}
+            </div>
+          ) : (
+            <div className="github-activity-stream">
+              {githubEvents.map((evt, idx) => (
+                <div key={evt.id || idx} className="github-activity-item">
+                  <div className="github-activity-dot-line">
+                    <div className="github-activity-dot">
+                      <GitCommit size={14} />
+                    </div>
+                    {idx < githubEvents.length - 1 && <div className="github-activity-line" />}
+                  </div>
 
-                <div className="github-activity-content">
-                  <div className="github-activity-header">
-                    <span className="github-activity-type">
-                      {evt.actionText ? evt.actionText[lang] : t.githubLive.eventPush}
-                    </span>
-                    <span className="github-activity-date">
-                      <Clock size={12} /> {formatFriendlyDate(evt.created_at, lang)}
-                    </span>
-                  </div>
-                  <div className="github-activity-repo">
-                    <a
-                      href={`https://github.com/${evt.repo}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="github-activity-repo-link"
-                    >
-                      <FolderGit2 size={14} />
-                      <span>{evt.repo}</span>
-                      <ExternalLink size={12} />
-                    </a>
+                  <div className="github-activity-content">
+                    <div className="github-activity-header">
+                      <span className="github-activity-type">
+                        {evt.actionText ? evt.actionText[lang] : t.githubLive.eventPush}
+                      </span>
+                      <span className="github-activity-date">
+                        <Clock size={12} /> {formatFriendlyDate(evt.created_at, lang)}
+                      </span>
+                    </div>
+                    <div className="github-activity-repo">
+                      <a
+                        href={`https://github.com/${evt.repo}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="github-activity-repo-link"
+                      >
+                        <FolderGit2 size={14} />
+                        <span>{evt.repo}</span>
+                        <ExternalLink size={12} />
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )
         )}
 
         {/* TAB 3: LINGUAGENS & MÉTRICAS */}
         {githubTab === 'stats' && (
-          <div className="github-stats-wrapper">
-            <div className="github-stats-grid">
-              <div className="github-stat-card">
-                <span className="github-stat-num">{githubUser.public_repos || 4}</span>
-                <span className="github-stat-label">{t.githubLive.statRepos}</span>
+          isSyncing ? (
+            <div className="github-stats-wrapper">
+              <div className="github-stats-grid">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="github-stat-card">
+                    <div className="skeleton-box" style={{ width: 45, height: 28, marginBottom: 6 }} />
+                    <div className="skeleton-box" style={{ width: 80, height: 12 }} />
+                  </div>
+                ))}
               </div>
-              <div className="github-stat-card">
-                <span className="github-stat-num" style={{ color: '#f7df1e' }}>JavaScript</span>
-                <span className="github-stat-label">{t.githubLive.statLanguage}</span>
-              </div>
-              <div className="github-stat-card">
-                <span className="github-stat-num" style={{ color: 'var(--accent)' }}>2024 — Presente</span>
-                <span className="github-stat-label">{t.githubLive.statActivity}</span>
-              </div>
-              <div className="github-stat-card">
-                <span className="github-stat-num">
-                  {formatFriendlyDate(githubRepos[0]?.updated_at, lang)}
-                </span>
-                <span className="github-stat-label">{lang === 'pt' ? 'Último Update' : 'Latest Update'}</span>
+              <div className="github-lang-progress-box" style={{ marginTop: '1.25rem' }}>
+                <div className="skeleton-box" style={{ width: '40%', height: 16, marginBottom: 12 }} />
+                <div className="skeleton-box" style={{ width: '100%', height: 8, borderRadius: 999 }} />
               </div>
             </div>
+          ) : (
+            <div className="github-stats-wrapper">
+              <div className="github-stats-grid">
+                <div className="github-stat-card">
+                  <span className="github-stat-num">{githubUser.public_repos || 4}</span>
+                  <span className="github-stat-label">{t.githubLive.statRepos}</span>
+                </div>
+                <div className="github-stat-card">
+                  <span className="github-stat-num" style={{ color: '#f7df1e' }}>JavaScript</span>
+                  <span className="github-stat-label">{t.githubLive.statLanguage}</span>
+                </div>
+                <div className="github-stat-card">
+                  <span className="github-stat-num" style={{ color: 'var(--accent)' }}>2024 — Presente</span>
+                  <span className="github-stat-label">{t.githubLive.statActivity}</span>
+                </div>
+                <div className="github-stat-card">
+                  <span className="github-stat-num">
+                    {formatFriendlyDate(githubRepos[0]?.updated_at, lang)}
+                  </span>
+                  <span className="github-stat-label">{lang === 'pt' ? 'Último Update' : 'Latest Update'}</span>
+                </div>
+              </div>
 
-            {/* Language Distribution Bar */}
-            <div className="github-lang-progress-box">
-              <h4>{t.githubLive.langDistribution}</h4>
-              <div className="github-lang-bar">
-                <div className="github-lang-segment" style={{ width: '75%', backgroundColor: '#f7df1e' }} title="JavaScript: 75%" />
-                <div className="github-lang-segment" style={{ width: '15%', backgroundColor: '#563d7c' }} title="CSS3: 15%" />
-                <div className="github-lang-segment" style={{ width: '10%', backgroundColor: '#e34c26' }} title="HTML5: 10%" />
-              </div>
-              <div className="github-lang-legend">
-                <div className="github-legend-item">
-                  <span className="lang-color-dot" style={{ backgroundColor: '#f7df1e' }} />
-                  <span>JavaScript (75%)</span>
+              {/* Language Distribution Bar */}
+              <div className="github-lang-progress-box">
+                <h4>{t.githubLive.langDistribution}</h4>
+                <div className="github-lang-bar">
+                  <div className="github-lang-segment" style={{ width: '75%', backgroundColor: '#f7df1e' }} title="JavaScript: 75%" />
+                  <div className="github-lang-segment" style={{ width: '15%', backgroundColor: '#563d7c' }} title="CSS3: 15%" />
+                  <div className="github-lang-segment" style={{ width: '10%', backgroundColor: '#e34c26' }} title="HTML5: 10%" />
                 </div>
-                <div className="github-legend-item">
-                  <span className="lang-color-dot" style={{ backgroundColor: '#563d7c' }} />
-                  <span>CSS3 (15%)</span>
-                </div>
-                <div className="github-legend-item">
-                  <span className="lang-color-dot" style={{ backgroundColor: '#e34c26' }} />
-                  <span>HTML5 (10%)</span>
+                <div className="github-lang-legend">
+                  <div className="github-legend-item">
+                    <span className="lang-color-dot" style={{ backgroundColor: '#f7df1e' }} />
+                    <span>JavaScript (75%)</span>
+                  </div>
+                  <div className="github-legend-item">
+                    <span className="lang-color-dot" style={{ backgroundColor: '#563d7c' }} />
+                    <span>CSS3 (15%)</span>
+                  </div>
+                  <div className="github-legend-item">
+                    <span className="lang-color-dot" style={{ backgroundColor: '#e34c26' }} />
+                    <span>HTML5 (10%)</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )
         )}
 
         {/* TAB 4: GRÁFICO DE CONTRIBUIÇÕES */}
@@ -314,7 +372,9 @@ export const GitHubLive = ({
               <p className="github-contributions-sub">{t.githubLive.contributionsSub}</p>
             </div>
 
-            {!chartError ? (
+            {isSyncing ? (
+              <div className="skeleton-box" style={{ width: '100%', height: 120, borderRadius: 8, margin: '1rem 0' }} />
+            ) : !chartError ? (
               <div className="github-chart-container">
                 <img
                   src="https://ghchart.rshah.io/64ffda/YvlLima"
