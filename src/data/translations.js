@@ -13,9 +13,10 @@ export const contentTranslations = {
     },
     now: {
       title: 'Agora',
-      subtitle: 'Projetos e explorações tecnológicas em desenvolvimento ativo neste momento.',
+      subtitle: 'O meu foco atual, aprendizagem e atividades em curso.',
       statusInDevelopment: 'Em desenvolvimento',
       statusExploring: 'A explorar',
+      statusFocus: 'Foco & Aprendizagem',
       btnCode: 'Ver no GitHub',
       btnDetails: 'Detalhes'
     },
@@ -162,9 +163,10 @@ export const contentTranslations = {
     },
     now: {
       title: 'Now',
-      subtitle: 'Projects, explorations, and technologies currently in active development.',
+      subtitle: 'My current focus, ongoing learning, and active pursuits.',
       statusInDevelopment: 'In Development',
       statusExploring: 'Exploring',
+      statusFocus: 'Focus & Learning',
       btnCode: 'View on GitHub',
       btnDetails: 'Details'
     },
