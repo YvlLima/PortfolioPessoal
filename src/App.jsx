@@ -29,7 +29,10 @@ import {
   Activity,
   Clock,
   Bot,
-  Info
+  Info,
+  Briefcase,
+  FileCheck,
+  Quote
 } from 'lucide-react';
 
 // Custom SVG for GitHub Icon
@@ -76,7 +79,7 @@ const contentTranslations = {
       sobre: 'Sobre mim',
       skills: 'Skills',
       projetos: 'Projetos',
-      educacao: 'Educação & Certificados',
+      educacao: 'Educação & Estágios',
       contacto: 'Contacto',
       ctaBtn: 'Contactar'
     },
@@ -155,8 +158,10 @@ const contentTranslations = {
       statActivityVal: 'Ativo & Em Desenvolvimento'
     },
     education: {
-      title: 'Educação & Certificações',
-      certTitle: 'Certificações & Cursos Extra',
+      title: 'Educação & Experiência',
+      recommendationsTitle: 'Cartas de Recomendação de Estágio',
+      recommendationsSub: 'Avaliações formais de desempenho emitidas pela entidade de acolhimento nos estágios curriculares de 11.º e 12.º ano (GPSI).',
+      certTitle: 'Certificações & Habilitações',
       edu1Period: 'Setembro 2025 — Presente',
       edu1Degree: 'CTeSP em Cibersegurança, Redes e Sistemas Informáticos',
       edu1Inst: 'ESTG — Escola Superior de Tecnologia e Gestão (P.PORTO)',
@@ -197,7 +202,7 @@ const contentTranslations = {
       sobre: 'About me',
       skills: 'Skills',
       projetos: 'Projects',
-      educacao: 'Education & Certs',
+      educacao: 'Education & Internships',
       contacto: 'Contact',
       ctaBtn: 'Get in touch'
     },
@@ -276,8 +281,10 @@ const contentTranslations = {
       statActivityVal: 'Active & Building'
     },
     education: {
-      title: 'Education & Certifications',
-      certTitle: 'Certifications & Extra Courses',
+      title: 'Education & Experience',
+      recommendationsTitle: 'Internship Recommendation Letters',
+      recommendationsSub: 'Formal performance evaluation letters issued by the host company during the 11th & 12th grade vocational internships (GPSI).',
+      certTitle: 'Certifications & Qualifications',
       edu1Period: 'September 2025 — Present',
       edu1Degree: 'Associate Degree (CTeSP) in Cybersecurity, Networks & Systems',
       edu1Inst: 'ESTG — School of Technology and Management (P.PORTO)',
@@ -1096,6 +1103,78 @@ export default function App() {
             'Specialization in Application Development & Networking',
             'Top grade on the Final Diploma Project (PAP)',
             'Path to Higher Education & Associate Degrees'
+          ]
+        }
+      }
+    }
+  ];
+
+  // Cartas de Recomendação de Estágio (11.º e 12.º Ano)
+  const recommendationLetters = [
+    {
+      id: 'rec-12',
+      year: '12.º Ano (FCT)',
+      company: 'Diga Mais – Equipamentos e Serviços Informáticos',
+      role: lang === 'pt' ? 'Estágio Curricular Final de Curso' : 'Final Curriculum Internship',
+      period: '2024 / 2025',
+      badge: lang === 'pt' ? 'Estágio 12.º Ano • Recomendação' : '12th Grade Internship • Recommendation',
+      desc: lang === 'pt'
+        ? 'Carta de recomendação e avaliação formal emitida pela Diga Mais. Reconhece o desempenho exemplar, autonomia técnica e capacidade de resolução de problemas em ambiente de trabalho.'
+        : 'Formal recommendation and performance evaluation issued by Diga Mais. Recognizes exemplary dedication, technical autonomy, and problem-solving skills in a workplace environment.',
+      modalData: {
+        title: lang === 'pt' ? 'Carta de Recomendação — Estágio 12.º Ano' : 'Recommendation Letter — 12th Grade Internship',
+        badge: 'Diga Mais – Equipamentos e Serviços Informáticos',
+        icon: <Briefcase size={28} />,
+        desc: {
+          pt: 'Carta de recomendação obtida no término do estágio curricular de 12.º ano (FCT) do curso profissional de Gestão e Programação de Sistemas Informáticos (GPSI) na empresa Diga Mais. A entidade atesta o rigor profissional, pontualidade, facilidade no diagnóstico e suporte informático.',
+          en: 'Formal recommendation letter received upon completing the 12th-grade curriculum internship (FCT) in IT Systems Management & Programming (GPSI) at Diga Mais. Highlights professional rigor, punctuality, diagnostic skills, and IT customer support.'
+        },
+        highlights: {
+          pt: [
+            'Avaliação de excelência no estágio curricular de fim de curso (FCT)',
+            'Manutenção, diagnóstico e reparação de equipamentos informáticos e redes',
+            'Instalação, configuração e suporte a sistemas operativos e software',
+            'Forte sentido de responsabilidade, assiduidade e espírito de equipa'
+          ],
+          en: [
+            'Top performance evaluation in the final vocational internship (FCT)',
+            'Hardware diagnosis, maintenance, and computer networking support',
+            'Operating systems and software installation & troubleshooting',
+            'Strong sense of responsibility, punctuality, and collaborative teamwork'
+          ]
+        }
+      }
+    },
+    {
+      id: 'rec-11',
+      year: '11.º Ano (FCT)',
+      company: 'Diga Mais – Equipamentos e Serviços Informáticos',
+      role: lang === 'pt' ? 'Primeiro Estágio Curricular' : 'First Curriculum Internship',
+      period: '2023 / 2024',
+      badge: lang === 'pt' ? 'Estágio 11.º Ano • Recomendação' : '11th Grade Internship • Recommendation',
+      desc: lang === 'pt'
+        ? 'Carta de recomendação emitida pela Diga Mais no primeiro ano de formação em contexto de trabalho. Salienta a rápida curva de aprendizagem e integração exemplar na equipa técnica.'
+        : 'Recommendation letter issued by Diga Mais during the first vocational internship period. Highlights quick learning curve and exemplary integration with the technical team.',
+      modalData: {
+        title: lang === 'pt' ? 'Carta de Recomendação — Estágio 11.º Ano' : 'Recommendation Letter — 11th Grade Internship',
+        badge: 'Diga Mais – Equipamentos e Serviços Informáticos',
+        icon: <Briefcase size={28} />,
+        desc: {
+          pt: 'Carta de recomendação emitida pela Diga Mais relativa ao estágio curricular do 11.º ano do curso de GPSI. Demonstrou grande motivação, adaptação rápida ao ambiente de trabalho e cumprimento rigoroso das tarefas técnicas atribuídas.',
+          en: 'Recommendation letter issued by Diga Mais for the 11th-grade curriculum internship in the GPSI vocational course. Demonstrated strong motivation, rapid workplace adaptability, and thorough execution of technical tasks.'
+        },
+        highlights: {
+          pt: [
+            'Integração bem-sucedida em ambiente profissional de serviços de informática',
+            'Apoio técnico, preparação e montagem de computadores e periféricos',
+            'Diagnóstico ágil de problemas de hardware e conectividade de rede',
+            'Pontualidade, proatividade e rigor na execução das tarefas'
+          ],
+          en: [
+            'Successful integration into a professional IT services company',
+            'Technical support, assembly, and configuration of PCs and peripherals',
+            'Prompt diagnosis of hardware and network connectivity issues',
+            'Punctuality, proactive attitude, and precision in execution'
           ]
         }
       }
@@ -2098,9 +2177,54 @@ export default function App() {
                 ))}
               </div>
 
-              {/* Certificações & Cursos Extra */}
+              {/* Cartas de Recomendação de Estágio */}
               <div style={{ marginTop: '3.5rem' }}>
                 <h3 style={{ fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <FileCheck size={22} className="accent" /> {t.education.recommendationsTitle}
+                </h3>
+                {t.education.recommendationsSub && (
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '0.35rem', marginBottom: '1.5rem' }}>
+                    {t.education.recommendationsSub}
+                  </p>
+                )}
+
+                <div className="recommendations-grid">
+                  {recommendationLetters.map((rec) => (
+                    <SpotlightCard
+                      key={rec.id}
+                      className="recommendation-card"
+                      onClick={() => setSelectedInfoModal(rec.modalData)}
+                      title={lang === 'pt' ? 'Clique para ver a carta e pontos-chave' : 'Click to view recommendation details'}
+                    >
+                      <div className="rec-card-header">
+                        <div className="rec-icon-box">
+                          <Briefcase size={20} className="accent" />
+                        </div>
+                        <div className="rec-header-info">
+                          <span className="rec-year-badge">{rec.year}</span>
+                          <h4 className="rec-company-name">{rec.company}</h4>
+                          <span className="rec-role-tag">{rec.role} • {rec.period}</span>
+                        </div>
+                      </div>
+
+                      <div className="rec-body">
+                        <Quote size={16} className="rec-quote-icon" />
+                        <p className="rec-desc">{rec.desc}</p>
+                      </div>
+
+                      <div className="rec-footer">
+                        <span className="card-click-hint">
+                          {lang === 'pt' ? 'Ver carta & pontos-chave' : 'View letter & key points'} <ChevronRight size={12} />
+                        </span>
+                      </div>
+                    </SpotlightCard>
+                  ))}
+                </div>
+              </div>
+
+              {/* Certificações & Habilitações */}
+              <div style={{ marginTop: '3.5rem' }}>
+                <h3 style={{ fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem' }}>
                   <Award size={22} className="accent" /> {t.education.certTitle}
                 </h3>
                 <div className="certifications-grid">
