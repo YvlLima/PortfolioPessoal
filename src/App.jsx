@@ -84,7 +84,7 @@ const contentTranslations = {
       ctaBtn: 'Contactar'
     },
     hero: {
-      badge: 'A concluir CTeSP para ingressar em Licenciatura em Eng. Informática',
+      badge: 'A concluir CTeSP para ingressar em Licenciatura em Segurança Informática em Redes de Computadores',
       title: 'Estudante de Cibersegurança & Developer Júnior',
       desc: 'Estudante no Politécnico do Porto (ESTG) focado em Cibersegurança, Redes e Desenvolvimento Web. Apaixonado por criar soluções digitais seguras, eficientes e com excelente experiência de utilização.',
       btnProjects: 'Ver Projetos',
@@ -95,13 +95,13 @@ const contentTranslations = {
       title: 'Sobre mim',
       p1: 'Olá! Sou o Gonçalo Martins de Lima, estudante no 2.º ano do CTeSP em Cibersegurança, Redes e Sistemas Informáticos na Escola Superior de Tecnologia e Gestão (ESTG) do Politécnico do Porto (P.PORTO).',
       p2: 'A minha jornada na informática iniciou-se na Escola Secundária de Felgueiras com o curso profissional de Gestão e Programação de Sistemas Informáticos (GPSI), onde desenvolvi a minha paixão pela lógica de programação, arquitetura de sistemas e desenvolvimento de projetos web.',
-      p3: 'Atualmente foco-me na combinação entre Desenvolvimento Web moderno (React, JavaScript, C#, Node.js) e Segurança Informática & Redes. O meu próximo objetivo é ingressar na Licenciatura em Engenharia Informática e integrar equipas dinâmicas onde possa continuar a evoluir e criar impacto positivo.',
+      p3: 'Atualmente foco-me na combinação entre Desenvolvimento Web moderno (React, JavaScript, C#, Node.js) e Segurança Informática & Redes. O meu próximo objetivo é ingressar na Licenciatura em Segurança Informática em Redes de Computadores e integrar equipas dinâmicas onde possa continuar a evoluir e criar impacto positivo.',
       stat1Title: 'Formação Atual',
       stat1Desc: 'CTeSP Cibersegurança, Redes e Sistemas (ESTG - P.PORTO)',
       stat2Title: 'Foco Principal',
       stat2Desc: 'Desenvolvimento Web & Segurança Informática',
       stat3Title: 'Próximo Passo',
-      stat3Desc: 'Licenciatura em Eng. Informática & Estágio/Dev Júnior',
+      stat3Desc: 'Licenciatura em Seg. Informática em Redes & Estágio/Dev Júnior',
       softSkillsTitle: 'Competências Pessoais & Valores'
     },
     skills: {
@@ -207,7 +207,7 @@ const contentTranslations = {
       ctaBtn: 'Get in touch'
     },
     hero: {
-      badge: 'Completing CTeSP to pursue a B.Sc. in Computer Science',
+      badge: 'Completing CTeSP to pursue a B.Sc. in Information Security in Computer Networks',
       title: 'Cybersecurity Student & Junior Developer',
       desc: 'Student at the Polytechnic of Porto (ESTG) focused on Cybersecurity, Networks, and Web Development. Passionate about creating secure, efficient digital solutions with great user experience.',
       btnProjects: 'View Projects',
@@ -218,13 +218,13 @@ const contentTranslations = {
       title: 'About me',
       p1: 'Hello! I am Gonçalo Martins de Lima, a 2nd-year student in Cybersecurity, Networks, and Computer Systems at the School of Technology and Management (ESTG) of the Polytechnic of Porto (P.PORTO).',
       p2: 'My journey in computer science began at Escola Secundária de Felgueiras in the IT Management & Programming course (GPSI), where I developed my passion for programming logic, system architecture, and web development.',
-      p3: 'Currently, I focus on combining modern Web Development (React, JavaScript, C#, Node.js) with Cybersecurity & Computer Networks. My next goal is to enroll in a B.Sc. in Computer Science and join dynamic teams where I can continue to grow and make a positive impact.',
+      p3: 'Currently, I focus on combining modern Web Development (React, JavaScript, C#, Node.js) with Cybersecurity & Computer Networks. My next goal is to enroll in a B.Sc. in Information Security in Computer Networks and join dynamic teams where I can continue to grow and make a positive impact.',
       stat1Title: 'Current Education',
       stat1Desc: 'Cybersecurity, Networks & Systems CTeSP (ESTG - P.PORTO)',
       stat2Title: 'Core Focus',
       stat2Desc: 'Web Development & Cybersecurity',
       stat3Title: 'Next Step',
-      stat3Desc: 'B.Sc. in Computer Science & Junior Dev / Internship',
+      stat3Desc: 'B.Sc. in Information Security & Networks & Junior Dev / Internship',
       softSkillsTitle: 'Soft Skills & Personal Values'
     },
     skills: {
@@ -940,18 +940,18 @@ export default function App() {
         badge: 'Evolução Profissional',
         icon: <Globe size={28} />,
         desc: {
-          pt: 'Após a conclusão do CTeSP, o meu objetivo imediato é ingressar na Licenciatura em Engenharia Informática para aprofundar os fundamentos teóricos e práticos de ciência da computação, paralelamente à integração no mercado de trabalho como Junior Developer ou Estagiário.',
-          en: 'Upon completing the CTeSP degree, my immediate goal is to pursue a B.Sc. in Computer Science to deepen my theoretical and practical computer science foundation, while entering the job market as a Junior Developer or Intern.'
+          pt: 'Após a conclusão do CTeSP, o meu objetivo imediato é ingressar na Licenciatura em Segurança Informática em Redes de Computadores para aprofundar competências práticas em defesa de infraestruturas, análise de vulnerabilidades e arquitetura de redes seguras, paralelamente à integração no mercado de trabalho como Junior Developer ou Estagiário.',
+          en: 'Upon completing the CTeSP degree, my immediate goal is to pursue a B.Sc. in Information Security in Computer Networks to deepen practical competencies in infrastructure defense, vulnerability assessment, and secure network architectures, while entering the job market as a Junior Developer or Intern.'
         },
         highlights: {
           pt: [
-            'Prossecução de estudos na Licenciatura em Engenharia Informática',
+            'Prossecução de estudos na Licenciatura em Segurança Informática em Redes de Computadores',
             'Procura ativa de estágio profissional',
             'Desenvolvimento contínuo de projetos reais no GitHub',
             'Disponibilidade para integrar equipas de desenvolvimento web / segurança'
           ],
           en: [
-            'Enrolling in a B.Sc. in Computer Science',
+            'Enrolling in a B.Sc. in Information Security in Computer Networks',
             'Actively looking for internships',
             'Continuous development of real-world projects on GitHub',
             'Ready to contribute to web development / security'
