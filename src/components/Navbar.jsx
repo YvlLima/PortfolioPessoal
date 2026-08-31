@@ -1,5 +1,5 @@
 import React from 'react';
-import { Terminal, X, Globe, Menu } from 'lucide-react';
+import { Terminal, X, Globe, Menu, Sun, Moon } from 'lucide-react';
 
 export const Navbar = ({
   activeSection,
@@ -8,7 +8,9 @@ export const Navbar = ({
   lang,
   toggleLanguage,
   t,
-  userEmail
+  userEmail,
+  toggleTheme,
+  isDark
 }) => {
   const navLinks = [
     { id: 'sobre', label: t.nav.sobre, num: '01.' },
@@ -18,6 +20,10 @@ export const Navbar = ({
     { id: 'educacao', label: t.nav.educacao, num: '05.' },
     { id: 'contacto', label: t.nav.contacto, num: '06.' },
   ];
+
+  const themeLabel = lang === 'pt'
+    ? (isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro')
+    : (isDark ? 'Switch to light theme' : 'Switch to dark theme');
 
   return (
     <>
@@ -70,11 +76,24 @@ export const Navbar = ({
                   onClick={toggleLanguage}
                   className="lang-toggle"
                   title={lang === 'pt' ? 'Mudar para Inglês' : 'Switch to Portuguese'}
+                  aria-label={lang === 'pt' ? 'Alternar idioma para Inglês' : 'Switch language to Portuguese'}
                 >
                   <Globe size={15} />
                   <span className={lang === 'pt' ? 'lang-active' : 'lang-inactive'}>PT</span>
                   <span style={{ opacity: 0.3 }}>|</span>
                   <span className={lang === 'en' ? 'lang-active' : 'lang-inactive'}>EN</span>
+                </button>
+              </li>
+
+              {/* Theme Toggle Button (Dark / Light) */}
+              <li className="nav-theme-item">
+                <button
+                  onClick={toggleTheme}
+                  className="theme-toggle"
+                  title={themeLabel}
+                  aria-label={themeLabel}
+                >
+                  {isDark ? <Sun size={17} /> : <Moon size={17} />}
                 </button>
               </li>
 

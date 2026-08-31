@@ -1,7 +1,8 @@
 /* ==========================================================================
-   Design System & Global Variables
+   Design System & Global Variables (Dark Default)
    ========================================================================== */
-:root {
+:root,
+[data-theme="dark"] {
   --bg-primary: #0d0d0d;
   --bg-secondary: #141414;
   --bg-card: #181818;
@@ -9,8 +10,10 @@
   --bg-glass: rgba(18, 18, 18, 0.85);
   
   --accent: #64ffda;
+  --accent-light: #99ffe8;
   --accent-glow: rgba(100, 255, 218, 0.15);
   --accent-dim: rgba(100, 255, 218, 0.4);
+  --btn-primary-text: #0d0d0d;
   
   --text-primary: #f3f4f6;
   --text-secondary: #9ca3af;
@@ -31,6 +34,30 @@
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-full: 9999px;
+}
+
+/* ==========================================================================
+   Light Theme Palette (Crisp, High-Contrast Cyan & Slate)
+   ========================================================================== */
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-glass: rgba(255, 255, 255, 0.9);
+  
+  --accent: #0d9488;
+  --accent-light: #0f766e;
+  --accent-glow: rgba(13, 148, 136, 0.16);
+  --accent-dim: rgba(13, 148, 136, 0.4);
+  --btn-primary-text: #ffffff;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  
+  --border-color: rgba(15, 23, 42, 0.1);
+  --border-hover: rgba(13, 148, 136, 0.45);
 }
 
 /* ==========================================================================
@@ -56,6 +83,20 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body,
+.header,
+.footer,
+.spotlight-card,
+.project-modal-content,
+.lang-toggle,
+.theme-toggle,
+.filter-btn,
+.form-input,
+.form-textarea {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 :focus-visible {
@@ -256,6 +297,30 @@ button {
 
 .lang-toggle .lang-inactive {
   color: var(--text-muted);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--bg-card-hover);
+  box-shadow: 0 0 12px var(--accent-glow);
+  transform: rotate(15deg);
 }
 
 .mobile-toggle {
@@ -2384,7 +2449,7 @@ a, button, input, textarea, select {
   justify-content: space-between;
   align-items: center;
   padding-top: 0.85rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-color);
   font-size: 0.78rem;
   font-family: var(--font-code);
 }

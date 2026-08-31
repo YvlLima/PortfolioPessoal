@@ -15,6 +15,9 @@ import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
 import Modal from './components/Modal';
 
+// Hooks
+import useTheme from './hooks/useTheme';
+
 // Static Data
 import { contentTranslations } from './data/translations';
 import { getAboutStatsList } from './data/aboutStats';
@@ -25,6 +28,7 @@ import { getTimelineItems, getCertifications } from './data/timeline';
 import { getRecommendationLetters } from './data/recommendations';
 
 export default function App() {
+  const { theme, toggleTheme, isDark } = useTheme();
   const [lang, setLang] = useState('pt'); // 'pt' | 'en'
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -285,6 +289,9 @@ export default function App() {
         toggleLanguage={toggleLanguage}
         t={t}
         userEmail={userEmail}
+        theme={theme}
+        toggleTheme={toggleTheme}
+        isDark={isDark}
       />
 
       <main>
