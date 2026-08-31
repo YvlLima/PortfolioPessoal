@@ -296,7 +296,13 @@ export default function App() {
 
       <main>
         {/* 1. Hero Section */}
-        <Hero t={t} />
+        <Hero
+          t={t}
+          lang={lang}
+          userEmail={userEmail}
+          githubUrl={githubUrl}
+          linkedinUrl={linkedinUrl}
+        />
 
         {/* 2. Sobre Mim Section */}
         <About
