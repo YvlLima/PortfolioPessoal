@@ -208,10 +208,15 @@ button {
   transition: var(--transition-normal);
 }
 
+.header .container {
+  max-width: 1240px;
+}
+
 .nav-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 2.5rem;
   height: 100%;
 }
 
@@ -225,6 +230,7 @@ button {
   gap: 0.5rem;
   flex-shrink: 0;
   white-space: nowrap;
+  margin-right: 2.5rem;
 }
 
 .logo .accent {
