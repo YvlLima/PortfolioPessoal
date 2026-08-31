@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export const AmbientFollowerLight = () => {
-  const [pos, setPos] = useState({ x: -300, y: -300 });
+  const lightRef = useRef(null);
+  const rafIdRef = useRef(null);
+  const latestPosRef = useRef({ x: -300, y: -300 });
   const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
@@ -12,20 +14,36 @@ export const AmbientFollowerLight = () => {
     }
 
     const handleMouseMove = (e) => {
-      setPos({ x: e.clientX, y: e.clientY });
+      latestPosRef.current = { x: e.clientX, y: e.clientY };
+
+      if (!rafIdRef.current) {
+        rafIdRef.current = requestAnimationFrame(() => {
+          if (lightRef.current) {
+            lightRef.current.style.transform = `translate3d(${latestPosRef.current.x}px, ${latestPosRef.current.y}px, 0) translate(-50%, -50%)`;
+          }
+          rafIdRef.current = null;
+        });
+      }
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+    };
   }, []);
 
   if (isTouch) return null;
 
   return (
     <div
+      ref={lightRef}
       className="ambient-follower"
       style={{
-        left: `${pos.x}px`,
-        top: `${pos.y}px`,
+        transform: 'translate3d(-300px, -300px, 0) translate(-50%, -50%)',
       }}
     />
   );
