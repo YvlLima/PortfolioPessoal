@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   RefreshCw,
   Terminal,
   FolderGit2,
   Activity,
   Cpu,
+  Calendar,
   ExternalLink,
   Star,
   Clock,
@@ -26,6 +27,8 @@ export const GitHubLive = ({
   fetchGitHubLive,
   githubUrl
 }) => {
+  const [chartError, setChartError] = useState(false);
+
   // Format Relative / Friendly Date
   const formatFriendlyDate = (dateStr, currentLang) => {
     if (!dateStr) return '';
@@ -129,7 +132,7 @@ export const GitHubLive = ({
           </p>
         </div>
 
-        {/* Sub Tabs: Repositórios / Atividade / Estatísticas */}
+        {/* Sub Tabs: Repositórios / Atividade / Estatísticas / Contribuições */}
         <div className="github-subtabs">
           <button
             className={`github-tab-btn ${githubTab === 'repos' ? 'active' : ''}`}
@@ -151,6 +154,13 @@ export const GitHubLive = ({
           >
             <Cpu size={15} />
             <span>{t.githubLive.tabStats}</span>
+          </button>
+          <button
+            className={`github-tab-btn ${githubTab === 'contributions' ? 'active' : ''}`}
+            onClick={() => setGithubTab('contributions')}
+          >
+            <Calendar size={15} />
+            <span>{t.githubLive.tabContributions}</span>
           </button>
         </div>
 
@@ -293,6 +303,41 @@ export const GitHubLive = ({
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* TAB 4: GRÁFICO DE CONTRIBUIÇÕES */}
+        {githubTab === 'contributions' && (
+          <div className="github-contributions-wrapper">
+            <div className="github-contributions-header">
+              <h4 className="github-contributions-title">{t.githubLive.contributionsTitle}</h4>
+              <p className="github-contributions-sub">{t.githubLive.contributionsSub}</p>
+            </div>
+
+            {!chartError ? (
+              <div className="github-chart-container">
+                <img
+                  src="https://ghchart.rshah.io/64ffda/YvlLima"
+                  alt={t.githubLive.contributionsAlt}
+                  loading="lazy"
+                  className="github-chart-img"
+                  onError={() => setChartError(true)}
+                />
+              </div>
+            ) : (
+              <div className="github-chart-error">
+                <p>{t.githubLive.chartError}</p>
+                <a
+                  href={githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-outline"
+                  style={{ marginTop: '0.75rem', display: 'inline-flex', padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+                >
+                  <FolderGit2 size={15} /> {t.githubLive.viewAllRepos}
+                </a>
+              </div>
+            )}
           </div>
         )}
 
