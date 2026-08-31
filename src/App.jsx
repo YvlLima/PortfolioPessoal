@@ -27,7 +27,9 @@ import {
   Star,
   RefreshCw,
   Activity,
-  Clock
+  Clock,
+  Bot,
+  Info
 } from 'lucide-react';
 
 // Custom SVG for GitHub Icon
@@ -112,13 +114,21 @@ const contentTranslations = {
     },
     projects: {
       title: 'Projetos em Destaque',
+      subtitle: 'Projetos reais com foco em código limpo, arquitetura escalável e segurança.',
       filterAll: 'Todos',
       filterWeb: 'Web Apps',
-      filterCms: 'WordPress',
-      proj1Desc: 'Plataforma web interativa de música com várias funcionalidades modernas de pesquisa, reprodução e organização de conteúdos áudio numa interface responsiva.',
-      proj2Desc: 'Projeto de Prova de Aptidão Profissional (PAP) desenvolvido no curso de GPSI na Escola Secundária de Felgueiras. Plataforma web completa desenvolvida sobre WordPress dedicada à galeria e comunidade escolar.',
+      filterBots: 'Bots & Backend',
+      filterCms: 'WordPress & CMS',
+      proj1Desc: 'Plataforma web interativa de música com pesquisa dinâmica, controlo de áudio em tempo real e interface responsiva alojada no Cloudflare Pages.',
+      proj2Desc: 'Projeto de Prova de Aptidão Profissional (PAP) no curso de GPSI. Plataforma comunitária e galeria digital desenvolvida sobre WordPress.',
+      proj3Desc: 'Bot dinâmico para Discord inspirado no universo FNAF com sistema de batalha PvP por turnos, comandos slash e gestão de dados.',
+      proj4Desc: 'Utilitário e aplicação web moderna desenhada para otimização de rotinas, organização ágil de tarefas e produtividade diária.',
+      proj5Desc: 'Portfólio interativo de alta performance construído em React + Vite com design cyberpunk, iluminação Spotlight 3D e Live Sync do GitHub.',
       githubTitle: 'Ver Código no GitHub',
-      demoTitle: 'Ver Demo Ao Vivo'
+      demoTitle: 'Ver Demo Ao Vivo',
+      btnLive: 'Demo Ao Vivo',
+      btnCode: 'GitHub',
+      btnDetails: 'Detalhes'
     },
     githubLive: {
       badge: 'Live Sync • GitHub API',
@@ -225,13 +235,21 @@ const contentTranslations = {
     },
     projects: {
       title: 'Featured Projects',
+      subtitle: 'Real-world projects emphasizing clean code, scalable architecture, and security.',
       filterAll: 'All',
       filterWeb: 'Web Apps',
-      filterCms: 'WordPress',
-      proj1Desc: 'Interactive music web platform featuring modern audio search, playback, and playlist organization within a responsive user interface.',
-      proj2Desc: 'Final High School Diploma Project (PAP) developed in the IT course at Escola Secundária de Felgueiras. Full web platform built on WordPress for the school gallery and community.',
+      filterBots: 'Bots & Backend',
+      filterCms: 'WordPress & CMS',
+      proj1Desc: 'Interactive music web platform featuring dynamic search, real-time audio playback, and responsive UI hosted on Cloudflare Pages.',
+      proj2Desc: 'High school graduation diploma project (PAP) in IT. Community platform and digital gallery developed on WordPress CMS.',
+      proj3Desc: 'Dynamic Discord Bot inspired by the FNAF universe featuring turn-based PvP battle engine, slash commands, and data management.',
+      proj4Desc: 'Modern utility and web application designed for workflow optimization, agile task organization, and daily productivity.',
+      proj5Desc: 'High-performance interactive portfolio built with React + Vite featuring cyberpunk aesthetic, dynamic 3D spotlight, and live GitHub sync.',
       githubTitle: 'View Code on GitHub',
-      demoTitle: 'View Live Demo'
+      demoTitle: 'View Live Demo',
+      btnLive: 'Live Demo',
+      btnCode: 'GitHub',
+      btnDetails: 'Details'
     },
     githubLive: {
       badge: 'Live Sync • GitHub API',
@@ -1215,6 +1233,12 @@ export default function App() {
       id: 1,
       title: 'Music Hub',
       category: 'web',
+      windowPath: 'src/apps/MusicHub.tsx',
+      badge: {
+        pt: '🚀 Live Web App',
+        en: '🚀 Live Web App'
+      },
+      icon: <Layers size={22} className="accent" />,
       description: t.projects.proj1Desc,
       fullDesc: {
         pt: 'O Music Hub é uma plataforma web moderna e interativa desenvolvida com React e CSS3. Permite aos utilizadores pesquisar faixas musicais, controlar a reprodução áudio em tempo real, gerir listas de reprodução e navegar numa interface fluida, rápida e responsiva. O projeto foi construído com foco em performance e está alojado com integração contínua no Cloudflare Pages.',
@@ -1224,12 +1248,14 @@ export default function App() {
         pt: [
           'Pesquisa dinâmica e filtragem em tempo real',
           'Design moderno 100% responsivo para desktop e mobile',
-          'Alojamento de alto desempenho no Cloudflare Pages'
+          'Alojamento de alto desempenho no Cloudflare Pages',
+          'Controlo avançado de reprodução áudio em Single Page Application'
         ],
         en: [
           'Dynamic real-time search and filtering',
           '100% responsive modern design for mobile & desktop',
-          'High-performance hosting on Cloudflare Pages'
+          'High-performance hosting on Cloudflare Pages',
+          'Advanced audio playback control within a Single Page Application'
         ]
       },
       tags: ['React', 'JavaScript', 'CSS3', 'Cloudflare Pages'],
@@ -1238,8 +1264,46 @@ export default function App() {
     },
     {
       id: 2,
+      title: 'Fazbear Nightshift',
+      category: 'bots',
+      windowPath: 'src/bots/FazbearNightshift.js',
+      badge: {
+        pt: '🤖 Discord Bot PvP',
+        en: '🤖 Discord Bot PvP'
+      },
+      icon: <Bot size={22} className="accent" />,
+      description: t.projects.proj3Desc,
+      fullDesc: {
+        pt: 'O Fazbear Nightshift é um bot interativo avançado para Discord inspirado no universo Five Nights at Freddy\'s. Conta com mecânicas completas de combate PvP por turnos, sistema de inventário de itens, gestão de status em tempo real, economia interna e integração com slash commands da Discord API.',
+        en: 'Fazbear Nightshift is an advanced interactive Discord bot inspired by the Five Nights at Freddy\'s universe. It features turn-based PvP combat mechanics, item inventory system, real-time status management, virtual economy, and Discord API slash commands.'
+      },
+      features: {
+        pt: [
+          'Motor de batalha por turnos e lógica de jogo assíncrona',
+          'Integração de comandos slash modernos da Discord API',
+          'Gestão de inventário e persistência de dados de jogadores',
+          'Arquitetura modular em Node.js e JavaScript ES6+'
+        ],
+        en: [
+          'Turn-based battle engine & asynchronous game logic',
+          'Modern Discord API slash command integration',
+          'Inventory management and player data persistence',
+          'Modular Node.js and JavaScript ES6+ architecture'
+        ]
+      },
+      tags: ['Node.js', 'Discord.js', 'JavaScript', 'Async Logic', 'APIs'],
+      github: 'https://github.com/YvlLima/FazbearNightshift'
+    },
+    {
+      id: 3,
       title: 'Galeria Piso Dois (PAP)',
       category: 'cms',
+      windowPath: 'public_html/galeriapisodois.php',
+      badge: {
+        pt: '⭐ PAP Destaque (GPSI)',
+        en: '⭐ Top Diploma (PAP)'
+      },
+      icon: <Globe size={22} className="accent" />,
       description: t.projects.proj2Desc,
       fullDesc: {
         pt: 'A Galeria Piso Dois é o projeto de Prova de Aptidão Profissional (PAP) desenvolvido no âmbito do curso de Gestão e Programação de Sistemas Informáticos (GPSI) na Escola Secundária de Felgueiras. Consiste numa plataforma web comunitária e galeria digital construída sobre o CMS WordPress, permitindo a publicação, organização e arquivo dos trabalhos escolares dos alunos.',
@@ -1259,8 +1323,70 @@ export default function App() {
           'Final diploma project (PAP) with top evaluation'
         ]
       },
-      tags: ['WordPress', 'CMS', 'Web Design'],
+      tags: ['WordPress', 'CMS', 'PHP', 'Web Design', 'MySQL'],
       demo: 'https://galeriapisodois.esfelgueiras.pt/'
+    },
+    {
+      id: 4,
+      title: 'BagLess',
+      category: 'web',
+      windowPath: 'src/utils/BagLess.js',
+      badge: {
+        pt: '⚡ Produtividade & Utility',
+        en: '⚡ Productivity & Utility'
+      },
+      icon: <Zap size={22} className="accent" />,
+      description: t.projects.proj4Desc,
+      fullDesc: {
+        pt: 'O BagLess é um utilitário web intuitivo desenhado para auxiliar na organização de tarefas, produtividade e simplificação do dia a dia. Com uma interface minimalista e foco em velocidade, proporciona uma experiência fluida para estruturação de dados e gestão rápida.',
+        en: 'BagLess is an intuitive web utility designed to streamline task organization, productivity, and daily routines. With a minimalist interface and focus on speed, it delivers a smooth experience for data structuring and quick management.'
+      },
+      features: {
+        pt: [
+          'Interface rápida e intuitiva orientada a produtividade',
+          'Manipulação ágil de estado e armazenamento local',
+          'Estrutura modular e código limpo (Clean Code)'
+        ],
+        en: [
+          'Fast and intuitive productivity-oriented interface',
+          'Agile state manipulation and local storage persistence',
+          'Modular structure and Clean Code architecture'
+        ]
+      },
+      tags: ['JavaScript', 'HTML5', 'CSS3', 'UI/UX', 'Productivity'],
+      github: 'https://github.com/YvlLima/BagLess'
+    },
+    {
+      id: 5,
+      title: 'Portfólio Pessoal',
+      category: 'web',
+      windowPath: 'src/Portfolio.tsx',
+      badge: {
+        pt: '✨ Cyberpunk Web',
+        en: '✨ Cyberpunk Web'
+      },
+      icon: <Terminal size={22} className="accent" />,
+      description: t.projects.proj5Desc,
+      fullDesc: {
+        pt: 'O Portfólio Pessoal é uma Single Page Application desenvolvida em React + Vite. Apresenta design cyberpunk moderno com iluminação interativa Spotlight 3D, cursor responsivo sem atrasos, suporte bilingue (PT/EN), modais detalhados e sincronização em tempo real com a API pública do GitHub.',
+        en: 'The Personal Portfolio is a Single Page Application built with React + Vite. It features a modern cyberpunk aesthetic with interactive 3D spotlight effects, lag-free cursor, bilingual support (PT/EN), detailed modals, and real-time synchronization with GitHub API.'
+      },
+      features: {
+        pt: [
+          'Iluminação dinâmica Spotlight 3D com rastreio de cursor',
+          'Sincronização em direto com a REST API do GitHub (@YvlLima)',
+          'Formulário com envio de email real e suporte bilingue PT/EN',
+          'Arquitetura orientada a componentes modulares em React'
+        ],
+        en: [
+          'Dynamic 3D Spotlight lighting with cursor tracking',
+          'Live synchronization with GitHub REST API (@YvlLima)',
+          'Real email submission form and full bilingual PT/EN support',
+          'Modular component architecture built with React'
+        ]
+      },
+      tags: ['React', 'Vite', 'CSS Tokens', 'GitHub API', 'Design 3D'],
+      github: 'https://github.com/YvlLima/PortfolioPessoal'
     }
   ];
 
@@ -1577,6 +1703,11 @@ export default function App() {
               <h2 className="section-title">
                 <span className="number">03.</span> {t.projects.title}
               </h2>
+              {t.projects.subtitle && (
+                <p className="projects-subtitle-text">
+                  {t.projects.subtitle}
+                </p>
+              )}
 
               {/* Dynamic Project Filter Tabs */}
               <div className="filter-tabs">
@@ -1584,76 +1715,117 @@ export default function App() {
                   className={`filter-btn ${projectFilter === 'all' ? 'active' : ''}`}
                   onClick={() => setProjectFilter('all')}
                 >
-                  {t.projects.filterAll}
+                  {t.projects.filterAll} <span className="filter-count">({projects.length})</span>
                 </button>
                 <button
                   className={`filter-btn ${projectFilter === 'web' ? 'active' : ''}`}
                   onClick={() => setProjectFilter('web')}
                 >
-                  {t.projects.filterWeb}
+                  {t.projects.filterWeb} <span className="filter-count">({projects.filter(p => p.category === 'web').length})</span>
+                </button>
+                <button
+                  className={`filter-btn ${projectFilter === 'bots' ? 'active' : ''}`}
+                  onClick={() => setProjectFilter('bots')}
+                >
+                  {t.projects.filterBots} <span className="filter-count">({projects.filter(p => p.category === 'bots').length})</span>
                 </button>
                 <button
                   className={`filter-btn ${projectFilter === 'cms' ? 'active' : ''}`}
                   onClick={() => setProjectFilter('cms')}
                 >
-                  {t.projects.filterCms}
+                  {t.projects.filterCms} <span className="filter-count">({projects.filter(p => p.category === 'cms').length})</span>
                 </button>
               </div>
 
-              <div className="projects-grid">
+              <div className="projects-grid-v2">
                 {filteredProjects.map((proj) => (
                   <SpotlightCard
                     key={proj.id}
-                    className="project-card"
+                    className="project-card-v2"
                     onClick={() => setSelectedProject(proj)}
-                    title={lang === 'pt' ? 'Clique para ver detalhes do projeto' : 'Click to view project details'}
+                    title={lang === 'pt' ? 'Clique para ver arquitetura e detalhes completos' : 'Click to view full architecture & details'}
                   >
-                    <div>
-                      <div className="project-header">
-                        <FolderGit2 size={32} className="project-folder-icon" />
-                        <div className="project-links" onClick={(e) => e.stopPropagation()}>
-                          {proj.github && (
-                            <a
-                              href={proj.github}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="project-link-icon"
-                              title={t.projects.githubTitle}
-                            >
-                              <GithubIcon size={20} />
-                            </a>
-                          )}
-                          {proj.demo && (
-                            <a
-                              href={proj.demo}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="project-link-icon"
-                              title={t.projects.demoTitle}
-                            >
-                              <ExternalLink size={20} />
-                            </a>
-                          )}
-                        </div>
+                    {/* Terminal Window Header */}
+                    <div className="project-window-bar">
+                      <div className="window-dots">
+                        <span className="window-dot red" />
+                        <span className="window-dot yellow" />
+                        <span className="window-dot green" />
                       </div>
-
-                      <h3 className="project-title">{proj.title}</h3>
-                      <p className="project-desc">{proj.description}</p>
+                      <span className="window-title">{proj.windowPath}</span>
+                      {proj.badge && (
+                        <span className="project-badge-pill">{proj.badge[lang]}</span>
+                      )}
                     </div>
 
-                    <div>
-                      <ul className="project-tags">
+                    {/* Card Content Body */}
+                    <div className="project-card-body-v2">
+                      <div className="project-card-header-row">
+                        <div className="project-icon-box">
+                          {proj.icon}
+                        </div>
+                        <h3 className="project-title-v2">{proj.title}</h3>
+                      </div>
+
+                      <p className="project-desc-v2">{proj.description}</p>
+
+                      {/* Mini Feature Highlights */}
+                      {proj.features && proj.features[lang] && (
+                        <ul className="project-mini-highlights">
+                          {proj.features[lang].slice(0, 2).map((feat, i) => (
+                            <li key={i}>
+                              <Check size={13} className="accent" style={{ flexShrink: 0, marginTop: '2px' }} />
+                              <span>{feat}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+
+                    {/* Footer with Tags and Action Buttons */}
+                    <div className="project-card-bottom-v2">
+                      <ul className="project-tags-v2">
                         {proj.tags.map((tag, i) => (
-                          <li key={i} className="project-tag">
+                          <li key={i} className="project-tag-v2">
                             {tag}
                           </li>
                         ))}
                       </ul>
 
-                      <div className="project-card-footer-hint">
-                        <span className="project-click-hint">
-                          {lang === 'pt' ? 'Abrir projeto' : 'Open project'} <ChevronRight size={14} />
-                        </span>
+                      <div className="project-actions-row" onClick={(e) => e.stopPropagation()}>
+                        {proj.demo && (
+                          <a
+                            href={proj.demo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="project-action-btn primary"
+                            title={t.projects.demoTitle}
+                          >
+                            <ExternalLink size={14} />
+                            <span>{t.projects.btnLive}</span>
+                          </a>
+                        )}
+                        {proj.github && (
+                          <a
+                            href={proj.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="project-action-btn outline"
+                            title={t.projects.githubTitle}
+                          >
+                            <GithubIcon size={14} />
+                            <span>{t.projects.btnCode}</span>
+                          </a>
+                        )}
+                        <button
+                          type="button"
+                          className="project-action-btn info"
+                          onClick={() => setSelectedProject(proj)}
+                          title={lang === 'pt' ? 'Ver detalhes da arquitetura' : 'View architecture details'}
+                        >
+                          <Info size={14} />
+                          <span>{t.projects.btnDetails}</span>
+                        </button>
                       </div>
                     </div>
                   </SpotlightCard>
