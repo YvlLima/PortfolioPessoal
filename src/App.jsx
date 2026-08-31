@@ -296,7 +296,6 @@ export default function App() {
         lang={lang}
         toggleLanguage={toggleLanguage}
         t={t}
-        userEmail={userEmail}
         theme={theme}
         toggleTheme={toggleTheme}
         isDark={isDark}

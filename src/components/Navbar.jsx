@@ -8,7 +8,6 @@ export const Navbar = ({
   lang,
   toggleLanguage,
   t,
-  userEmail,
   toggleTheme,
   isDark
 }) => {
@@ -119,7 +118,7 @@ export const Navbar = ({
 
                 {/* Contact Action Button */}
                 <a
-                  href={`mailto:${userEmail}`}
+                  href="#contacto"
                   className="nav-cta-btn"
                   onClick={() => setMobileMenuOpen(false)}
                   title={t.nav.ctaBtn}
