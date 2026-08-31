@@ -39,7 +39,7 @@ export const Hero = ({
                   {t.hero.btnProjects} <ChevronRight size={18} />
                 </a>
                 <a
-                  href="/goncalolima-cv.pdf"
+                  href="/Goncalo_Lima_CV.pdf"
                   download="Goncalo_Lima_CV.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
