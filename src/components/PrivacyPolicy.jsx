@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ArrowLeft, ShieldCheck, Lock, EyeOff, Server, Mail, CheckCircle2, FileText } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, Lock, FileText, Server, Mail, ExternalLink } from 'lucide-react';
 import FadeInSection from './FadeInSection';
 import SpotlightCard from './SpotlightCard';
 
@@ -37,11 +37,11 @@ export const PrivacyPolicy = ({
             <span>{isPt ? 'Voltar ao início' : 'Back to home'}</span>
           </button>
 
-          {/* Privacy Header Card */}
+          {/* Header Card */}
           <SpotlightCard className="privacy-header-card">
             <div className="privacy-badge">
               <ShieldCheck size={16} className="accent" aria-hidden="true" />
-              <span>{isPt ? 'RGPD & PRIVACIDADE • COOKIELESS ANALYTICS' : 'GDPR & PRIVACY • COOKIELESS ANALYTICS'}</span>
+              <span>{isPt ? 'POLÍTICA DE PRIVACIDADE • RGPD' : 'PRIVACY POLICY • GDPR'}</span>
             </div>
 
             <h1 className="privacy-title">
@@ -50,8 +50,8 @@ export const PrivacyPolicy = ({
 
             <p className="privacy-lead">
               {isPt
-                ? 'Este website foi concebido com uma política de privacidade rigorosa e respeito absoluto pelos teus dados. Transparência total, sem cookies de rastreamento e sem partilha com terceiros.'
-                : 'This website was built with a strict privacy-first mindset and absolute respect for your data. Total transparency, no tracking cookies, and zero third-party sharing.'}
+                ? 'Informação sobre o tratamento de dados pessoais e privacidade no website goncalolima.pt, em cumprimento do Regulamento Geral sobre a Proteção de Dados (RGPD).'
+                : 'Information regarding the processing of personal data and privacy on goncalolima.pt, in compliance with the General Data Protection Regulation (GDPR).'}
             </p>
 
             <div className="privacy-meta-bar">
@@ -72,195 +72,203 @@ export const PrivacyPolicy = ({
             </div>
           </SpotlightCard>
 
-          {/* Key Highlights / Summary Grid */}
-          <div className="privacy-highlights-grid">
-            <SpotlightCard className="privacy-highlight-card">
-              <EyeOff size={24} className="accent" />
-              <h3>{isPt ? 'Sem Cookies de Tracking' : 'No Tracking Cookies'}</h3>
-              <p>
-                {isPt
-                  ? 'Não usamos cookies invasivos nem criamos perfis de navegação. Não necessitas de aceitar banners de cookies.'
-                  : 'We do not use invasive cookies or build tracking profiles. No annoying cookie banners needed.'}
-              </p>
+          {/* Numbered Sections Stack (Each in its own SpotlightCard) */}
+          <div className="privacy-cards-stack">
+            {/* 1. Identificação do Responsável */}
+            <SpotlightCard className="privacy-section-card">
+              <h2 className="privacy-section-heading">
+                <span className="privacy-sec-num">1.</span>
+                {isPt ? 'Identificação do Responsável' : 'Data Controller Identification'}
+              </h2>
+              <div className="privacy-section-content">
+                <p>
+                  {isPt
+                    ? 'O responsável pelo tratamento dos dados deste website é:'
+                    : 'The data controller responsible for this website is:'}
+                </p>
+                <ul className="privacy-list">
+                  <li><strong>{isPt ? 'Nome:' : 'Name:'}</strong> Gonçalo Martins de Lima</li>
+                  <li><strong>{isPt ? 'Website:' : 'Website:'}</strong> <a href="https://goncalolima.pt" target="_blank" rel="noopener noreferrer" className="privacy-link">goncalolima.pt</a></li>
+                  <li><strong>{isPt ? 'Email:' : 'Email:'}</strong> <a href={`mailto:${userEmail}`} className="privacy-link">{userEmail}</a></li>
+                </ul>
+              </div>
             </SpotlightCard>
 
-            <SpotlightCard className="privacy-highlight-card">
-              <ShieldCheck size={24} className="accent" />
-              <h3>{isPt ? 'Analytics 100% Anónimos' : '100% Anonymous Analytics'}</h3>
-              <p>
-                {isPt
-                  ? 'Métricas agregadas através do Plausible Analytics, sem gravação de endereço IP nem identificadores pessoais.'
-                  : 'Aggregated metrics powered by Plausible Analytics, without storing IP addresses or persistent identifiers.'}
-              </p>
+            {/* 2. Dados Recolhidos */}
+            <SpotlightCard className="privacy-section-card">
+              <h2 className="privacy-section-heading">
+                <span className="privacy-sec-num">2.</span>
+                {isPt ? 'Dados Recolhidos' : 'Collected Data'}
+              </h2>
+              <div className="privacy-section-content">
+                <ul className="privacy-list">
+                  <li>
+                    <strong>{isPt ? 'Analytics:' : 'Analytics:'}</strong> {isPt
+                      ? 'Plausible Analytics (dados técnicos agregados e anónimos, sem identificação individual, sem rastreamento entre sessões e sem armazenamento de endereços IP).'
+                      : 'Plausible Analytics (aggregated and anonymous technical data, without individual identification, cross-site tracking, or persistent IP storage).'}
+                  </li>
+                  <li>
+                    <strong>{isPt ? 'Formulário de contacto:' : 'Contact Form:'}</strong> {isPt
+                      ? 'Nome, email, assunto e mensagem, recolhidos unicamente mediante submissão voluntária pelo utilizador.'
+                      : 'Name, email address, subject, and message content, collected only upon voluntary submission by the user.'}
+                  </li>
+                </ul>
+              </div>
             </SpotlightCard>
 
-            <SpotlightCard className="privacy-highlight-card">
-              <Mail size={24} className="accent" />
-              <h3>{isPt ? 'Finalidade do Contacto' : 'Direct Contact Only'}</h3>
-              <p>
-                {isPt
-                  ? 'Os dados do formulário de contacto são usados exclusivamente para responder à tua mensagem e eliminados após a resposta.'
-                  : 'Contact form details are used solely to reply to your inquiry and deleted when no longer required.'}
-              </p>
-            </SpotlightCard>
-          </div>
-
-          {/* Structured Policy Content */}
-          <div className="privacy-body-wrapper">
-            <section className="privacy-section">
+            {/* 3. Finalidade do Tratamento */}
+            <SpotlightCard className="privacy-section-card">
               <h2 className="privacy-section-heading">
-                <span className="privacy-sec-num">01.</span>
-                {isPt ? 'Identificação do Responsável pelo Tratamento' : 'Data Controller Identification'}
+                <span className="privacy-sec-num">3.</span>
+                {isPt ? 'Finalidade do Tratamento' : 'Purposes of Processing'}
               </h2>
-              <p>
-                {isPt
-                  ? 'O responsável pelo tratamento dos dados deste website (goncalolima.pt) é:'
-                  : 'The data controller responsible for this website (goncalolima.pt) is:'}
-              </p>
-              <ul className="privacy-list">
-                <li><strong>{isPt ? 'Nome:' : 'Name:'}</strong> Gonçalo Martins de Lima</li>
-                <li><strong>{isPt ? 'Ocupação:' : 'Role:'}</strong> {isPt ? 'Estudante de CTeSP em Cibersegurança, Redes e Sistemas Informáticos (ESTG - Politécnico do Porto) & Desenvolvedor Júnior' : 'Cybersecurity, Networks & Systems Associate Student (ESTG - P.PORTO) & Junior Developer'}</li>
-                <li><strong>{isPt ? 'Website:' : 'Website:'}</strong> <a href="https://goncalolima.pt" target="_blank" rel="noopener noreferrer" className="privacy-link">https://goncalolima.pt</a></li>
-                <li><strong>{isPt ? 'Email de Contacto:' : 'Contact Email:'}</strong> <a href={`mailto:${userEmail}`} className="privacy-link">{userEmail}</a></li>
-                <li><strong>{isPt ? 'Localização:' : 'Location:'}</strong> Portugal, {isPt ? 'União Europeia' : 'European Union'}</li>
-              </ul>
-            </section>
-
-            <section className="privacy-section">
-              <h2 className="privacy-section-heading">
-                <span className="privacy-sec-num">02.</span>
-                {isPt ? 'Dados Recolhidos e Finalidades' : 'Collected Data & Purposes'}
-              </h2>
-              
-              <h3 className="privacy-subheading">
-                {isPt ? 'A. Estatísticas de Visitação (Plausible Analytics)' : 'A. Visitor Statistics (Plausible Analytics)'}
-              </h3>
-              <p>
-                {isPt
-                  ? 'Este site utiliza o Plausible Analytics para recolher métricas gerais de utilização de forma totalmente anónima e respeitadora da privacidade.'
-                  : 'This website uses Plausible Analytics to collect aggregate usage metrics in a completely anonymous and privacy-friendly manner.'}
-              </p>
-              <ul className="privacy-list">
-                <li>
-                  <strong>{isPt ? 'Sem Cookies:' : 'Cookieless:'}</strong> {isPt ? 'O Plausible não grava cookies, não usa localStorage e não coloca identificadores persistentes no teu dispositivo.' : 'Plausible does not store cookies, localStorage, or persistent identifiers on your device.'}
-                </li>
-                <li>
-                  <strong>{isPt ? 'Anonimização de IP:' : 'IP Anonymization:'}</strong> {isPt ? 'O teu endereço IP nunca é guardado em base de dados. É processado temporariamente apenas na memória volátil para gerar uma chave diária anonimizada e irreversível.' : 'Your IP address is never stored in any database. It is processed in volatile memory only to generate a daily irreversible hash.'}
-                </li>
-                <li>
-                  <strong>{isPt ? 'Dados agregados:' : 'Aggregated data:'}</strong> {isPt ? 'Recolhemos apenas informações técnicas genéricas como contagem de visualizações de páginas, páginas de referência (referrer), tipo de dispositivo (computador/telemóvel), sistema operativo e país de origem.' : 'We only collect generic statistics such as page view counts, referrer sources, device type, operating system, and approximate country of origin.'}
-                </li>
-                <li>
-                  <strong>{isPt ? 'Finalidade e Base Legal:' : 'Purpose & Legal Basis:'}</strong> {isPt ? 'A finalidade é estritamente estatística, para compreender o alcance e performance dos projetos técnicos expostos no portfólio (Interesse Legítimo, Art. 6.º, n.º 1, alínea f) do RGPD).' : 'The purpose is purely statistical to assess the performance of technical projects featured on the portfolio (Legitimate Interest, Art. 6(1)(f) GDPR).'}
-                </li>
-              </ul>
-
-              <h3 className="privacy-subheading">
-                {isPt ? 'B. Formulário de Contacto e Comunicação Direta' : 'B. Contact Form and Direct Communications'}
-              </h3>
-              <p>
-                {isPt
-                  ? 'Ao utilizar o formulário de contacto do site ou enviar uma mensagem por email:'
-                  : 'When you voluntarily use the website contact form or send an email:'}
-              </p>
-              <ul className="privacy-list">
-                <li>
-                  <strong>{isPt ? 'Dados fornecidos voluntariamente:' : 'Voluntarily provided data:'}</strong> {isPt ? 'Nome, endereço de email, assunto e texto da mensagem fornecidos pelo remetente.' : 'Name, email address, subject, and message text entered by the sender.'}
-                </li>
-                <li>
-                  <strong>{isPt ? 'Finalidade estrita:' : 'Strict Purpose:'}</strong> {isPt ? 'Os dados são utilizados única e exclusivamente para ler, analisar e responder à mensagem enviada (oportunidades profissionais, feedback sobre projetos ou questões técnicas).' : 'These details are used solely to read, evaluate, and reply to your inquiry (job opportunities, technical feedback, or questions).'}
-                </li>
-                <li>
-                  <strong>{isPt ? 'Sem Marketing / Sem Spam:' : 'No Marketing / No Spam:'}</strong> {isPt ? 'O teu email nunca será utilizado para marketing, newsletters automáticas ou qualquer tipo de comunicação não solicitada.' : 'Your email will never be used for marketing, newsletter subscriptions, or unsolicited messages.'}
-                </li>
-                <li>
-                  <strong>{isPt ? 'Conservação:' : 'Retention:'}</strong> {isPt ? 'Os emails são mantidos apenas enquanto a troca de mensagens for necessária para a finalidade de contacto, sendo eliminados periodicamente quando já não forem necessários.' : 'Emails are retained only for the duration needed to resolve the communication and deleted when no longer required.'}
-                </li>
-              </ul>
-            </section>
-
-            <section className="privacy-section">
-              <h2 className="privacy-section-heading">
-                <span className="privacy-sec-num">03.</span>
-                {isPt ? 'Política de Cookies' : 'Cookie Policy'}
-              </h2>
-              <p>
-                {isPt
-                  ? 'Este website não utiliza cookies de rastreio, cookies de terceiros publicitários ou ferramentas de monitorização comportamental.'
-                  : 'This website does not use tracking cookies, third-party advertising cookies, or behavioral monitoring tools.'}
-              </p>
-              <div className="privacy-callout">
-                <CheckCircle2 size={20} className="accent" />
-                <div>
-                  <strong>{isPt ? 'Sem necessidade de Cookie Banner' : 'No Cookie Banner Needed'}</strong>
-                  <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+              <div className="privacy-section-content">
+                <p>
+                  {isPt
+                    ? 'Os dados tratados destinam-se exclusivamente às seguintes finalidades:'
+                    : 'Personal data processed through this website is strictly used for:'}
+                </p>
+                <ul className="privacy-list">
+                  <li>
                     {isPt
-                      ? 'Uma vez que não são colocados cookies não-essenciais no teu navegador, este site não requer nem exibe banners de consentimento de cookies, respeitando as diretrizes da Diretiva e-Privacy e da CNPD.'
-                      : 'Because no non-essential tracking cookies are stored on your device, this website complies with the e-Privacy Directive without requiring intrusive cookie banners.'}
-                  </p>
+                      ? 'Estatísticas agregadas de utilização e desempenho do site.'
+                      : 'Aggregated website usage and performance statistics.'}
+                  </li>
+                  <li>
+                    {isPt
+                      ? 'Resposta e seguimento a mensagens submetidas via formulário de contacto ou email direto.'
+                      : 'Responding to and managing inquiries sent via the contact form or direct email.'}
+                  </li>
+                </ul>
+              </div>
+            </SpotlightCard>
+
+            {/* 4. Tabela de Cookies */}
+            <SpotlightCard className="privacy-section-card">
+              <h2 className="privacy-section-heading">
+                <span className="privacy-sec-num">4.</span>
+                {isPt ? 'Tabela de Cookies' : 'Cookie Table'}
+              </h2>
+              <div className="privacy-section-content">
+                <div className="privacy-table-container">
+                  <table className="privacy-table">
+                    <thead>
+                      <tr>
+                        <th>{isPt ? 'Nome' : 'Name'}</th>
+                        <th>{isPt ? 'Tipo' : 'Type'}</th>
+                        <th>{isPt ? 'Finalidade' : 'Purpose'}</th>
+                        <th>{isPt ? 'Duração' : 'Duration'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>theme_preference</code></td>
+                        <td>{isPt ? 'Técnico / Essencial' : 'Technical / Essential'}</td>
+                        <td>{isPt ? 'Guardar preferência de modo claro/escuro' : 'Store light/dark mode preference'}</td>
+                        <td>{isPt ? 'Persistente (localStorage)' : 'Persistent (localStorage)'}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            </section>
+            </SpotlightCard>
 
-            <section className="privacy-section">
+            {/* 5. Partilha de Dados */}
+            <SpotlightCard className="privacy-section-card">
               <h2 className="privacy-section-heading">
-                <span className="privacy-sec-num">04.</span>
-                {isPt ? 'Partilha de Dados com Terceiros' : 'Third-Party Data Sharing'}
+                <span className="privacy-sec-num">5.</span>
+                {isPt ? 'Partilha de Dados' : 'Data Sharing'}
               </h2>
-              <p>
-                {isPt
-                  ? 'Não existe qualquer venda, aluguer, cedência ou partilha de dados pessoais com terceiros ou redes de publicidade. Todo o tráfego do website é encriptado via HTTPS (SSL/TLS).'
-                  : 'We never sell, rent, lease, or share personal data with third parties or advertising networks. All website communication is strictly encrypted via HTTPS (SSL/TLS).'}
-              </p>
-            </section>
+              <div className="privacy-section-content">
+                <p>
+                  {isPt
+                    ? 'Não há partilha, venda, aluguer ou cedência de dados pessoais a terceiros.'
+                    : 'Personal data is never sold, rented, leased, or shared with third parties.'}
+                </p>
+              </div>
+            </SpotlightCard>
 
-            <section className="privacy-section">
+            {/* 6. Direitos do Titular (RGPD) */}
+            <SpotlightCard className="privacy-section-card">
               <h2 className="privacy-section-heading">
-                <span className="privacy-sec-num">05.</span>
-                {isPt ? 'Direitos do Titular dos Dados (RGPD)' : 'Your Rights under GDPR'}
+                <span className="privacy-sec-num">6.</span>
+                {isPt ? 'Direitos do Titular (RGPD)' : 'Data Subject Rights (GDPR)'}
               </h2>
-              <p>
-                {isPt
-                  ? 'Ao abrigo do Regulamento Geral sobre a Proteção de Dados (Regulamento UE 2016/679 - RGPD), tens garantidos os seguintes direitos:'
-                  : 'Under the General Data Protection Regulation (EU Regulation 2016/679 - GDPR), you have the right to:'}
-              </p>
-              <ul className="privacy-list">
-                <li><strong>{isPt ? 'Direito de Acesso:' : 'Right of Access:'}</strong> {isPt ? 'Confirmar se os teus dados são tratados e solicitar acesso aos mesmos.' : 'Confirm whether your data is processed and request a copy.'}</li>
-                <li><strong>{isPt ? 'Direito de Retificação:' : 'Right to Rectification:'}</strong> {isPt ? 'Solicitar a correção de dados incompletos ou incorretos.' : 'Request the correction of inaccurate or incomplete information.'}</li>
-                <li><strong>{isPt ? 'Direito ao Apagamento:' : 'Right to Erasure:'}</strong> {isPt ? 'Pedir a eliminação dos teus dados de contacto («direito a ser esquecido»).' : 'Request the permanent deletion of your contact data ("right to be forgotten").'}</li>
-                <li><strong>{isPt ? 'Direito à Limitação ou Oposição:' : 'Right to Restriction or Objection:'}</strong> {isPt ? 'Opor-te ou limitar o tratamento dos teus dados a qualquer momento.' : 'Object to or restrict the processing of your data at any time.'}</li>
-                <li>
-                  <strong>{isPt ? 'Direito de Reclamação:' : 'Right to Lodge a Complaint:'}</strong> {isPt ? 'Tens o direito de apresentar uma reclamação formal junto da autoridade de controlo competente em Portugal:' : 'You have the right to lodge a formal complaint with the supervisory authority in Portugal:'}
-                  <div style={{ marginTop: '0.4rem', paddingLeft: '0.5rem', color: 'var(--text-muted)', fontSize: '0.88rem' }}>
-                    CNPD — Comissão Nacional de Proteção de Dados (<a href="https://www.cnpd.pt" target="_blank" rel="noopener noreferrer" className="privacy-link">www.cnpd.pt</a>)
-                  </div>
-                </li>
-              </ul>
-            </section>
+              <div className="privacy-section-content">
+                <p>
+                  {isPt
+                    ? 'Ao abrigo do RGPD (Regulamento UE 2016/679), o titular dos dados tem direito a solicitar:'
+                    : 'Under the GDPR (EU Regulation 2016/679), data subjects have the right to request:'}
+                </p>
+                <ul className="privacy-list">
+                  <li><strong>{isPt ? 'Acesso:' : 'Access:'}</strong> {isPt ? 'Confirmação e cópia dos dados pessoais tratados.' : 'Confirmation and copy of processed personal data.'}</li>
+                  <li><strong>{isPt ? 'Retificação:' : 'Rectification:'}</strong> {isPt ? 'Correção de dados inexatos ou desatualizados.' : 'Correction of inaccurate or incomplete data.'}</li>
+                  <li><strong>{isPt ? 'Apagamento:' : 'Erasure:'}</strong> {isPt ? 'Eliminação dos dados pessoais («direito a ser esquecido»).' : 'Deletion of personal data ("right to be forgotten").'}</li>
+                  <li><strong>{isPt ? 'Limitação:' : 'Restriction:'}</strong> {isPt ? 'Limitação do tratamento em circunstâncias específicas.' : 'Restriction of data processing under specified conditions.'}</li>
+                  <li><strong>{isPt ? 'Oposição:' : 'Objection:'}</strong> {isPt ? 'Oposição ao tratamento dos seus dados.' : 'Objection to personal data processing.'}</li>
+                  <li><strong>{isPt ? 'Portabilidade:' : 'Portability:'}</strong> {isPt ? 'Receção dos dados em formato estruturado de leitura automática.' : 'Receipt of personal data in a structured, machine-readable format.'}</li>
+                  <li>
+                    <strong>{isPt ? 'Reclamação à CNPD:' : 'Complaint to Supervisory Authority:'}</strong> {isPt
+                      ? 'Direito de apresentar reclamação junto da autoridade de controlo nacional: '
+                      : 'Right to lodge a complaint with the Portuguese Data Protection Authority: '}
+                    <a href="https://www.cnpd.pt" target="_blank" rel="noopener noreferrer" className="privacy-link" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <span>CNPD — Comissão Nacional de Proteção de Dados (www.cnpd.pt)</span>
+                      <ExternalLink size={12} aria-hidden="true" />
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </SpotlightCard>
 
-            <section className="privacy-section">
+            {/* 7. Retenção de Dados */}
+            <SpotlightCard className="privacy-section-card">
               <h2 className="privacy-section-heading">
-                <span className="privacy-sec-num">06.</span>
-                {isPt ? 'Contacto para Exercício de Direitos' : 'Contact to Exercise Your Rights'}
+                <span className="privacy-sec-num">7.</span>
+                {isPt ? 'Retenção de Dados' : 'Data Retention'}
               </h2>
-              <p>
-                {isPt
-                  ? 'Para exercer qualquer um dos teus direitos ao abrigo do RGPD, esclarecer qualquer dúvida ou solicitar a eliminação de mensagens anteriores, contacta diretamente:'
-                  : 'To exercise any of your GDPR rights or request the deletion of previous messages, please contact directly:'}
-              </p>
+              <div className="privacy-section-content">
+                <p>
+                  {isPt
+                    ? 'As mensagens de contacto são guardadas apenas durante o tempo necessário para responder e dar seguimento à comunicação. Os dados de analytics são agregados e não contêm identificadores individuais.'
+                    : 'Contact messages are retained only for the duration required to reply and follow up on the inquiry. Analytics data is aggregated and does not contain individual identifiers.'}
+                </p>
+              </div>
+            </SpotlightCard>
 
-              <div className="privacy-contact-box">
-                <Mail size={22} className="accent" />
-                <div>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                    {isPt ? 'Email Oficial para Assuntos de Privacidade:' : 'Official Email for Privacy Inquiries:'}
-                  </span>
+            {/* 8. Contacto */}
+            <SpotlightCard className="privacy-section-card">
+              <h2 className="privacy-section-heading">
+                <span className="privacy-sec-num">8.</span>
+                {isPt ? 'Contacto' : 'Contact'}
+              </h2>
+              <div className="privacy-section-content">
+                <p>
+                  {isPt
+                    ? 'Para exercer qualquer um dos direitos previstos no RGPD ou colocar questões sobre esta política:'
+                    : 'To exercise any GDPR rights or inquire about this policy:'}
+                </p>
+                <div className="privacy-contact-box">
+                  <Mail size={20} className="accent" aria-hidden="true" />
                   <a href={`mailto:${userEmail}`} className="privacy-contact-email">
                     {userEmail}
                   </a>
                 </div>
               </div>
-            </section>
+            </SpotlightCard>
+
+            {/* 9. Data de última atualização */}
+            <SpotlightCard className="privacy-section-card">
+              <h2 className="privacy-section-heading">
+                <span className="privacy-sec-num">9.</span>
+                {isPt ? 'Data de Última Atualização' : 'Last Updated Date'}
+              </h2>
+              <div className="privacy-section-content">
+                <p style={{ margin: 0 }}>
+                  {isPt ? 'Esta política de privacidade foi atualizada em ' : 'This privacy policy was last updated in '}
+                  <strong>{isPt ? 'Março de 2026' : 'March 2026'}</strong>.
+                </p>
+              </div>
+            </SpotlightCard>
           </div>
 
           {/* Bottom Navigation Bar */}
