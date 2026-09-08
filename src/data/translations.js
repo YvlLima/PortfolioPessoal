@@ -147,7 +147,8 @@ export const contentTranslations = {
     },
     footer: {
       designedBy: 'Desenhado & Criado por',
-      sub: 'ESTG (P.PORTO) — CTeSP em Cibersegurança, Redes e Sistemas Informáticos'
+      sub: 'ESTG (P.PORTO) — CTeSP em Cibersegurança, Redes e Sistemas Informáticos',
+      privacyPolicy: 'Política de Privacidade'
     }
   },
   en: {
@@ -297,7 +298,8 @@ export const contentTranslations = {
     },
     footer: {
       designedBy: 'Designed & Built by',
-      sub: 'ESTG (P.PORTO) — Cybersecurity, Networks & Systems'
+      sub: 'ESTG (P.PORTO) — Cybersecurity, Networks & Systems',
+      privacyPolicy: 'Privacy Policy'
     }
   }
 };

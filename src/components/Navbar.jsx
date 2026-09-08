@@ -9,7 +9,8 @@ export const Navbar = ({
   toggleLanguage,
   t,
   toggleTheme,
-  isDark
+  isDark,
+  onNavigateHome
 }) => {
   const navLinks = [
     { id: 'sobre', label: t.nav.sobre, num: '01.' },
@@ -20,6 +21,11 @@ export const Navbar = ({
     { id: 'educacao', label: t.nav.educacao, num: '06.' },
     { id: 'contacto', label: t.nav.contacto, num: '07.' },
   ];
+
+  const handleLinkClick = () => {
+    setMobileMenuOpen(false);
+    if (onNavigateHome) onNavigateHome();
+  };
 
   const themeLabel = lang === 'pt'
     ? (isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro')
@@ -37,7 +43,12 @@ export const Navbar = ({
       <header className="header">
         <div className="container nav-container">
           {/* Brand Logo */}
-          <a href="#hero" className="logo" aria-label="Gonçalo Lima - Página Inicial">
+          <a
+            href="#hero"
+            className="logo"
+            aria-label="Gonçalo Lima - Página Inicial"
+            onClick={handleLinkClick}
+          >
             <Terminal size={20} className="accent" aria-hidden="true" />
             <span>dev<span className="accent">.lima</span></span>
           </a>
@@ -66,7 +77,7 @@ export const Navbar = ({
                   <a
                     href={`#${link.id}`}
                     className={`nav-link ${activeSection === link.id ? 'active' : ''}`}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={handleLinkClick}
                   >
                     <span className="num">{link.num}</span>
                     <span className="txt">{link.label}</span>
@@ -120,7 +131,7 @@ export const Navbar = ({
                 <a
                   href="#contacto"
                   className="nav-cta-btn"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={handleLinkClick}
                   title={t.nav.ctaBtn}
                   aria-label={t.nav.ctaBtn}
                 >
@@ -130,6 +141,7 @@ export const Navbar = ({
               </li>
             </ul>
           </nav>
+
 
           {/* Mobile Hamburger Toggle Button */}
           <button

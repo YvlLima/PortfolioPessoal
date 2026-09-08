@@ -12,6 +12,7 @@ import GitHubLive from './components/GitHubLive';
 import Now from './components/Now';
 import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import Education from './components/Education';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
@@ -30,6 +31,12 @@ import { getTimelineItems, getCertifications } from './data/timeline';
 import { getRecommendationLetters } from './data/recommendations';
 import { getAllPosts } from './utils/blog';
 
+const isPrivacyRoute = (path, hash) => {
+  const p = (path || '').toLowerCase();
+  const h = (hash || '').toLowerCase();
+  return p === '/privacidade' || p === '/privacy' || p === '/politica-de-privacidade' || h === '#privacidade' || h === '#privacy';
+};
+
 export default function App() {
   const { theme, toggleTheme, isDark } = useTheme();
   const [lang, setLang] = useState('pt'); // 'pt' | 'en'
@@ -39,6 +46,12 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [selectedInfoModal, setSelectedInfoModal] = useState(null);
   const [selectedBlogPost, setSelectedBlogPost] = useState(null);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return isPrivacyRoute(window.location.pathname, window.location.hash);
+    }
+    return false;
+  });
 
   // GitHub Live Activity State
   const [githubTab, setGithubTab] = useState('repos'); // 'repos' | 'activity' | 'stats' | 'contributions'
@@ -191,12 +204,70 @@ export default function App() {
     fetchGitHubLive();
   }, []);
 
+  // Sync with browser history and URL routes (popstate and hashchange)
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const isPriv = isPrivacyRoute(window.location.pathname, window.location.hash);
+      setIsPrivacyOpen(isPriv);
+      if (isPriv) {
+        setSelectedBlogPost(null);
+      }
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
+  }, []);
+
+  const handleOpenPrivacy = (e) => {
+    if (e) e.preventDefault();
+    setSelectedBlogPost(null);
+    setSelectedProject(null);
+    setSelectedInfoModal(null);
+    setIsPrivacyOpen(true);
+    try {
+      window.history.pushState({ view: 'privacy' }, '', '/privacidade');
+    } catch {
+      // Fallback in environments without history pushState support
+      window.location.hash = 'privacidade';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleClosePrivacy = () => {
+    setIsPrivacyOpen(false);
+    try {
+      window.history.pushState({ view: 'home' }, '', '/');
+    } catch {
+      window.location.hash = '';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNavigateHome = () => {
+    if (isPrivacyOpen) {
+      setIsPrivacyOpen(false);
+      try {
+        window.history.pushState({ view: 'home' }, '', '/');
+      } catch {}
+    }
+    if (selectedBlogPost) {
+      setSelectedBlogPost(null);
+    }
+  };
+
   const t = contentTranslations[lang];
 
-  // Fechar modals e artigo de blog ao premir Escape
+  // Fechar modals, artigo de blog e privacidade ao premir Escape
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
+        if (isPrivacyOpen) {
+          handleClosePrivacy();
+        }
         setSelectedProject(null);
         setSelectedInfoModal(null);
         setSelectedBlogPost(null);
@@ -205,7 +276,7 @@ export default function App() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [isPrivacyOpen]);
 
   // Lock body scroll when mobile menu or modal is open
   useEffect(() => {
@@ -221,7 +292,7 @@ export default function App() {
 
   // Active section spy
   useEffect(() => {
-    if (selectedBlogPost) return;
+    if (selectedBlogPost || isPrivacyOpen) return;
 
     const handleScroll = () => {
       const sections = ['hero', 'sobre', 'skills', 'projetos', 'agora', 'blog', 'educacao', 'contacto'];
@@ -241,7 +312,7 @@ export default function App() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [selectedBlogPost]);
+  }, [selectedBlogPost, isPrivacyOpen]);
 
   // Email & Links do Gonçalo
   const userEmail = "goncalomartinslima2007@gmail.com";
@@ -290,7 +361,7 @@ export default function App() {
 
       {/* Navigation Header */}
       <Navbar
-        activeSection={selectedBlogPost ? 'blog' : activeSection}
+        activeSection={isPrivacyOpen ? '' : (selectedBlogPost ? 'blog' : activeSection)}
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
         lang={lang}
@@ -299,10 +370,19 @@ export default function App() {
         theme={theme}
         toggleTheme={toggleTheme}
         isDark={isDark}
+        onNavigateHome={handleNavigateHome}
       />
 
       <main>
-        {selectedBlogPost ? (
+        {isPrivacyOpen ? (
+          /* Vista de Política de Privacidade */
+          <PrivacyPolicy
+            onBack={handleClosePrivacy}
+            t={t}
+            lang={lang}
+            userEmail={userEmail}
+          />
+        ) : selectedBlogPost ? (
           /* Vista de Artigo Individual */
           <BlogPost
             post={selectedBlogPost}
@@ -408,7 +488,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer t={t} />
+      <Footer t={t} onOpenPrivacy={handleOpenPrivacy} />
 
       {/* Modals */}
       <Modal
@@ -422,3 +502,4 @@ export default function App() {
     </div>
   );
 }
+

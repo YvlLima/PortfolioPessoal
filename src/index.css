@@ -3600,11 +3600,251 @@ a, button, input, textarea, select {
   align-items: center;
 }
 
+/* ==========================================================================
+   Privacy Policy View & Cyberpunk Tokens
+   ========================================================================== */
+.privacy-policy-view {
+  animation: fadeIn 0.3s ease-out forwards;
+}
 
+.privacy-header-card {
+  padding: 2.25rem;
+  margin-bottom: 2rem;
+  border-radius: var(--radius-md);
+}
 
+.privacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(100, 255, 218, 0.08);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-full);
+  font-family: var(--font-code);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.5px;
+}
 
+.privacy-title {
+  font-size: clamp(2rem, 4.5vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
 
+.privacy-lead {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
 
+.privacy-meta-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  font-family: var(--font-code);
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.25rem;
+}
 
+.privacy-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
 
+.privacy-meta-dot {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.privacy-highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (max-width: 860px) {
+  .privacy-highlights-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.privacy-highlight-card {
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.privacy-highlight-card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.privacy-highlight-card p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.privacy-body-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 2.5rem 2.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+@media (max-width: 768px) {
+  .privacy-body-wrapper {
+    padding: 1.75rem 1.25rem;
+    gap: 2rem;
+  }
+}
+
+.privacy-section {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 2rem;
+}
+
+.privacy-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.privacy-section-heading {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.privacy-sec-num {
+  font-family: var(--font-code);
+  font-size: 1.05rem;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.privacy-subheading {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.6rem;
+  color: var(--text-primary);
+}
+
+.privacy-section p {
+  color: var(--text-secondary);
+  font-size: 0.98rem;
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.privacy-list {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.privacy-list li {
+  margin-bottom: 0.6rem;
+}
+
+.privacy-list li strong {
+  color: var(--text-primary);
+}
+
+.privacy-link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity var(--transition-fast);
+}
+
+.privacy-link:hover {
+  opacity: 0.8;
+}
+
+.privacy-callout {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.2rem;
+  background: rgba(100, 255, 218, 0.05);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-sm);
+  margin: 1.25rem 0;
+}
+
+.privacy-contact-box {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  margin-top: 1.25rem;
+}
+
+.privacy-contact-email {
+  display: block;
+  font-family: var(--font-code);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 0.25rem;
+  transition: opacity var(--transition-fast);
+}
+
+.privacy-contact-email:hover {
+  opacity: 0.85;
+  text-decoration: underline;
+}
+
+/* Footer discreet privacy link */
+.footer-privacy-row {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+}
+
+.footer-privacy-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: var(--font-code);
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+  border-bottom: 1px dashed transparent;
+  padding-bottom: 1px;
+}
+
+.footer-privacy-link:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
 
