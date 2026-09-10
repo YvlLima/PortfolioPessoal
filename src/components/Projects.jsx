@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, ExternalLink, Info, FolderGit2 } from 'lucide-react';
+import { Check, ExternalLink, Info, FolderGit2, Sparkles, ArrowRight } from 'lucide-react';
 import FadeInSection from './FadeInSection';
 import SpotlightCard from './SpotlightCard';
 
@@ -7,7 +7,9 @@ export const Projects = ({
   t,
   lang,
   projects,
-  onSelectProject
+  onSelectProject,
+  onOpenProjectsList,
+  onOpenCaseStudy
 }) => {
   const [projectFilter, setProjectFilter] = useState('all');
 
@@ -20,14 +22,31 @@ export const Projects = ({
     <section id="projetos" className="section">
       <div className="container">
         <FadeInSection>
-          <h2 className="section-title">
-            <span className="number">03.</span> {t.projects.title}
-          </h2>
-          {t.projects.subtitle && (
-            <p className="projects-subtitle-text">
-              {t.projects.subtitle}
-            </p>
-          )}
+          <div className="section-header-row" style={{ alignItems: 'flex-start' }}>
+            <div>
+              <h2 className="section-title">
+                <span className="number">03.</span> {t.projects.title}
+              </h2>
+              {t.projects.subtitle && (
+                <p className="projects-subtitle-text">
+                  {t.projects.subtitle}
+                </p>
+              )}
+            </div>
+
+            {onOpenProjectsList && (
+              <button
+                type="button"
+                onClick={onOpenProjectsList}
+                className="projects-case-studies-banner-btn"
+                title={lang === 'pt' ? 'Ver análise aprofundada de arquitetura' : 'View in-depth architecture breakdown'}
+              >
+                <Sparkles size={14} className="accent" />
+                <span>{lang === 'pt' ? 'Case Studies de Engenharia (/projetos)' : 'Engineering Case Studies (/projetos)'}</span>
+                <ArrowRight size={14} />
+              </button>
+            )}
+          </div>
 
           {/* Dynamic Project Filter Tabs */}
           <div className="filter-tabs">
@@ -138,15 +157,39 @@ export const Projects = ({
                         <span>{t.projects.btnCode}</span>
                       </a>
                     )}
-                    <button
-                      type="button"
-                      className="project-action-btn info"
-                      onClick={() => onSelectProject(proj)}
-                      title={lang === 'pt' ? 'Ver detalhes da arquitetura' : 'View architecture details'}
-                    >
-                      <Info size={14} />
-                      <span>{t.projects.btnDetails}</span>
-                    </button>
+                    {(() => {
+                      const lowerTitle = (proj.title || '').toLowerCase();
+                      let caseStudySlug = null;
+                      if (lowerTitle.includes('bagless')) caseStudySlug = 'bagless';
+                      else if (lowerTitle.includes('music')) caseStudySlug = 'musichub';
+                      else if (lowerTitle.includes('fazbear')) caseStudySlug = 'fazbear-nightshift';
+
+                      if (caseStudySlug && onOpenCaseStudy) {
+                        return (
+                          <button
+                            type="button"
+                            className="project-action-btn case-study"
+                            onClick={() => onOpenCaseStudy(caseStudySlug)}
+                            title={lang === 'pt' ? 'Ver Case Study Completo de Engenharia' : 'View Full Engineering Case Study'}
+                          >
+                            <Sparkles size={14} className="accent" />
+                            <span>{t.projects.btnCaseStudies || 'Case Study'}</span>
+                          </button>
+                        );
+                      }
+
+                      return (
+                        <button
+                          type="button"
+                          className="project-action-btn info"
+                          onClick={() => onSelectProject(proj)}
+                          title={lang === 'pt' ? 'Ver detalhes da arquitetura' : 'View architecture details'}
+                        >
+                          <Info size={14} />
+                          <span>{t.projects.btnDetails}</span>
+                        </button>
+                      );
+                    })()}
                   </div>
                 </div>
               </SpotlightCard>

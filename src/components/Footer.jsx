@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Footer = ({ t, onOpenPrivacy }) => {
+export const Footer = ({ t, onOpenPrivacy, onOpenProjectsList }) => {
   return (
     <footer className="footer">
       <div className="container">
@@ -12,11 +12,24 @@ export const Footer = ({ t, onOpenPrivacy }) => {
         </p>
         <div className="footer-privacy-row">
           <a
+            href="/projetos"
+            onClick={(e) => {
+              if (onOpenProjectsList) {
+                e.preventDefault();
+                onOpenProjectsList(e);
+              }
+            }}
+            className="footer-privacy-link"
+          >
+            {t.nav.projetos} (Case Studies)
+          </a>
+          <span style={{ color: 'var(--text-muted)' }}>•</span>
+          <a
             href="/privacidade"
             onClick={(e) => {
               if (onOpenPrivacy) {
                 e.preventDefault();
-                onOpenPrivacy();
+                onOpenPrivacy(e);
               }
             }}
             className="footer-privacy-link"

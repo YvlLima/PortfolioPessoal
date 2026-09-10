@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 // Components
 import SimpleCursor from './components/SimpleCursor';
@@ -13,6 +13,8 @@ import Now from './components/Now';
 import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import ProjectsList from './components/ProjectsList';
+import ProjectCaseStudy from './components/ProjectCaseStudy';
 import Education from './components/Education';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
@@ -29,12 +31,38 @@ import { getProjects } from './data/projects';
 import { getNowProjects } from './data/nowProjects';
 import { getTimelineItems, getCertifications } from './data/timeline';
 import { getRecommendationLetters } from './data/recommendations';
+import { getCaseStudyBySlug } from './data/projectsData';
 import { getAllPosts } from './utils/blog';
 
 const isPrivacyRoute = (path, hash) => {
   const p = (path || '').toLowerCase();
   const h = (hash || '').toLowerCase();
   return p === '/privacidade' || p === '/privacy' || p === '/politica-de-privacidade' || h === '#privacidade' || h === '#privacy';
+};
+
+const getCaseStudyRoute = (path, hash) => {
+  const p = (path || '').toLowerCase();
+  const h = (hash || '').toLowerCase();
+
+  const matchPathDetail = p.match(/^\/(?:projetos|projects)\/([a-z0-9_-]+)\/?$/);
+  if (matchPathDetail && matchPathDetail[1]) {
+    return { type: 'detail', slug: matchPathDetail[1] };
+  }
+
+  if (p === '/projetos' || p === '/projects') {
+    return { type: 'list', slug: null };
+  }
+
+  const matchHashDetail = h.match(/^#(?:projetos|projects)\/([a-z0-9_-]+)$/);
+  if (matchHashDetail && matchHashDetail[1]) {
+    return { type: 'detail', slug: matchHashDetail[1] };
+  }
+
+  if (h === '#projetos-cases' || h === '#cases' || h === '#projetos-list') {
+    return { type: 'list', slug: null };
+  }
+
+  return null;
 };
 
 export default function App() {
@@ -51,6 +79,12 @@ export default function App() {
       return isPrivacyRoute(window.location.pathname, window.location.hash);
     }
     return false;
+  });
+  const [caseStudyRoute, setCaseStudyRoute] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return getCaseStudyRoute(window.location.pathname, window.location.hash);
+    }
+    return null;
   });
 
   // GitHub Live Activity State
@@ -208,9 +242,15 @@ export default function App() {
   useEffect(() => {
     const handleLocationChange = () => {
       const isPriv = isPrivacyRoute(window.location.pathname, window.location.hash);
+      const csRoute = getCaseStudyRoute(window.location.pathname, window.location.hash);
+
       setIsPrivacyOpen(isPriv);
-      if (isPriv) {
+      setCaseStudyRoute(csRoute);
+
+      if (isPriv || csRoute) {
         setSelectedBlogPost(null);
+        setSelectedProject(null);
+        setSelectedInfoModal(null);
       }
     };
 
@@ -223,10 +263,11 @@ export default function App() {
   }, []);
 
   const handleOpenPrivacy = (e) => {
-    if (e) e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     setSelectedBlogPost(null);
     setSelectedProject(null);
     setSelectedInfoModal(null);
+    setCaseStudyRoute(null);
     setIsPrivacyOpen(true);
     try {
       window.history.pushState({ view: 'privacy' }, '', '/privacidade');
@@ -237,7 +278,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleClosePrivacy = () => {
+  const handleClosePrivacy = useCallback(() => {
     setIsPrivacyOpen(false);
     try {
       window.history.pushState({ view: 'home' }, '', '/');
@@ -245,28 +286,73 @@ export default function App() {
       window.location.hash = '';
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
 
-  const handleNavigateHome = () => {
-    if (isPrivacyOpen) {
-      setIsPrivacyOpen(false);
-      try {
-        window.history.pushState({ view: 'home' }, '', '/');
-      } catch {}
+  const handleOpenProjectsList = useCallback((e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setSelectedBlogPost(null);
+    setSelectedProject(null);
+    setSelectedInfoModal(null);
+    setIsPrivacyOpen(false);
+    setCaseStudyRoute({ type: 'list', slug: null });
+    try {
+      window.history.pushState({ view: 'projects_list' }, '', '/projetos');
+    } catch {
+      window.location.hash = 'projetos-cases';
     }
-    if (selectedBlogPost) {
-      setSelectedBlogPost(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const handleOpenCaseStudy = useCallback((slug) => {
+    setSelectedBlogPost(null);
+    setSelectedProject(null);
+    setSelectedInfoModal(null);
+    setIsPrivacyOpen(false);
+    setCaseStudyRoute({ type: 'detail', slug });
+    try {
+      window.history.pushState({ view: 'project_detail', slug }, '', `/projetos/${slug}`);
+    } catch {
+      window.location.hash = `projetos/${slug}`;
     }
-  };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const handleBackToProjectsList = useCallback(() => {
+    setCaseStudyRoute({ type: 'list', slug: null });
+    try {
+      window.history.pushState({ view: 'projects_list' }, '', '/projetos');
+    } catch {
+      window.location.hash = 'projetos-cases';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const handleNavigateHome = useCallback(() => {
+    setIsPrivacyOpen(false);
+    setCaseStudyRoute(null);
+    setSelectedBlogPost(null);
+    try {
+      window.history.pushState({ view: 'home' }, '', '/');
+    } catch {
+      window.location.hash = '';
+    }
+  }, []);
 
   const t = contentTranslations[lang];
 
-  // Fechar modals, artigo de blog e privacidade ao premir Escape
+  // Fechar modals, artigo de blog, case studies e privacidade ao premir Escape
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         if (isPrivacyOpen) {
           handleClosePrivacy();
+        }
+        if (caseStudyRoute) {
+          if (caseStudyRoute.type === 'detail') {
+            handleBackToProjectsList();
+          } else {
+            handleNavigateHome();
+          }
         }
         setSelectedProject(null);
         setSelectedInfoModal(null);
@@ -276,7 +362,7 @@ export default function App() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isPrivacyOpen]);
+  }, [isPrivacyOpen, caseStudyRoute, handleClosePrivacy, handleBackToProjectsList, handleNavigateHome]);
 
   // Lock body scroll when mobile menu or modal is open
   useEffect(() => {
@@ -292,7 +378,7 @@ export default function App() {
 
   // Active section spy
   useEffect(() => {
-    if (selectedBlogPost || isPrivacyOpen) return;
+    if (selectedBlogPost || isPrivacyOpen || caseStudyRoute) return;
 
     const handleScroll = () => {
       const sections = ['hero', 'sobre', 'skills', 'projetos', 'agora', 'blog', 'educacao', 'contacto'];
@@ -312,7 +398,7 @@ export default function App() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [selectedBlogPost, isPrivacyOpen]);
+  }, [selectedBlogPost, isPrivacyOpen, caseStudyRoute]);
 
   // Email & Links do Gonçalo
   const userEmail = "goncalomartinslima2007@gmail.com";
@@ -344,6 +430,14 @@ export default function App() {
   const certifications = getCertifications(lang);
   const recommendationLetters = getRecommendationLetters(lang);
 
+  const activeNavSection = isPrivacyOpen
+    ? ''
+    : caseStudyRoute
+    ? 'projetos'
+    : selectedBlogPost
+    ? 'blog'
+    : activeSection;
+
   return (
     <div className="portfolio-app" onClick={handleGlobalClick}>
       {/* Minimalist Dot + Soft Ring Cursor */}
@@ -361,7 +455,7 @@ export default function App() {
 
       {/* Navigation Header */}
       <Navbar
-        activeSection={isPrivacyOpen ? '' : (selectedBlogPost ? 'blog' : activeSection)}
+        activeSection={activeNavSection}
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
         lang={lang}
@@ -381,6 +475,24 @@ export default function App() {
             t={t}
             lang={lang}
             userEmail={userEmail}
+          />
+        ) : caseStudyRoute?.type === 'detail' ? (
+          /* Vista de Case Study Individual (/projetos/:slug) */
+          <ProjectCaseStudy
+            project={getCaseStudyBySlug(caseStudyRoute.slug)}
+            onBackToProjects={handleBackToProjectsList}
+            onSelectCaseStudy={handleOpenCaseStudy}
+            onBackHome={handleNavigateHome}
+            t={t}
+            lang={lang}
+          />
+        ) : caseStudyRoute?.type === 'list' ? (
+          /* Vista de Lista de Case Studies (/projetos) */
+          <ProjectsList
+            onSelectCaseStudy={handleOpenCaseStudy}
+            onBackHome={handleNavigateHome}
+            t={t}
+            lang={lang}
           />
         ) : selectedBlogPost ? (
           /* Vista de Artigo Individual */
@@ -431,6 +543,8 @@ export default function App() {
               lang={lang}
               projects={projects}
               onSelectProject={(proj) => setSelectedProject(proj)}
+              onOpenProjectsList={handleOpenProjectsList}
+              onOpenCaseStudy={handleOpenCaseStudy}
             />
 
             <div className="container">
@@ -488,7 +602,11 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer t={t} onOpenPrivacy={handleOpenPrivacy} />
+      <Footer
+        t={t}
+        onOpenPrivacy={handleOpenPrivacy}
+        onOpenProjectsList={handleOpenProjectsList}
+      />
 
       {/* Modals */}
       <Modal

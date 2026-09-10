@@ -79,7 +79,9 @@ export const contentTranslations = {
       demoTitle: 'Ver Demo Ao Vivo',
       btnLive: 'Demo Ao Vivo',
       btnCode: 'GitHub',
-      btnDetails: 'Detalhes'
+      btnDetails: 'Detalhes',
+      btnCaseStudies: 'Case Studies',
+      viewCaseStudiesBanner: 'Explorar Case Studies de Engenharia (/projetos)'
     },
     githubLive: {
       badge: 'Live Sync • GitHub API',
@@ -230,7 +232,9 @@ export const contentTranslations = {
       demoTitle: 'View Live Demo',
       btnLive: 'Live Demo',
       btnCode: 'GitHub',
-      btnDetails: 'Details'
+      btnDetails: 'Details',
+      btnCaseStudies: 'Case Studies',
+      viewCaseStudiesBanner: 'Explore Engineering Case Studies (/projetos)'
     },
     githubLive: {
       badge: 'Live Sync • GitHub API',
