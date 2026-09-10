@@ -1,12 +1,12 @@
 import React from 'react';
-import { Terminal, X, Globe, Menu, Sun, Moon, Download, Mail } from 'lucide-react';
+import { Terminal, X, Menu, Sun, Moon, Download, Mail } from 'lucide-react';
+import LanguageToggle from './LanguageToggle';
 
 export const Navbar = ({
   activeSection,
   mobileMenuOpen,
   setMobileMenuOpen,
   lang,
-  toggleLanguage,
   t,
   toggleTheme,
   isDark,
@@ -88,20 +88,7 @@ export const Navbar = ({
               {/* Action Utilities Group */}
               <li className="nav-actions-group">
                 {/* Language Switcher */}
-                <button
-                  onClick={toggleLanguage}
-                  className="lang-toggle"
-                  title={lang === 'pt' ? 'Mudar para Inglês' : 'Switch to Portuguese'}
-                  aria-label={lang === 'pt' ? 'Alternar idioma para Inglês' : 'Switch language to Portuguese'}
-                >
-                  <Globe size={14} aria-hidden="true" />
-                  <span className="lang-text-full">
-                    <span className={lang === 'pt' ? 'lang-active' : 'lang-inactive'}>PT</span>
-                    <span className="lang-divider">|</span>
-                    <span className={lang === 'en' ? 'lang-active' : 'lang-inactive'}>EN</span>
-                  </span>
-                  <span className="lang-badge-compact">{lang.toUpperCase()}</span>
-                </button>
+                <LanguageToggle />
 
                 {/* Theme Toggle Button */}
                 <button

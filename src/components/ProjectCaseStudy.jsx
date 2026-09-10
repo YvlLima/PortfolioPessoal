@@ -31,6 +31,8 @@ export const ProjectCaseStudy = ({
   t,
   lang = 'pt'
 }) => {
+  const csT = t?.caseStudies || {};
+
   // Scroll to top on mount or when project changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -40,15 +42,15 @@ export const ProjectCaseStudy = ({
     return (
       <section className="section case-study-not-found" style={{ paddingTop: 'calc(var(--nav-height) + 3rem)', minHeight: '70vh' }}>
         <div className="container" style={{ textAlign: 'center' }}>
-          <h2>{lang === 'pt' ? 'Case Study Não Encontrado' : 'Case Study Not Found'}</h2>
+          <h2>{csT.notFoundTitle || (lang === 'pt' ? 'Case Study Não Encontrado' : 'Case Study Not Found')}</h2>
           <p style={{ margin: '1.5rem 0' }}>
-            {lang === 'pt'
+            {csT.notFoundText || (lang === 'pt'
               ? 'O projeto que procuras não existe ou foi movido.'
-              : 'The project you are looking for does not exist or has been moved.'}
+              : 'The project you are looking for does not exist or has been moved.')}
           </p>
           <button type="button" onClick={onBackToProjects} className="btn btn-primary">
             <ArrowLeft size={16} />
-            <span>{lang === 'pt' ? 'Voltar aos Projetos' : 'Back to Projects'}</span>
+            <span>{csT.backProjects || (lang === 'pt' ? 'Voltar aos Projetos' : 'Back to Projects')}</span>
           </button>
         </div>
       </section>
@@ -82,10 +84,10 @@ export const ProjectCaseStudy = ({
               type="button"
               onClick={onBackToProjects}
               className="blog-back-btn"
-              aria-label={lang === 'pt' ? 'Voltar a todos os projetos' : 'Back to all projects'}
+              aria-label={csT.backProjects || (lang === 'pt' ? 'Voltar a todos os projetos' : 'Back to all projects')}
             >
               <ArrowLeft size={16} />
-              <span>{lang === 'pt' ? '← Voltar aos Projetos' : '← Back to Projects'}</span>
+              <span>{csT.backProjects || (lang === 'pt' ? '← Voltar aos Projetos' : '← Back to Projects')}</span>
             </button>
 
             <div className="case-study-breadcrumbs">
@@ -94,7 +96,7 @@ export const ProjectCaseStudy = ({
               </button>
               <ChevronRight size={14} className="breadcrumb-sep" />
               <button type="button" onClick={onBackToProjects} className="breadcrumb-link">
-                {lang === 'pt' ? 'Projetos' : 'Projects'}
+                {t?.nav?.projetos || (lang === 'pt' ? 'Projetos' : 'Projects')}
               </button>
               <ChevronRight size={14} className="breadcrumb-sep" />
               <span className="breadcrumb-current">{project.title}</span>
@@ -132,28 +134,28 @@ export const ProjectCaseStudy = ({
                 <div className="case-study-meta-box">
                   <Calendar size={15} className="accent" />
                   <div>
-                    <span className="meta-box-label">{lang === 'pt' ? 'Ano' : 'Year'}</span>
+                    <span className="meta-box-label">{csT.year || (lang === 'pt' ? 'Ano' : 'Year')}</span>
                     <span className="meta-box-val">{project.meta.year}</span>
                   </div>
                 </div>
                 <div className="case-study-meta-box">
                   <UserCheck size={15} className="accent" />
                   <div>
-                    <span className="meta-box-label">{lang === 'pt' ? 'Função' : 'Role'}</span>
+                    <span className="meta-box-label">{csT.role || (lang === 'pt' ? 'Função' : 'Role')}</span>
                     <span className="meta-box-val">{project.meta.role}</span>
                   </div>
                 </div>
                 <div className="case-study-meta-box">
                   <Clock size={15} className="accent" />
                   <div>
-                    <span className="meta-box-label">{lang === 'pt' ? 'Duração' : 'Duration'}</span>
+                    <span className="meta-box-label">{csT.duration || (lang === 'pt' ? 'Duração' : 'Duration')}</span>
                     <span className="meta-box-val">{project.meta.duration}</span>
                   </div>
                 </div>
                 <div className="case-study-meta-box">
                   <Activity size={15} className="accent" />
                   <div>
-                    <span className="meta-box-label">{lang === 'pt' ? 'Estado' : 'Status'}</span>
+                    <span className="meta-box-label">{csT.status || (lang === 'pt' ? 'Estado' : 'Status')}</span>
                     <span className="meta-box-val">{project.meta.status}</span>
                   </div>
                 </div>
@@ -170,7 +172,7 @@ export const ProjectCaseStudy = ({
                       className="btn btn-outline"
                     >
                       <FolderGit2 size={16} />
-                      <span>{lang === 'pt' ? 'Ver no GitHub' : 'View on GitHub'}</span>
+                      <span>{csT.githubBtn || (lang === 'pt' ? 'Ver no GitHub' : 'View on GitHub')}</span>
                     </a>
                   )}
                   {project.links.demo && (
@@ -181,7 +183,7 @@ export const ProjectCaseStudy = ({
                       className="btn btn-primary"
                     >
                       <ExternalLink size={16} />
-                      <span>{lang === 'pt' ? 'Demo Ao Vivo' : 'Live Demo'}</span>
+                      <span>{csT.liveBtn || (lang === 'pt' ? 'Demo Ao Vivo' : 'Live Demo')}</span>
                     </a>
                   )}
                 </div>
@@ -203,7 +205,7 @@ export const ProjectCaseStudy = ({
             <div className="case-study-section">
               <h2 className="case-study-section-heading">
                 <span className="section-step-num">01.</span>{' '}
-                {lang === 'pt' ? 'Métricas de Impacto & Escala' : 'Impact & Scale Metrics'}
+                {csT.metricsHeading || (lang === 'pt' ? 'Métricas de Impacto & Escala' : 'Impact & Scale Metrics')}
               </h2>
               <div className="case-study-metrics-grid">
                 {project.metrics.map((metric, i) => (
@@ -281,7 +283,7 @@ export const ProjectCaseStudy = ({
           <div className="case-study-section">
             <h2 className="case-study-section-heading">
               <span className="section-step-num">05.</span>{' '}
-              {lang === 'pt' ? 'Desafios Técnicos & Engenharia' : 'Technical Challenges & Engineering'}
+              {csT.challengesHeading || (lang === 'pt' ? 'Desafios Técnicos & Engenharia' : 'Technical Challenges & Engineering')}
             </h2>
             <div className="case-study-challenges-list">
               {project.challenges.map((challenge, idx) => (
@@ -296,7 +298,7 @@ export const ProjectCaseStudy = ({
                     <div className="challenge-block problem">
                       <div className="challenge-block-label">
                         <AlertTriangle size={15} className="warning-icon" />
-                        <span>{lang === 'pt' ? 'Problema / Obstáculo' : 'Problem / Bottleneck'}</span>
+                        <span>{csT.problemLabel || (lang === 'pt' ? 'Problema / Obstáculo' : 'Problem / Bottleneck')}</span>
                       </div>
                       <p className="challenge-block-content">{challenge.problem}</p>
                     </div>
@@ -305,7 +307,7 @@ export const ProjectCaseStudy = ({
                     <div className="challenge-block solution">
                       <div className="challenge-block-label">
                         <Lightbulb size={15} className="accent" />
-                        <span>{lang === 'pt' ? 'Solução de Engenharia' : 'Engineering Solution'}</span>
+                        <span>{csT.solutionLabel || (lang === 'pt' ? 'Solução de Engenharia' : 'Engineering Solution')}</span>
                       </div>
                       <p className="challenge-block-content">{challenge.solution}</p>
                     </div>
@@ -329,7 +331,7 @@ export const ProjectCaseStudy = ({
                 {project.results.currentStatusList && (
                   <div className="status-checklist-box">
                     <h4 className="checklist-heading">
-                      {lang === 'pt' ? 'Estado Atual de Implementação:' : 'Current Implementation Status:'}
+                      {csT.statusChecklistHeading || (lang === 'pt' ? 'Estado Atual de Implementação:' : 'Current Implementation Status:')}
                     </h4>
                     <ul className="status-checklist">
                       {project.results.currentStatusList.map((item, i) => (
@@ -349,7 +351,7 @@ export const ProjectCaseStudy = ({
           <div className="case-study-section">
             <h2 className="case-study-section-heading">
               <span className="section-step-num">07.</span>{' '}
-              {lang === 'pt' ? 'Capturas de Ecrã & Demonstrações' : 'Screenshots & Demonstrations'}
+              {csT.screenshotsHeading || (lang === 'pt' ? 'Capturas de Ecrã & Demonstrações' : 'Screenshots & Demonstrations')}
             </h2>
             <div className="case-study-gallery-grid">
               {project.gallery.map((item) => (
@@ -377,7 +379,7 @@ export const ProjectCaseStudy = ({
               className="btn btn-outline"
             >
               <ArrowLeft size={16} />
-              <span>{lang === 'pt' ? '← Voltar aos Projetos' : '← Back to Projects'}</span>
+              <span>{csT.backProjects || (lang === 'pt' ? '← Voltar aos Projetos' : '← Back to Projects')}</span>
             </button>
 
             {nextProject && (
@@ -387,7 +389,7 @@ export const ProjectCaseStudy = ({
                 className="btn btn-outline next-case-study-btn"
               >
                 <span>
-                  {lang === 'pt' ? 'Próximo Case Study' : 'Next Case Study'}: <strong>{nextProject.title}</strong>
+                  {csT.nextProject || (lang === 'pt' ? 'Próximo Case Study' : 'Next Case Study')}: <strong>{nextProject.title}</strong>
                 </span>
                 <ArrowRight size={16} />
               </button>

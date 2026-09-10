@@ -7,8 +7,11 @@ import { projectsCaseStudies } from '../data/projectsData';
 export const ProjectsList = ({
   onSelectCaseStudy,
   onBackHome,
+  t,
   lang = 'pt'
 }) => {
+  const csT = t?.caseStudies || {};
+
   const getIcon = (iconName) => {
     switch (iconName) {
       case 'Zap':
@@ -32,10 +35,10 @@ export const ProjectsList = ({
               type="button"
               onClick={onBackHome}
               className="blog-back-btn"
-              aria-label={lang === 'pt' ? 'Voltar à Página Inicial' : 'Back to Home'}
+              aria-label={csT.backHome || (lang === 'pt' ? 'Voltar à Página Inicial' : 'Back to Home')}
             >
               <ArrowLeft size={16} />
-              <span>{lang === 'pt' ? '← Voltar à Página Inicial' : '← Back to Home'}</span>
+              <span>{csT.backHome || (lang === 'pt' ? '← Voltar à Página Inicial' : '← Back to Home')}</span>
             </button>
           </div>
 
@@ -43,15 +46,15 @@ export const ProjectsList = ({
           <div className="case-studies-header">
             <div className="case-studies-pill-badge">
               <Terminal size={14} className="accent" />
-              <span>{lang === 'pt' ? 'Arquitetura & Engenharia de Software' : 'Software Engineering & Architecture'}</span>
+              <span>{csT.badge || (lang === 'pt' ? 'Arquitetura & Engenharia de Software' : 'Software Engineering & Architecture')}</span>
             </div>
             <h1 className="case-studies-main-title">
-              {lang === 'pt' ? 'Case Studies de Projetos' : 'Project Case Studies'}
+              {csT.title || (lang === 'pt' ? 'Case Studies de Projetos' : 'Project Case Studies')}
             </h1>
             <p className="case-studies-main-subtitle">
-              {lang === 'pt'
+              {csT.subtitle || (lang === 'pt'
                 ? 'Análise aprofundada da arquitetura, desafios técnicos reais e decisões de engenharia por trás de cada aplicação.'
-                : 'In-depth breakdown of system architecture, real technical challenges, and engineering decisions behind each project.'}
+                : 'In-depth breakdown of system architecture, real technical challenges, and engineering decisions behind each project.')}
             </p>
           </div>
 
@@ -133,7 +136,7 @@ export const ProjectsList = ({
                 {/* Card Action Footer */}
                 <div className="case-study-card-footer">
                   <span className="case-study-read-link">
-                    <span>{lang === 'pt' ? 'Explorar Case Study' : 'Explore Case Study'}</span>
+                    <span>{csT.explore || (lang === 'pt' ? 'Explorar Case Study' : 'Explore Case Study')}</span>
                     <ArrowRight size={16} className="arrow-hover" />
                   </span>
 

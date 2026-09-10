@@ -22,9 +22,10 @@ import Modal from './components/Modal';
 
 // Hooks
 import useTheme from './hooks/useTheme';
+import { LanguageProvider } from './context/LanguageContext';
+import { useLanguage } from './hooks/useLanguage';
 
 // Static Data & Utilities
-import { contentTranslations } from './data/translations';
 import { getAboutStatsList } from './data/aboutStats';
 import { skillsList, getSoftSkills } from './data/skills';
 import { getProjects } from './data/projects';
@@ -65,9 +66,9 @@ const getCaseStudyRoute = (path, hash) => {
   return null;
 };
 
-export default function App() {
-  const { theme, toggleTheme, isDark } = useTheme();
-  const [lang, setLang] = useState('pt'); // 'pt' | 'en'
+function PortfolioContent() {
+  const { toggleTheme, isDark } = useTheme();
+  const { lang, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [ripples, setRipples] = useState([]);
@@ -338,8 +339,6 @@ export default function App() {
     }
   }, []);
 
-  const t = contentTranslations[lang];
-
   // Fechar modals, artigo de blog, case studies e privacidade ao premir Escape
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -405,11 +404,6 @@ export default function App() {
   const githubUrl = "https://github.com/YvlLima";
   const linkedinUrl = "https://www.linkedin.com/in/gon%C3%A7alo-lima-532318428/?skipRedirect=true";
 
-  // Toggle Language
-  const toggleLanguage = () => {
-    setLang((prev) => (prev === 'pt' ? 'en' : 'pt'));
-  };
-
   // Click Ripple Effect
   const handleGlobalClick = (e) => {
     const newRipple = {
@@ -459,9 +453,7 @@ export default function App() {
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
         lang={lang}
-        toggleLanguage={toggleLanguage}
         t={t}
-        theme={theme}
         toggleTheme={toggleTheme}
         isDark={isDark}
         onNavigateHome={handleNavigateHome}
@@ -618,6 +610,14 @@ export default function App() {
         t={t}
       />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <PortfolioContent />
+    </LanguageProvider>
   );
 }
 
