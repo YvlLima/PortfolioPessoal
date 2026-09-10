@@ -162,9 +162,15 @@ export const PrivacyPolicy = ({
                     </thead>
                     <tbody>
                       <tr>
-                        <td><code>theme_preference</code></td>
+                        <td><code>portfolio-theme</code></td>
                         <td>{isPt ? 'Técnico / Essencial' : 'Technical / Essential'}</td>
                         <td>{isPt ? 'Guardar preferência de modo claro/escuro' : 'Store light/dark mode preference'}</td>
+                        <td>{isPt ? 'Persistente (localStorage)' : 'Persistent (localStorage)'}</td>
+                      </tr>
+                      <tr>
+                        <td><code>site_language</code></td>
+                        <td>{isPt ? 'Técnico / Essencial' : 'Technical / Essential'}</td>
+                        <td>{isPt ? 'Guardar preferência de idioma (PT/EN)' : 'Store language preference (PT/EN)'}</td>
                         <td>{isPt ? 'Persistente (localStorage)' : 'Persistent (localStorage)'}</td>
                       </tr>
                     </tbody>
