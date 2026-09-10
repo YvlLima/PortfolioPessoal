@@ -25,6 +25,13 @@ export const ProjectsList = ({
     }
   };
 
+  const resolveText = (val) => {
+    if (val && typeof val === 'object') {
+      return val[lang] || val.pt || '';
+    }
+    return val || '';
+  };
+
   return (
     <section className="section case-studies-page-view" style={{ paddingTop: 'calc(var(--nav-height) + 2rem)', minHeight: '85vh' }}>
       <div className="container">
@@ -76,7 +83,7 @@ export const ProjectsList = ({
                     <span className="window-dot green" />
                   </div>
                   <span className="window-title">{project.windowPath}</span>
-                  <span className="project-badge-pill">{project.category}</span>
+                  <span className="project-badge-pill">{resolveText(project.category)}</span>
                 </div>
 
                 {/* Card Hero / Thumbnail Placeholder */}
@@ -89,7 +96,7 @@ export const ProjectsList = ({
                   </div>
                   <div className="case-study-preview-badge">
                     <CheckCircle2 size={12} className="accent" />
-                    <span>{project.meta.status}</span>
+                    <span>{resolveText(project.meta.status)}</span>
                   </div>
                 </div>
 
@@ -100,19 +107,19 @@ export const ProjectsList = ({
                     <span className="case-study-year">{project.meta.year}</span>
                   </div>
 
-                  <p className="case-study-tagline">{project.tagline}</p>
+                  <p className="case-study-tagline">{resolveText(project.tagline)}</p>
 
                   {/* Highlights / Metric Pill */}
                   {project.metrics && project.metrics.length > 0 && (
                     <div className="case-study-mini-metrics">
                       <div className="case-study-mini-metric-item">
                         <span className="mini-metric-val">{project.metrics[0].value}</span>
-                        <span className="mini-metric-label">{project.metrics[0].label}</span>
+                        <span className="mini-metric-label">{resolveText(project.metrics[0].label)}</span>
                       </div>
                       {project.metrics[1] && (
                         <div className="case-study-mini-metric-item">
                           <span className="mini-metric-val">{project.metrics[1].value}</span>
-                          <span className="mini-metric-label">{project.metrics[1].label}</span>
+                          <span className="mini-metric-label">{resolveText(project.metrics[1].label)}</span>
                         </div>
                       )}
                     </div>

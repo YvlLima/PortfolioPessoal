@@ -74,6 +74,18 @@ export const ProjectCaseStudy = ({
     }
   };
 
+  const resolveText = (val) => {
+    if (val && typeof val === 'object') {
+      return val[lang] || val.pt || '';
+    }
+    return val || '';
+  };
+
+  const contextData = project.context?.[lang] || project.context?.pt || project.context || {};
+  const solutionData = project.solution?.[lang] || project.solution?.pt || project.solution || {};
+  const stackWhyData = project.stackWhy?.[lang] || project.stackWhy?.pt || project.stackWhy || {};
+  const resultsData = project.results?.[lang] || project.results?.pt || project.results || {};
+
   return (
     <article className="case-study-view section" style={{ paddingTop: 'calc(var(--nav-height) + 2rem)', minHeight: '90vh' }}>
       <div className="container" style={{ maxWidth: '980px' }}>
@@ -113,7 +125,7 @@ export const ProjectCaseStudy = ({
                 <span className="window-dot green" />
               </div>
               <span className="window-title">{project.windowPath}</span>
-              <span className="project-badge-pill">{project.heroBadge}</span>
+              <span className="project-badge-pill">{resolveText(project.heroBadge)}</span>
             </div>
 
             <div className="case-study-header-inner">
@@ -122,12 +134,12 @@ export const ProjectCaseStudy = ({
                   {getCategoryIcon(project.thumbnail.iconName)}
                 </div>
                 <div className="case-study-title-group">
-                  <span className="case-study-category-badge">{project.category}</span>
+                  <span className="case-study-category-badge">{resolveText(project.category)}</span>
                   <h1 className="case-study-main-heading">{project.title}</h1>
                 </div>
               </div>
 
-              <p className="case-study-lead-tagline">{project.tagline}</p>
+              <p className="case-study-lead-tagline">{resolveText(project.tagline)}</p>
 
               {/* Meta Stats Row */}
               <div className="case-study-meta-grid">
@@ -142,21 +154,21 @@ export const ProjectCaseStudy = ({
                   <UserCheck size={15} className="accent" />
                   <div>
                     <span className="meta-box-label">{csT.role || (lang === 'pt' ? 'Função' : 'Role')}</span>
-                    <span className="meta-box-val">{project.meta.role}</span>
+                    <span className="meta-box-val">{resolveText(project.meta.role)}</span>
                   </div>
                 </div>
                 <div className="case-study-meta-box">
                   <Clock size={15} className="accent" />
                   <div>
                     <span className="meta-box-label">{csT.duration || (lang === 'pt' ? 'Duração' : 'Duration')}</span>
-                    <span className="meta-box-val">{project.meta.duration}</span>
+                    <span className="meta-box-val">{resolveText(project.meta.duration)}</span>
                   </div>
                 </div>
                 <div className="case-study-meta-box">
                   <Activity size={15} className="accent" />
                   <div>
                     <span className="meta-box-label">{csT.status || (lang === 'pt' ? 'Estado' : 'Status')}</span>
-                    <span className="meta-box-val">{project.meta.status}</span>
+                    <span className="meta-box-val">{resolveText(project.meta.status)}</span>
                   </div>
                 </div>
               </div>
@@ -211,8 +223,8 @@ export const ProjectCaseStudy = ({
                 {project.metrics.map((metric, i) => (
                   <SpotlightCard key={i} className="metric-highlight-card">
                     <div className="metric-number-glow">{metric.value}</div>
-                    <div className="metric-label-strong">{metric.label}</div>
-                    <p className="metric-description-text">{metric.desc}</p>
+                    <div className="metric-label-strong">{resolveText(metric.label)}</div>
+                    <p className="metric-description-text">{resolveText(metric.desc)}</p>
                   </SpotlightCard>
                 ))}
               </div>
@@ -220,156 +232,174 @@ export const ProjectCaseStudy = ({
           )}
 
           {/* Section 2: Contexto / Problema */}
-          <div className="case-study-section">
-            <h2 className="case-study-section-heading">
-              <span className="section-step-num">02.</span> {project.context.title}
-            </h2>
-            <SpotlightCard className="case-study-card-panel">
-              <div className="case-study-panel-body">
-                {project.context.paragraphs.map((p, i) => (
-                  <p key={i} className="case-study-paragraph">{p}</p>
-                ))}
-              </div>
-            </SpotlightCard>
-          </div>
+          {contextData && (
+            <div className="case-study-section">
+              <h2 className="case-study-section-heading">
+                <span className="section-step-num">02.</span> {contextData.title}
+              </h2>
+              <SpotlightCard className="case-study-card-panel">
+                <div className="case-study-panel-body">
+                  {(contextData.paragraphs || []).map((p, i) => (
+                    <p key={i} className="case-study-paragraph">{p}</p>
+                  ))}
+                </div>
+              </SpotlightCard>
+            </div>
+          )}
 
           {/* Section 3: Solução & Principais Funcionalidades */}
-          <div className="case-study-section">
-            <h2 className="case-study-section-heading">
-              <span className="section-step-num">03.</span> {project.solution.title}
-            </h2>
-            <SpotlightCard className="case-study-card-panel">
-              <div className="case-study-panel-body">
-                {project.solution.paragraphs.map((p, i) => (
-                  <p key={i} className="case-study-paragraph">{p}</p>
-                ))}
+          {solutionData && (
+            <div className="case-study-section">
+              <h2 className="case-study-section-heading">
+                <span className="section-step-num">03.</span> {solutionData.title}
+              </h2>
+              <SpotlightCard className="case-study-card-panel">
+                <div className="case-study-panel-body">
+                  {(solutionData.paragraphs || []).map((p, i) => (
+                    <p key={i} className="case-study-paragraph">{p}</p>
+                  ))}
 
-                {project.solution.features && (
-                  <div className="case-study-features-grid">
-                    {project.solution.features.map((feat, idx) => (
-                      <div key={idx} className="feature-item-box">
-                        <div className="feature-header-line">
-                          <CheckCircle2 size={16} className="accent" />
-                          <h3 className="feature-item-title">{feat.title}</h3>
+                  {solutionData.features && (
+                    <div className="case-study-features-grid">
+                      {solutionData.features.map((feat, idx) => (
+                        <div key={idx} className="feature-item-box">
+                          <div className="feature-header-line">
+                            <CheckCircle2 size={16} className="accent" />
+                            <h3 className="feature-item-title">{feat.title}</h3>
+                          </div>
+                          <p className="feature-item-desc">{feat.description}</p>
                         </div>
-                        <p className="feature-item-desc">{feat.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </SpotlightCard>
-          </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </SpotlightCard>
+            </div>
+          )}
 
           {/* Section 4: Stack & Decisões de Arquitetura */}
-          <div className="case-study-section">
-            <h2 className="case-study-section-heading">
-              <span className="section-step-num">04.</span> {project.stackWhy.title}
-            </h2>
-            <div className="case-study-stack-grid">
-              {project.stackWhy.items.map((item, idx) => (
-                <SpotlightCard key={idx} className="stack-why-card">
-                  <div className="stack-why-header">
-                    <Sparkles size={16} className="accent" />
-                    <h3 className="stack-why-tech">{item.tech}</h3>
-                  </div>
-                  <p className="stack-why-reason">{item.reason}</p>
-                </SpotlightCard>
-              ))}
+          {stackWhyData && (
+            <div className="case-study-section">
+              <h2 className="case-study-section-heading">
+                <span className="section-step-num">04.</span> {stackWhyData.title}
+              </h2>
+              <div className="case-study-stack-grid">
+                {(stackWhyData.items || []).map((item, idx) => (
+                  <SpotlightCard key={idx} className="stack-why-card">
+                    <div className="stack-why-header">
+                      <Sparkles size={16} className="accent" />
+                      <h3 className="stack-why-tech">{item.tech}</h3>
+                    </div>
+                    <p className="stack-why-reason">{item.reason}</p>
+                  </SpotlightCard>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Section 5: Desafios Técnicos Resolvidos */}
-          <div className="case-study-section">
-            <h2 className="case-study-section-heading">
-              <span className="section-step-num">05.</span>{' '}
-              {csT.challengesHeading || (lang === 'pt' ? 'Desafios Técnicos & Engenharia' : 'Technical Challenges & Engineering')}
-            </h2>
-            <div className="case-study-challenges-list">
-              {project.challenges.map((challenge, idx) => (
-                <SpotlightCard key={idx} className="challenge-item-card">
-                  <div className="challenge-header-bar">
-                    <span className="challenge-num-tag">DESAFIO #{challenge.number}</span>
-                    <h3 className="challenge-title-text">{challenge.title}</h3>
-                  </div>
-
-                  <div className="challenge-body-grid">
-                    {/* Problem Block */}
-                    <div className="challenge-block problem">
-                      <div className="challenge-block-label">
-                        <AlertTriangle size={15} className="warning-icon" />
-                        <span>{csT.problemLabel || (lang === 'pt' ? 'Problema / Obstáculo' : 'Problem / Bottleneck')}</span>
+          {project.challenges && project.challenges.length > 0 && (
+            <div className="case-study-section">
+              <h2 className="case-study-section-heading">
+                <span className="section-step-num">05.</span>{' '}
+                {csT.challengesHeading || (lang === 'pt' ? 'Desafios Técnicos & Engenharia' : 'Technical Challenges & Engineering')}
+              </h2>
+              <div className="case-study-challenges-list">
+                {project.challenges.map((challenge, idx) => {
+                  const chData = challenge[lang] || challenge.pt || challenge;
+                  return (
+                    <SpotlightCard key={idx} className="challenge-item-card">
+                      <div className="challenge-header-bar">
+                        <span className="challenge-num-tag">{lang === 'pt' ? `DESAFIO #${challenge.number}` : `CHALLENGE #${challenge.number}`}</span>
+                        <h3 className="challenge-title-text">{chData.title}</h3>
                       </div>
-                      <p className="challenge-block-content">{challenge.problem}</p>
-                    </div>
 
-                    {/* Solution Block */}
-                    <div className="challenge-block solution">
-                      <div className="challenge-block-label">
-                        <Lightbulb size={15} className="accent" />
-                        <span>{csT.solutionLabel || (lang === 'pt' ? 'Solução de Engenharia' : 'Engineering Solution')}</span>
+                      <div className="challenge-body-grid">
+                        {/* Problem Block */}
+                        <div className="challenge-block problem">
+                          <div className="challenge-block-label">
+                            <AlertTriangle size={15} className="warning-icon" />
+                            <span>{csT.problemLabel || (lang === 'pt' ? 'Problema / Obstáculo' : 'Problem / Bottleneck')}</span>
+                          </div>
+                          <p className="challenge-block-content">{chData.problem}</p>
+                        </div>
+
+                        {/* Solution Block */}
+                        <div className="challenge-block solution">
+                          <div className="challenge-block-label">
+                            <Lightbulb size={15} className="accent" />
+                            <span>{csT.solutionLabel || (lang === 'pt' ? 'Solução de Engenharia' : 'Engineering Solution')}</span>
+                          </div>
+                          <p className="challenge-block-content">{chData.solution}</p>
+                        </div>
                       </div>
-                      <p className="challenge-block-content">{challenge.solution}</p>
-                    </div>
-                  </div>
-                </SpotlightCard>
-              ))}
+                    </SpotlightCard>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Section 6: Resultados & Estado Atual */}
-          <div className="case-study-section">
-            <h2 className="case-study-section-heading">
-              <span className="section-step-num">06.</span> {project.results.title}
-            </h2>
-            <SpotlightCard className="case-study-card-panel">
-              <div className="case-study-panel-body">
-                {project.results.paragraphs.map((p, i) => (
-                  <p key={i} className="case-study-paragraph">{p}</p>
-                ))}
+          {resultsData && (
+            <div className="case-study-section">
+              <h2 className="case-study-section-heading">
+                <span className="section-step-num">06.</span> {resultsData.title}
+              </h2>
+              <SpotlightCard className="case-study-card-panel">
+                <div className="case-study-panel-body">
+                  {(resultsData.paragraphs || []).map((p, i) => (
+                    <p key={i} className="case-study-paragraph">{p}</p>
+                  ))}
 
-                {project.results.currentStatusList && (
-                  <div className="status-checklist-box">
-                    <h4 className="checklist-heading">
-                      {csT.statusChecklistHeading || (lang === 'pt' ? 'Estado Atual de Implementação:' : 'Current Implementation Status:')}
-                    </h4>
-                    <ul className="status-checklist">
-                      {project.results.currentStatusList.map((item, i) => (
-                        <li key={i}>
-                          <CheckCircle2 size={16} className="accent" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </SpotlightCard>
-          </div>
+                  {resultsData.currentStatusList && (
+                    <div className="status-checklist-box">
+                      <h4 className="checklist-heading">
+                        {csT.statusChecklistHeading || (lang === 'pt' ? 'Estado Atual de Implementação:' : 'Current Implementation Status:')}
+                      </h4>
+                      <ul className="status-checklist">
+                        {resultsData.currentStatusList.map((item, i) => (
+                          <li key={i}>
+                            <CheckCircle2 size={16} className="accent" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </SpotlightCard>
+            </div>
+          )}
 
           {/* Section 7: Galeria de Screenshots / Demonstrações (Placeholders) */}
-          <div className="case-study-section">
-            <h2 className="case-study-section-heading">
-              <span className="section-step-num">07.</span>{' '}
-              {csT.screenshotsHeading || (lang === 'pt' ? 'Capturas de Ecrã & Demonstrações' : 'Screenshots & Demonstrations')}
-            </h2>
-            <div className="case-study-gallery-grid">
-              {project.gallery.map((item) => (
-                <SpotlightCard key={item.id} className="gallery-placeholder-card">
-                  <div className="gallery-preview-frame">
-                    <div className="gallery-preview-icon">
-                      <ImageIcon size={32} className="accent" />
-                    </div>
-                    <span className="gallery-type-badge">{item.type}</span>
-                  </div>
-                  <div className="gallery-caption-wrapper">
-                    <h4 className="gallery-card-title">{item.title}</h4>
-                    <p className="gallery-card-caption">{item.caption}</p>
-                  </div>
-                </SpotlightCard>
-              ))}
+          {project.gallery && project.gallery.length > 0 && (
+            <div className="case-study-section">
+              <h2 className="case-study-section-heading">
+                <span className="section-step-num">07.</span>{' '}
+                {csT.screenshotsHeading || (lang === 'pt' ? 'Capturas de Ecrã & Demonstrações' : 'Screenshots & Demonstrations')}
+              </h2>
+              <div className="case-study-gallery-grid">
+                {project.gallery.map((item) => {
+                  const itemData = item[lang] || item.pt || item;
+                  return (
+                    <SpotlightCard key={item.id} className="gallery-placeholder-card">
+                      <div className="gallery-preview-frame">
+                        <div className="gallery-preview-icon">
+                          <ImageIcon size={32} className="accent" />
+                        </div>
+                        <span className="gallery-type-badge">{item.type}</span>
+                      </div>
+                      <div className="gallery-caption-wrapper">
+                        <h4 className="gallery-card-title">{itemData.title}</h4>
+                        <p className="gallery-card-caption">{itemData.caption}</p>
+                      </div>
+                    </SpotlightCard>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Bottom Navigation & Cross Links */}
           <div className="case-study-footer-nav">
@@ -396,7 +426,7 @@ export const ProjectCaseStudy = ({
             )}
 
             <a href="#contacto" className="btn btn-primary" onClick={onBackHome}>
-              {t.nav.ctaBtn}
+              {t?.nav?.ctaBtn || (lang === 'pt' ? 'Entrar em Contacto' : 'Get in Touch')}
             </a>
           </div>
         </FadeInSection>
