@@ -60,14 +60,15 @@ export function parseMarkdownPost(filepath, rawContent) {
   };
 }
 
-export function getAllPosts() {
-  const postFiles = import.meta.glob('/src/content/blog/*.md', { query: '?raw', eager: true });
+export function getAllPosts(lang = 'pt') {
+  const postFiles = import.meta.glob('/src/content/blog/**/*.md', { query: '?raw', eager: true });
 
   const posts = Object.entries(postFiles).map(([path, rawModule]) => {
     const raw = typeof rawModule === 'string' ? rawModule : rawModule?.default || '';
-    return parseMarkdownPost(path, raw);
+    return { ...parseMarkdownPost(path, raw), language: path.includes('/en/') ? 'en' : 'pt' };
   });
 
   // Sort descending by date (newest first)
-  return posts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+  const localized = posts.filter(post => post.language === lang || (post.language === 'pt' && !posts.some(other => other.slug === post.slug && other.language === lang)));
+  return localized.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 }

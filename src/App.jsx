@@ -22,6 +22,7 @@ import Modal from './components/Modal';
 
 // Hooks
 import useTheme from './hooks/useTheme';
+import useReducedMotion from './hooks/useReducedMotion';
 import { LanguageProvider } from './context/LanguageContext';
 import { useLanguage } from './hooks/useLanguage';
 
@@ -68,11 +69,11 @@ const getCaseStudyRoute = (path, hash) => {
 
 function PortfolioContent() {
   const { toggleTheme, isDark } = useTheme();
+  const reducedMotion = useReducedMotion();
   const { lang, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [ripples, setRipples] = useState([]);
-  const [selectedProject, setSelectedProject] = useState(null);
   const [selectedInfoModal, setSelectedInfoModal] = useState(null);
   const [selectedBlogPost, setSelectedBlogPost] = useState(null);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(() => {
@@ -88,157 +89,6 @@ function PortfolioContent() {
     return null;
   });
 
-  // GitHub Live Activity State
-  const [githubTab, setGithubTab] = useState('repos'); // 'repos' | 'activity' | 'stats' | 'contributions'
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState(null);
-  const [githubUser, setGithubUser] = useState({
-    login: 'YvlLima',
-    name: 'Lima',
-    avatar_url: 'https://avatars.githubusercontent.com/u/171243763?v=4',
-    public_repos: 4,
-    followers: 0,
-    following: 0,
-    html_url: 'https://github.com/YvlLima',
-    bio: 'Cybersecurity Student & Web Developer'
-  });
-
-  const [githubRepos, setGithubRepos] = useState([
-    {
-      id: 'repo-1',
-      name: 'FazbearNightshift',
-      description: 'Fazbear Nightshift - Bot Discord FNAF PvP interativo e dinâmico',
-      language: 'JavaScript',
-      stargazers_count: 0,
-      forks_count: 0,
-      html_url: 'https://github.com/YvlLima/FazbearNightshift',
-      updated_at: '2026-08-18T21:51:57Z'
-    },
-    {
-      id: 'repo-2',
-      name: 'PortfolioPessoal',
-      description: 'Portfólio Pessoal moderno em React + Vite com design cyberpunk e spotlight interativo',
-      language: 'JavaScript',
-      stargazers_count: 0,
-      forks_count: 0,
-      html_url: 'https://github.com/YvlLima/PortfolioPessoal',
-      updated_at: '2026-08-16T19:30:12Z'
-    },
-    {
-      id: 'repo-3',
-      name: 'MusicHub',
-      description: 'Plataforma web de música interativa construída com React e Cloudflare Pages',
-      language: 'JavaScript',
-      stargazers_count: 0,
-      forks_count: 0,
-      html_url: 'https://github.com/YvlLima/MusicHub',
-      updated_at: '2026-08-10T11:42:05Z'
-    },
-    {
-      id: 'repo-4',
-      name: 'BagLess',
-      description: 'Aplicação web moderna para produtividade e organização pessoal ágil',
-      language: 'JavaScript',
-      stargazers_count: 0,
-      forks_count: 0,
-      html_url: 'https://github.com/YvlLima/BagLess',
-      updated_at: '2026-08-04T15:18:22Z'
-    }
-  ]);
-
-  const [githubEvents, setGithubEvents] = useState([
-    {
-      id: 'ev-1',
-      type: 'PushEvent',
-      repo: 'YvlLima/FazbearNightshift',
-      created_at: '2026-08-18T21:51:57Z',
-      actionText: {
-        pt: 'Atualização de comandos slash e PvP',
-        en: 'Updated slash commands and PvP engine'
-      }
-    },
-    {
-      id: 'ev-2',
-      type: 'PushEvent',
-      repo: 'YvlLima/PortfolioPessoal',
-      created_at: '2026-08-16T19:30:12Z',
-      actionText: {
-        pt: 'Melhorias de interface e dados',
-        en: 'UI improvements and data structuring'
-      }
-    },
-    {
-      id: 'ev-3',
-      type: 'PushEvent',
-      repo: 'YvlLima/MusicHub',
-      created_at: '2026-08-09T14:58:35Z',
-      actionText: {
-        pt: 'Ajustes de reprodução e componentes React',
-        en: 'Playback adjustments and React components'
-      }
-    },
-    {
-      id: 'ev-4',
-      type: 'PushEvent',
-      repo: 'YvlLima/PortfolioPessoal',
-      created_at: '2026-08-08T16:21:10Z',
-      actionText: {
-        pt: 'Deploy e otimização de performance do site',
-        en: 'Deploy and site performance optimization'
-      }
-    }
-  ]);
-
-  const fetchGitHubLive = async () => {
-    setIsSyncing(true);
-    try {
-      // 1. Fetch User Profile
-      const userRes = await fetch('https://api.github.com/users/YvlLima');
-      if (userRes.ok) {
-        const userData = await userRes.json();
-        setGithubUser(userData);
-      }
-
-      // 2. Fetch User Repos
-      const reposRes = await fetch('https://api.github.com/users/YvlLima/repos?sort=updated&per_page=6');
-      if (reposRes.ok) {
-        const reposData = await reposRes.json();
-        if (Array.isArray(reposData) && reposData.length > 0) {
-          setGithubRepos(reposData);
-        }
-      }
-
-      // 3. Fetch User Events
-      const eventsRes = await fetch('https://api.github.com/users/YvlLima/events/public?per_page=6');
-      if (eventsRes.ok) {
-        const eventsData = await eventsRes.json();
-        if (Array.isArray(eventsData) && eventsData.length > 0) {
-          const parsedEvents = eventsData.slice(0, 5).map((e, idx) => ({
-            id: e.id || `event-${idx}`,
-            type: e.type,
-            repo: e.repo?.name || 'YvlLima/Repository',
-            created_at: e.created_at,
-            actionText: {
-              pt: e.type === 'PushEvent' ? 'Push de novos commits' : 'Atividade no repositório',
-              en: e.type === 'PushEvent' ? 'Pushed new commits' : 'Repository activity'
-            }
-          }));
-          setGithubEvents(parsedEvents);
-        }
-      }
-
-      setLastSyncTime(new Date());
-    } catch (err) {
-      console.warn('Erro ao sincronizar com GitHub API (usando cache local):', err);
-    } finally {
-      setTimeout(() => setIsSyncing(false), 600);
-    }
-  };
-
-  useEffect(() => {
-    fetchGitHubLive();
-  }, []);
-
   // Sync with browser history and URL routes (popstate and hashchange)
   useEffect(() => {
     const handleLocationChange = () => {
@@ -250,7 +100,7 @@ function PortfolioContent() {
 
       if (isPriv || csRoute) {
         setSelectedBlogPost(null);
-        setSelectedProject(null);
+
         setSelectedInfoModal(null);
       }
     };
@@ -266,7 +116,7 @@ function PortfolioContent() {
   const handleOpenPrivacy = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setSelectedBlogPost(null);
-    setSelectedProject(null);
+
     setSelectedInfoModal(null);
     setCaseStudyRoute(null);
     setIsPrivacyOpen(true);
@@ -276,7 +126,7 @@ function PortfolioContent() {
       // Fallback in environments without history pushState support
       window.location.hash = 'privacidade';
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   };
 
   const handleClosePrivacy = useCallback(() => {
@@ -286,13 +136,13 @@ function PortfolioContent() {
     } catch {
       window.location.hash = '';
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   }, []);
 
   const handleOpenProjectsList = useCallback((e) => {
     if (e && e.preventDefault) e.preventDefault();
     setSelectedBlogPost(null);
-    setSelectedProject(null);
+
     setSelectedInfoModal(null);
     setIsPrivacyOpen(false);
     setCaseStudyRoute({ type: 'list', slug: null });
@@ -301,12 +151,12 @@ function PortfolioContent() {
     } catch {
       window.location.hash = 'projetos-cases';
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   }, []);
 
   const handleOpenCaseStudy = useCallback((slug) => {
     setSelectedBlogPost(null);
-    setSelectedProject(null);
+
     setSelectedInfoModal(null);
     setIsPrivacyOpen(false);
     setCaseStudyRoute({ type: 'detail', slug });
@@ -315,7 +165,7 @@ function PortfolioContent() {
     } catch {
       window.location.hash = `projetos/${slug}`;
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   }, []);
 
   const handleBackToProjectsList = useCallback(() => {
@@ -325,47 +175,42 @@ function PortfolioContent() {
     } catch {
       window.location.hash = 'projetos-cases';
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   }, []);
 
-  const handleNavigateHome = useCallback(() => {
+  const handleNavigateHome = useCallback((section = 'hero') => {
     setIsPrivacyOpen(false);
     setCaseStudyRoute(null);
     setSelectedBlogPost(null);
     try {
-      window.history.pushState({ view: 'home' }, '', '/');
+      window.history.pushState({ view: 'home' }, '', `/#${typeof section === 'string' ? section : 'hero'}`);
     } catch {
-      window.location.hash = '';
+      window.location.hash = 'hero';
     }
+    requestAnimationFrame(() => {
+      const target = document.getElementById(typeof section === 'string' ? section : 'hero');
+      target?.scrollIntoView();
+      const heading = target?.querySelector('h1, h2');
+      heading?.setAttribute('tabindex', '-1');
+      heading?.focus({ preventScroll: true });
+    });
   }, []);
 
-  // Fechar modals, artigo de blog, case studies e privacidade ao premir Escape
+  // Escape closes overlays; ordinary project pages stay in browser history.
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = e => {
       if (e.key === 'Escape') {
-        if (isPrivacyOpen) {
-          handleClosePrivacy();
-        }
-        if (caseStudyRoute) {
-          if (caseStudyRoute.type === 'detail') {
-            handleBackToProjectsList();
-          } else {
-            handleNavigateHome();
-          }
-        }
-        setSelectedProject(null);
         setSelectedInfoModal(null);
-        setSelectedBlogPost(null);
         setMobileMenuOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isPrivacyOpen, caseStudyRoute, handleClosePrivacy, handleBackToProjectsList, handleNavigateHome]);
+  }, []);
 
   // Lock body scroll when mobile menu or modal is open
   useEffect(() => {
-    if (mobileMenuOpen || selectedProject || selectedInfoModal) {
+    if (mobileMenuOpen || selectedInfoModal) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -373,14 +218,14 @@ function PortfolioContent() {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [mobileMenuOpen, selectedProject, selectedInfoModal]);
+  }, [mobileMenuOpen, selectedInfoModal]);
 
   // Active section spy
   useEffect(() => {
     if (selectedBlogPost || isPrivacyOpen || caseStudyRoute) return;
 
     const handleScroll = () => {
-      const sections = ['hero', 'sobre', 'skills', 'projetos', 'agora', 'blog', 'educacao', 'contacto'];
+      const sections = ['hero', 'projetos', 'sobre', 'skills', 'agora', 'blog', 'educacao', 'contacto'];
       const scrollY = window.scrollY;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -399,6 +244,17 @@ function PortfolioContent() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [selectedBlogPost, isPrivacyOpen, caseStudyRoute]);
 
+  useEffect(() => {
+    if (!caseStudyRoute) return;
+    const frame = requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      const heading = document.querySelector('main h1');
+      heading?.setAttribute('tabindex', '-1');
+      heading?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [caseStudyRoute]);
+
   // Email & Links do Gonçalo
   const userEmail = "goncalomartinslima2007@gmail.com";
   const githubUrl = "https://github.com/YvlLima";
@@ -406,6 +262,7 @@ function PortfolioContent() {
 
   // Click Ripple Effect
   const handleGlobalClick = (e) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const newRipple = {
       id: Date.now(),
       x: e.clientX,
@@ -417,9 +274,9 @@ function PortfolioContent() {
   // Data instances derived from active language and files
   const aboutStatsList = getAboutStatsList(t);
   const softSkills = getSoftSkills(lang);
-  const projects = getProjects(t);
+  const projects = getProjects(lang);
   const nowProjects = getNowProjects(lang, t);
-  const blogPosts = getAllPosts();
+  const blogPosts = getAllPosts(lang);
   const timelineItems = getTimelineItems(t);
   const certifications = getCertifications(lang);
   const recommendationLetters = getRecommendationLetters(lang);
@@ -435,8 +292,8 @@ function PortfolioContent() {
   return (
     <div className="portfolio-app" onClick={handleGlobalClick}>
       {/* Minimalist Dot + Soft Ring Cursor */}
-      <SimpleCursor />
-      <AmbientFollowerLight />
+      {!reducedMotion && <SimpleCursor />}
+      {!reducedMotion && <AmbientFollowerLight />}
 
       {/* Global Click Ripples */}
       {ripples.map((r) => (
@@ -459,7 +316,8 @@ function PortfolioContent() {
         onNavigateHome={handleNavigateHome}
       />
 
-      <main>
+      <a className="skip-link" href="#main-content">{lang === 'pt' ? 'Saltar para o conteúdo' : 'Skip to content'}</a>
+      <main id="main-content" tabIndex={-1}>
         {isPrivacyOpen ? (
           /* Vista de Política de Privacidade */
           <PrivacyPolicy
@@ -489,12 +347,12 @@ function PortfolioContent() {
         ) : selectedBlogPost ? (
           /* Vista de Artigo Individual */
           <BlogPost
-            post={selectedBlogPost}
+            post={blogPosts.find(post => post.slug === selectedBlogPost.slug) || selectedBlogPost}
             onBack={() => {
               setSelectedBlogPost(null);
               setTimeout(() => {
                 const el = document.getElementById('blog');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                if (el) el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
               }, 50);
             }}
             t={t}
@@ -512,6 +370,19 @@ function PortfolioContent() {
               linkedinUrl={linkedinUrl}
             />
 
+            {/* 4. Projetos & GitHub Live Activity */}
+            <Projects
+              t={t}
+              lang={lang}
+              projects={projects}
+              onOpenProjectsList={handleOpenProjectsList}
+              onOpenCaseStudy={handleOpenCaseStudy}
+            />
+
+            <div className="container">
+              <GitHubLive lang={lang} />
+            </div>
+
             {/* 2. Sobre Mim Section */}
             <About
               t={t}
@@ -526,41 +397,16 @@ function PortfolioContent() {
               t={t}
               lang={lang}
               skillsList={skillsList}
+              onOpenCaseStudy={handleOpenCaseStudy}
               onSelectModal={(data) => setSelectedInfoModal(data)}
             />
-
-            {/* 4. Projetos & GitHub Live Activity */}
-            <Projects
-              t={t}
-              lang={lang}
-              projects={projects}
-              onSelectProject={(proj) => setSelectedProject(proj)}
-              onOpenProjectsList={handleOpenProjectsList}
-              onOpenCaseStudy={handleOpenCaseStudy}
-            />
-
-            <div className="container">
-              <GitHubLive
-                t={t}
-                lang={lang}
-                githubUser={githubUser}
-                githubRepos={githubRepos}
-                githubEvents={githubEvents}
-                githubTab={githubTab}
-                setGithubTab={setGithubTab}
-                isSyncing={isSyncing}
-                lastSyncTime={lastSyncTime}
-                fetchGitHubLive={fetchGitHubLive}
-                githubUrl={githubUrl}
-              />
-            </div>
 
             {/* 5. Agora (Now) - Projetos Atuais */}
             <Now
               t={t}
               lang={lang}
               nowProjects={nowProjects}
-              onSelectModal={(data) => setSelectedInfoModal(data)}
+              onOpenCaseStudy={handleOpenCaseStudy}
             />
 
             {/* 6. Blog & Artigos em Markdown */}
@@ -602,9 +448,7 @@ function PortfolioContent() {
 
       {/* Modals */}
       <Modal
-        selectedProject={selectedProject}
         selectedInfoModal={selectedInfoModal}
-        onCloseProject={() => setSelectedProject(null)}
         onCloseInfo={() => setSelectedInfoModal(null)}
         lang={lang}
         t={t}

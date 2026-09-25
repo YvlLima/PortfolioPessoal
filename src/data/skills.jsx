@@ -10,7 +10,8 @@ import {
   ShieldCheck,
   Brain,
   Users,
-  Search
+  Search,
+  Gamepad2
 } from 'lucide-react';
 
 // Skills Técnicas
@@ -135,6 +136,17 @@ export const skillsList = [
       en: 'Computer networking fundamentals, OSI model, protocols (TCP/IP, DNS, HTTP/S), packet analysis, cybersecurity principles, firewalls, and permissions.'
     },
     highlights: ['Redes & Protocolos (TCP/IP)', 'Análise de Segurança', 'Firewalls & Permissões', 'ESTG CTeSP']
+  },
+  {
+    id: 'godot',
+    name: 'Godot & GDScript',
+    catKey: 'tools',
+    icon: <Gamepad2 size={22} />,
+    desc: {
+      pt: 'Desenvolvimento de protótipos de jogos 3D no motor Godot 4, programação em GDScript, geração procedural por chunks e arquitetura modular orientada a dados.',
+      en: '3D game prototyping in Godot 4, GDScript programming, procedural chunk-based world generation, and modular data-oriented architecture.'
+    },
+    highlights: ['Godot Engine 4.4+', 'GDScript', 'Geração Procedural', 'Arquitetura de Cenas']
   },
 ];
 

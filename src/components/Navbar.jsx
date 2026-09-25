@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Terminal, X, Menu, Sun, Moon, Download, Mail } from 'lucide-react';
 import LanguageToggle from './LanguageToggle';
 
@@ -12,20 +12,38 @@ export const Navbar = ({
   isDark,
   onNavigateHome
 }) => {
+  const menuRef = useRef(null);
+  const toggleRef = useRef(null);
   const navLinks = [
-    { id: 'sobre', label: t.nav.sobre, num: '01.' },
-    { id: 'skills', label: t.nav.skills, num: '02.' },
-    { id: 'projetos', label: t.nav.projetos, num: '03.' },
-    { id: 'agora', label: t.nav.agora, num: '04.' },
-    { id: 'blog', label: t.nav.blog, num: '05.' },
-    { id: 'educacao', label: t.nav.educacao, num: '06.' },
-    { id: 'contacto', label: t.nav.contacto, num: '07.' },
+    { id: 'projetos', label: t.nav.projetos },
+    { id: 'sobre', label: t.nav.sobre },
+    { id: 'educacao', label: t.nav.educacao },
+    { id: 'contacto', label: t.nav.contacto },
   ];
-
-  const handleLinkClick = () => {
+  const handleLinkClick = (event, section = 'hero') => {
+    event.preventDefault();
     setMobileMenuOpen(false);
-    if (onNavigateHome) onNavigateHome();
+    onNavigateHome(section);
   };
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const menu = menuRef.current;
+    menu?.querySelector('button')?.focus();
+    const trap = event => {
+      if (event.key === 'Escape') { setMobileMenuOpen(false); toggleRef.current?.focus(); }
+      if (event.key !== 'Tab') return;
+      const items = [...menu.querySelectorAll('button, a[href]')].filter(el => el.getClientRects().length > 0);
+      const first = items[0], last = items[items.length - 1];
+      if (!menu.contains(document.activeElement)) { event.preventDefault(); (event.shiftKey ? last : first)?.focus(); }
+      else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    const media = window.matchMedia('(max-width: 960px)');
+    const resize = () => { if (!media.matches) setMobileMenuOpen(false); };
+    document.addEventListener('keydown', trap);
+    media.addEventListener('change', resize);
+    return () => { document.removeEventListener('keydown', trap); media.removeEventListener('change', resize); };
+  }, [mobileMenuOpen, setMobileMenuOpen]);
 
   const themeLabel = lang === 'pt'
     ? (isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro')
@@ -44,9 +62,9 @@ export const Navbar = ({
         <div className="container nav-container">
           {/* Brand Logo */}
           <a
-            href="#hero"
+            href="/#hero"
             className="logo"
-            aria-label="Gonçalo Lima - Página Inicial"
+            aria-label={lang === 'pt' ? 'Gonçalo Lima — Início' : 'Gonçalo Lima — Home'}
             onClick={handleLinkClick}
           >
             <Terminal size={20} className="accent" aria-hidden="true" />
@@ -54,8 +72,8 @@ export const Navbar = ({
           </a>
 
           {/* Desktop & Mobile Nav Menu */}
-          <nav className="nav-main" aria-label="Navegação Principal">
-            <ul className={`nav-menu ${mobileMenuOpen ? 'open' : ''}`}>
+          <nav className="nav-main" aria-label={lang === 'pt' ? 'Navegação principal' : 'Main navigation'}>
+            <ul id="navigation-menu" ref={menuRef} className={`nav-menu ${mobileMenuOpen ? 'open' : ''}`}>
               {/* Drawer Header for Mobile */}
               <li className="mobile-drawer-header">
                 <span className="logo" style={{ fontSize: '1.1rem' }}>
@@ -64,8 +82,8 @@ export const Navbar = ({
                 </span>
                 <button
                   className="mobile-close-icon"
-                  onClick={() => setMobileMenuOpen(false)}
-                  aria-label="Fechar Menu de Navegação"
+                  onClick={() => { setMobileMenuOpen(false); toggleRef.current?.focus(); }}
+                  aria-label={lang === 'pt' ? 'Fechar menu' : 'Close menu'}
                 >
                   <X size={20} />
                 </button>
@@ -75,11 +93,12 @@ export const Navbar = ({
               {navLinks.map((link) => (
                 <li key={link.id} className="nav-item">
                   <a
-                    href={`#${link.id}`}
+                    href={`/#${link.id}`}
                     className={`nav-link ${activeSection === link.id ? 'active' : ''}`}
-                    onClick={handleLinkClick}
+                    onClick={event => handleLinkClick(event, link.id)}
+                    aria-current={activeSection === link.id ? 'location' : undefined}
                   >
-                    <span className="num">{link.num}</span>
+                    
                     <span className="txt">{link.label}</span>
                   </a>
                 </li>
@@ -116,9 +135,9 @@ export const Navbar = ({
 
                 {/* Contact Action Button */}
                 <a
-                  href="#contacto"
+                  href="/#contacto"
                   className="nav-cta-btn"
-                  onClick={handleLinkClick}
+                  onClick={event => handleLinkClick(event, 'contacto')}
                   title={t.nav.ctaBtn}
                   aria-label={t.nav.ctaBtn}
                 >
@@ -132,9 +151,11 @@ export const Navbar = ({
 
           {/* Mobile Hamburger Toggle Button */}
           <button
+            ref={toggleRef}
             className="mobile-toggle"
+            aria-controls="navigation-menu"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? "Fechar Menu" : "Abrir Menu"}
+            aria-label={lang === 'pt' ? (mobileMenuOpen ? 'Fechar menu' : 'Abrir menu') : (mobileMenuOpen ? 'Close menu' : 'Open menu')}
             aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

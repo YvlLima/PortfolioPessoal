@@ -201,9 +201,9 @@ export const ContactForm = ({
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>{t.contact.formName}</label>
+                    <label htmlFor="contact-name">{t.contact.formName}</label>
                     <input
-                      type="text"
+                      id="contact-name" type="text"
                       required
                       maxLength={80}
                       className="form-input"
@@ -213,9 +213,9 @@ export const ContactForm = ({
                     />
                   </div>
                   <div className="form-group">
-                    <label>{t.contact.formEmail}</label>
+                    <label htmlFor="contact-email">{t.contact.formEmail}</label>
                     <input
-                      type="email"
+                      id="contact-email" type="email"
                       required
                       maxLength={120}
                       className="form-input"
@@ -227,9 +227,9 @@ export const ContactForm = ({
                 </div>
 
                 <div className="form-group">
-                  <label>{t.contact.formSubject}</label>
+                  <label htmlFor="contact-subject">{t.contact.formSubject}</label>
                   <input
-                    type="text"
+                    id="contact-subject" type="text"
                     required
                     maxLength={120}
                     className="form-input"
@@ -241,13 +241,13 @@ export const ContactForm = ({
 
                 <div className="form-group">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <label>{t.contact.formMessage}</label>
+                    <label htmlFor="contact-message">{t.contact.formMessage}</label>
                     <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-code)' }}>
                       {formState.message.length}/2000
                     </span>
                   </div>
                   <textarea
-                    required
+                    id="contact-message" required
                     minLength={10}
                     maxLength={2000}
                     className="form-textarea"

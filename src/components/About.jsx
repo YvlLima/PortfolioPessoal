@@ -15,7 +15,7 @@ export const About = ({
       <div className="container">
         <FadeInSection>
           <h2 className="section-title">
-            <span className="number">01.</span> {t.about.title}
+            <span className="number">02.</span> {t.about.title}
           </h2>
 
           <div className="about-grid">

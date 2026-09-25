@@ -1,438 +1,55 @@
-import React, { useEffect } from 'react';
-import {
-  ArrowLeft,
-  ArrowRight,
-  ExternalLink,
-  FolderGit2,
-  Calendar,
-  UserCheck,
-  Clock,
-  Activity,
-  Layers,
-  Zap,
-  Bot,
-  Terminal,
-  CheckCircle2,
-  AlertTriangle,
-  Lightbulb,
-  Sparkles,
-  Image as ImageIcon,
-  ChevronRight
-} from 'lucide-react';
+import React from 'react';
+import { ArrowLeft, ArrowRight, ExternalLink, FolderGit2 } from 'lucide-react';
 import SpotlightCard from './SpotlightCard';
-import FadeInSection from './FadeInSection';
-import { projectsCaseStudies } from '../data/projectsData';
-
-export const ProjectCaseStudy = ({
-  project,
-  onBackToProjects,
-  onSelectCaseStudy,
-  onBackHome,
-  t,
-  lang = 'pt'
-}) => {
-  const csT = t?.caseStudies || {};
-
-  // Scroll to top on mount or when project changes
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [project]);
-
-  if (!project) {
-    return (
-      <section className="section case-study-not-found" style={{ paddingTop: 'calc(var(--nav-height) + 3rem)', minHeight: '70vh' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
-          <h2>{csT.notFoundTitle || (lang === 'pt' ? 'Case Study Não Encontrado' : 'Case Study Not Found')}</h2>
-          <p style={{ margin: '1.5rem 0' }}>
-            {csT.notFoundText || (lang === 'pt'
-              ? 'O projeto que procuras não existe ou foi movido.'
-              : 'The project you are looking for does not exist or has been moved.')}
-          </p>
-          <button type="button" onClick={onBackToProjects} className="btn btn-primary">
-            <ArrowLeft size={16} />
-            <span>{csT.backProjects || (lang === 'pt' ? 'Voltar aos Projetos' : 'Back to Projects')}</span>
-          </button>
+import { projectsCaseStudies, projectCategories } from '../data/projectsData';
+export default function ProjectCaseStudy({ project, onBackToProjects, onSelectCaseStudy, onBackHome, lang = 'pt' }) {
+  const pt = lang === 'pt';
+  if (!project) return <section className="section project-page-wrapper"><div className="container"><h1>{pt ? 'Projeto não encontrado' : 'Project not found'}</h1><button className="btn btn-primary" onClick={onBackToProjects}>{pt ? 'Ver projetos' : 'View projects'}</button></div></section>;
+  const next = projectsCaseStudies[(projectsCaseStudies.indexOf(project) + 1) % projectsCaseStudies.length];
+  return <article className="section case-study-view project-page-wrapper">
+    <div className="container project-detail-container">
+      <nav className="case-study-top-bar" aria-label={pt ? 'Navegação do projeto' : 'Project navigation'}>
+        <button className="blog-back-btn" onClick={onBackToProjects}><ArrowLeft size={16} />{pt ? 'Todos os projetos' : 'All projects'}</button>
+        <button className="breadcrumb-link" onClick={() => onBackHome()}>{pt ? 'Início' : 'Home'}</button>
+      </nav>
+      <SpotlightCard className="case-study-header-card">
+        <div className="project-window-bar"><span className="project-category">{projectCategories[project.category][lang]}</span><span className="project-badge-pill">{project.status[lang]}</span></div>
+        <div className="case-study-header-inner">
+          <h1 className="case-study-main-heading">{project.title}</h1>
+          <p className="case-study-lead-tagline">{project.summary[lang]}</p>
+          <div className="case-study-header-stack">{project.tags.map(tag => <span className="case-study-tech-pill" key={tag}>{tag}</span>)}</div>
+          <div className="case-study-header-links">
+            {project.links.demo && <a className="btn btn-primary" href={project.links.demo} target="_blank" rel="noopener noreferrer"><ExternalLink size={16} />Demo</a>}
+            {project.links.github && <a className="btn btn-outline" href={project.links.github} target="_blank" rel="noopener noreferrer"><FolderGit2 size={16} />{pt ? 'Ver código' : 'View code'}</a>}
+          </div>
         </div>
+      </SpotlightCard>
+      <section className="case-study-section"><h2 className="case-study-section-heading">{pt ? 'O projeto' : 'The project'}</h2><p className="case-study-paragraph">{project.context[lang]}</p></section>
+      <section className="case-study-section">
+        <h2 className="case-study-section-heading">{pt ? 'Funcionalidades' : 'Features'}</h2>
+        <ul className="project-feature-list">
+          {project.features[lang].map((feature, i) => {
+            const isImplemented = feature.startsWith('Implementado:') || feature.startsWith('Implemented:');
+            const isPlanned = feature.startsWith('Planeado:') || feature.startsWith('Planned:');
+            if (isImplemented || isPlanned) {
+              const colonIndex = feature.indexOf(':');
+              const tagLabel = feature.slice(0, colonIndex).trim();
+              const text = feature.slice(colonIndex + 1).trim();
+              return (
+                <li key={i} className="project-feature-tagged">
+                  <span className={`feature-status-tag ${isImplemented ? 'tag-implemented' : 'tag-planned'}`}>{tagLabel}</span>
+                  <span>{text}</span>
+                </li>
+              );
+            }
+            return <li key={i}>{feature}</li>;
+          })}
+        </ul>
       </section>
-    );
-  }
-
-  // Find next case study for bottom navigation
-  const currentIndex = projectsCaseStudies.findIndex((p) => p.slug === project.slug);
-  const nextProject = projectsCaseStudies[(currentIndex + 1) % projectsCaseStudies.length];
-
-  const getCategoryIcon = (iconName) => {
-    switch (iconName) {
-      case 'Zap':
-        return <Zap size={28} className="accent" />;
-      case 'Layers':
-        return <Layers size={28} className="accent" />;
-      case 'Bot':
-        return <Bot size={28} className="accent" />;
-      default:
-        return <Terminal size={28} className="accent" />;
-    }
-  };
-
-  const resolveText = (val) => {
-    if (val && typeof val === 'object') {
-      return val[lang] || val.pt || '';
-    }
-    return val || '';
-  };
-
-  const contextData = project.context?.[lang] || project.context?.pt || project.context || {};
-  const solutionData = project.solution?.[lang] || project.solution?.pt || project.solution || {};
-  const stackWhyData = project.stackWhy?.[lang] || project.stackWhy?.pt || project.stackWhy || {};
-  const resultsData = project.results?.[lang] || project.results?.pt || project.results || {};
-
-  return (
-    <article className="case-study-view section" style={{ paddingTop: 'calc(var(--nav-height) + 2rem)', minHeight: '90vh' }}>
-      <div className="container" style={{ maxWidth: '980px' }}>
-        <FadeInSection>
-          {/* Top Breadcrumbs & Back Navigation */}
-          <div className="case-study-top-bar">
-            <button
-              type="button"
-              onClick={onBackToProjects}
-              className="blog-back-btn"
-              aria-label={csT.backProjects || (lang === 'pt' ? 'Voltar a todos os projetos' : 'Back to all projects')}
-            >
-              <ArrowLeft size={16} />
-              <span>{csT.backProjects || (lang === 'pt' ? '← Voltar aos Projetos' : '← Back to Projects')}</span>
-            </button>
-
-            <div className="case-study-breadcrumbs">
-              <button type="button" onClick={onBackHome} className="breadcrumb-link">
-                {lang === 'pt' ? 'Início' : 'Home'}
-              </button>
-              <ChevronRight size={14} className="breadcrumb-sep" />
-              <button type="button" onClick={onBackToProjects} className="breadcrumb-link">
-                {t?.nav?.projetos || (lang === 'pt' ? 'Projetos' : 'Projects')}
-              </button>
-              <ChevronRight size={14} className="breadcrumb-sep" />
-              <span className="breadcrumb-current">{project.title}</span>
-            </div>
-          </div>
-
-          {/* Header Hero Card */}
-          <SpotlightCard className="case-study-header-card">
-            {/* Terminal Window Header Bar */}
-            <div className="project-window-bar">
-              <div className="window-dots">
-                <span className="window-dot red" />
-                <span className="window-dot yellow" />
-                <span className="window-dot green" />
-              </div>
-              <span className="window-title">{project.windowPath}</span>
-              <span className="project-badge-pill">{resolveText(project.heroBadge)}</span>
-            </div>
-
-            <div className="case-study-header-inner">
-              <div className="case-study-hero-top-row">
-                <div className="case-study-icon-box">
-                  {getCategoryIcon(project.thumbnail.iconName)}
-                </div>
-                <div className="case-study-title-group">
-                  <span className="case-study-category-badge">{resolveText(project.category)}</span>
-                  <h1 className="case-study-main-heading">{project.title}</h1>
-                </div>
-              </div>
-
-              <p className="case-study-lead-tagline">{resolveText(project.tagline)}</p>
-
-              {/* Meta Stats Row */}
-              <div className="case-study-meta-grid">
-                <div className="case-study-meta-box">
-                  <Calendar size={15} className="accent" />
-                  <div>
-                    <span className="meta-box-label">{csT.year || (lang === 'pt' ? 'Ano' : 'Year')}</span>
-                    <span className="meta-box-val">{project.meta.year}</span>
-                  </div>
-                </div>
-                <div className="case-study-meta-box">
-                  <UserCheck size={15} className="accent" />
-                  <div>
-                    <span className="meta-box-label">{csT.role || (lang === 'pt' ? 'Função' : 'Role')}</span>
-                    <span className="meta-box-val">{resolveText(project.meta.role)}</span>
-                  </div>
-                </div>
-                <div className="case-study-meta-box">
-                  <Clock size={15} className="accent" />
-                  <div>
-                    <span className="meta-box-label">{csT.duration || (lang === 'pt' ? 'Duração' : 'Duration')}</span>
-                    <span className="meta-box-val">{resolveText(project.meta.duration)}</span>
-                  </div>
-                </div>
-                <div className="case-study-meta-box">
-                  <Activity size={15} className="accent" />
-                  <div>
-                    <span className="meta-box-label">{csT.status || (lang === 'pt' ? 'Estado' : 'Status')}</span>
-                    <span className="meta-box-val">{resolveText(project.meta.status)}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons & Badges */}
-              <div className="case-study-header-actions-row">
-                <div className="case-study-header-links">
-                  {project.links.github && (
-                    <a
-                      href={project.links.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-outline"
-                    >
-                      <FolderGit2 size={16} />
-                      <span>{csT.githubBtn || (lang === 'pt' ? 'Ver no GitHub' : 'View on GitHub')}</span>
-                    </a>
-                  )}
-                  {project.links.demo && (
-                    <a
-                      href={project.links.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-primary"
-                    >
-                      <ExternalLink size={16} />
-                      <span>{csT.liveBtn || (lang === 'pt' ? 'Demo Ao Vivo' : 'Live Demo')}</span>
-                    </a>
-                  )}
-                </div>
-
-                {/* Stack Badges Pill List */}
-                <div className="case-study-header-stack">
-                  {project.stack.map((item, idx) => (
-                    <span key={idx} className="case-study-tech-pill">
-                      {item.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </SpotlightCard>
-
-          {/* Section 1: Metrics Overview Grid */}
-          {project.metrics && project.metrics.length > 0 && (
-            <div className="case-study-section">
-              <h2 className="case-study-section-heading">
-                <span className="section-step-num">01.</span>{' '}
-                {csT.metricsHeading || (lang === 'pt' ? 'Métricas de Impacto & Escala' : 'Impact & Scale Metrics')}
-              </h2>
-              <div className="case-study-metrics-grid">
-                {project.metrics.map((metric, i) => (
-                  <SpotlightCard key={i} className="metric-highlight-card">
-                    <div className="metric-number-glow">{metric.value}</div>
-                    <div className="metric-label-strong">{resolveText(metric.label)}</div>
-                    <p className="metric-description-text">{resolveText(metric.desc)}</p>
-                  </SpotlightCard>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Section 2: Contexto / Problema */}
-          {contextData && (
-            <div className="case-study-section">
-              <h2 className="case-study-section-heading">
-                <span className="section-step-num">02.</span> {contextData.title}
-              </h2>
-              <SpotlightCard className="case-study-card-panel">
-                <div className="case-study-panel-body">
-                  {(contextData.paragraphs || []).map((p, i) => (
-                    <p key={i} className="case-study-paragraph">{p}</p>
-                  ))}
-                </div>
-              </SpotlightCard>
-            </div>
-          )}
-
-          {/* Section 3: Solução & Principais Funcionalidades */}
-          {solutionData && (
-            <div className="case-study-section">
-              <h2 className="case-study-section-heading">
-                <span className="section-step-num">03.</span> {solutionData.title}
-              </h2>
-              <SpotlightCard className="case-study-card-panel">
-                <div className="case-study-panel-body">
-                  {(solutionData.paragraphs || []).map((p, i) => (
-                    <p key={i} className="case-study-paragraph">{p}</p>
-                  ))}
-
-                  {solutionData.features && (
-                    <div className="case-study-features-grid">
-                      {solutionData.features.map((feat, idx) => (
-                        <div key={idx} className="feature-item-box">
-                          <div className="feature-header-line">
-                            <CheckCircle2 size={16} className="accent" />
-                            <h3 className="feature-item-title">{feat.title}</h3>
-                          </div>
-                          <p className="feature-item-desc">{feat.description}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </SpotlightCard>
-            </div>
-          )}
-
-          {/* Section 4: Stack & Decisões de Arquitetura */}
-          {stackWhyData && (
-            <div className="case-study-section">
-              <h2 className="case-study-section-heading">
-                <span className="section-step-num">04.</span> {stackWhyData.title}
-              </h2>
-              <div className="case-study-stack-grid">
-                {(stackWhyData.items || []).map((item, idx) => (
-                  <SpotlightCard key={idx} className="stack-why-card">
-                    <div className="stack-why-header">
-                      <Sparkles size={16} className="accent" />
-                      <h3 className="stack-why-tech">{item.tech}</h3>
-                    </div>
-                    <p className="stack-why-reason">{item.reason}</p>
-                  </SpotlightCard>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Section 5: Desafios Técnicos Resolvidos */}
-          {project.challenges && project.challenges.length > 0 && (
-            <div className="case-study-section">
-              <h2 className="case-study-section-heading">
-                <span className="section-step-num">05.</span>{' '}
-                {csT.challengesHeading || (lang === 'pt' ? 'Desafios Técnicos & Engenharia' : 'Technical Challenges & Engineering')}
-              </h2>
-              <div className="case-study-challenges-list">
-                {project.challenges.map((challenge, idx) => {
-                  const chData = challenge[lang] || challenge.pt || challenge;
-                  return (
-                    <SpotlightCard key={idx} className="challenge-item-card">
-                      <div className="challenge-header-bar">
-                        <span className="challenge-num-tag">{lang === 'pt' ? `DESAFIO #${challenge.number}` : `CHALLENGE #${challenge.number}`}</span>
-                        <h3 className="challenge-title-text">{chData.title}</h3>
-                      </div>
-
-                      <div className="challenge-body-grid">
-                        {/* Problem Block */}
-                        <div className="challenge-block problem">
-                          <div className="challenge-block-label">
-                            <AlertTriangle size={15} className="warning-icon" />
-                            <span>{csT.problemLabel || (lang === 'pt' ? 'Problema / Obstáculo' : 'Problem / Bottleneck')}</span>
-                          </div>
-                          <p className="challenge-block-content">{chData.problem}</p>
-                        </div>
-
-                        {/* Solution Block */}
-                        <div className="challenge-block solution">
-                          <div className="challenge-block-label">
-                            <Lightbulb size={15} className="accent" />
-                            <span>{csT.solutionLabel || (lang === 'pt' ? 'Solução de Engenharia' : 'Engineering Solution')}</span>
-                          </div>
-                          <p className="challenge-block-content">{chData.solution}</p>
-                        </div>
-                      </div>
-                    </SpotlightCard>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Section 6: Resultados & Estado Atual */}
-          {resultsData && (
-            <div className="case-study-section">
-              <h2 className="case-study-section-heading">
-                <span className="section-step-num">06.</span> {resultsData.title}
-              </h2>
-              <SpotlightCard className="case-study-card-panel">
-                <div className="case-study-panel-body">
-                  {(resultsData.paragraphs || []).map((p, i) => (
-                    <p key={i} className="case-study-paragraph">{p}</p>
-                  ))}
-
-                  {resultsData.currentStatusList && (
-                    <div className="status-checklist-box">
-                      <h4 className="checklist-heading">
-                        {csT.statusChecklistHeading || (lang === 'pt' ? 'Estado Atual de Implementação:' : 'Current Implementation Status:')}
-                      </h4>
-                      <ul className="status-checklist">
-                        {resultsData.currentStatusList.map((item, i) => (
-                          <li key={i}>
-                            <CheckCircle2 size={16} className="accent" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </SpotlightCard>
-            </div>
-          )}
-
-          {/* Section 7: Galeria de Screenshots / Demonstrações (Placeholders) */}
-          {project.gallery && project.gallery.length > 0 && (
-            <div className="case-study-section">
-              <h2 className="case-study-section-heading">
-                <span className="section-step-num">07.</span>{' '}
-                {csT.screenshotsHeading || (lang === 'pt' ? 'Capturas de Ecrã & Demonstrações' : 'Screenshots & Demonstrations')}
-              </h2>
-              <div className="case-study-gallery-grid">
-                {project.gallery.map((item) => {
-                  const itemData = item[lang] || item.pt || item;
-                  return (
-                    <SpotlightCard key={item.id} className="gallery-placeholder-card">
-                      <div className="gallery-preview-frame">
-                        <div className="gallery-preview-icon">
-                          <ImageIcon size={32} className="accent" />
-                        </div>
-                        <span className="gallery-type-badge">{item.type}</span>
-                      </div>
-                      <div className="gallery-caption-wrapper">
-                        <h4 className="gallery-card-title">{itemData.title}</h4>
-                        <p className="gallery-card-caption">{itemData.caption}</p>
-                      </div>
-                    </SpotlightCard>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Bottom Navigation & Cross Links */}
-          <div className="case-study-footer-nav">
-            <button
-              type="button"
-              onClick={onBackToProjects}
-              className="btn btn-outline"
-            >
-              <ArrowLeft size={16} />
-              <span>{csT.backProjects || (lang === 'pt' ? '← Voltar aos Projetos' : '← Back to Projects')}</span>
-            </button>
-
-            {nextProject && (
-              <button
-                type="button"
-                onClick={() => onSelectCaseStudy(nextProject.slug)}
-                className="btn btn-outline next-case-study-btn"
-              >
-                <span>
-                  {csT.nextProject || (lang === 'pt' ? 'Próximo Case Study' : 'Next Case Study')}: <strong>{nextProject.title}</strong>
-                </span>
-                <ArrowRight size={16} />
-              </button>
-            )}
-
-            <a href="#contacto" className="btn btn-primary" onClick={onBackHome}>
-              {t?.nav?.ctaBtn || (lang === 'pt' ? 'Entrar em Contacto' : 'Get in Touch')}
-            </a>
-          </div>
-        </FadeInSection>
-      </div>
-    </article>
-  );
-};
-
-export default ProjectCaseStudy;
+      <section className="case-study-section"><h2 className="case-study-section-heading">{pt ? 'Como está organizado' : 'How it is organised'}</h2><p className="case-study-paragraph">{project.technical[lang]}</p></section>
+      <section className="case-study-section"><h2 className="case-study-section-heading">{pt ? 'Estado e âmbito' : 'Status and scope'}</h2><p className="case-study-paragraph">{project.scope[lang]}</p></section>
+      {project.links?.github && project.evidence?.length > 0 && <section className="case-study-section"><h2 className="case-study-section-heading">{pt ? 'Explorar no código' : 'Explore the source'}</h2><ul className="project-source-list">{project.evidence.map(path => <li key={path}><a href={`${project.links.github}/tree/main/${path}`} target="_blank" rel="noopener noreferrer">{path}<ExternalLink size={13} /></a></li>)}</ul></section>}
+      <div className="case-study-footer-nav"><button className="btn btn-outline" onClick={onBackToProjects}><ArrowLeft size={16} />{pt ? 'Projetos' : 'Projects'}</button><button className="btn btn-outline" onClick={() => onSelectCaseStudy(next.slug)}>{next.title}<ArrowRight size={16} /></button><a className="btn btn-primary" href="/#contacto" onClick={e => { e.preventDefault(); onBackHome('contacto'); }}>{pt ? 'Contactar' : 'Contact'}</a></div>
+    </div>
+  </article>;
+}

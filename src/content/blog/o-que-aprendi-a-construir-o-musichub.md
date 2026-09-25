@@ -1,59 +1,26 @@
 ---
-title: "O que aprendi a construir o MusicHub: React, Streaming de Áudio e Performance Web"
+title: "MusicHub: interface web, API e persistência"
 date: "2026-08-25"
-excerpt: "Uma reflexão sobre os desafios técnicos de sincronização de estado, manipulação da HTML5 Audio API e otimização de renderização na criação de uma plataforma web interativa de música."
-tags: ["React", "JavaScript", "Web Dev", "Performance", "Audio API"]
-readTime: "5"
+excerpt: "Uma leitura da estrutura do MusicHub: JavaScript no browser, Express no servidor e PostgreSQL para os dados."
+tags: ["JavaScript", "Express", "PostgreSQL"]
+readTime: "2"
 author: "Gonçalo Lima"
 ---
 
-## A Motivação
+## A estrutura do projeto
 
-Quando comecei a desenhar o **MusicHub**, o meu objetivo principal era criar uma interface fluida, moderna e reativa para descoberta e reprodução contínua de áudio na web, sem depender de bibliotecas externas pesadas e com deploy ágil na cloud (Cloudflare Pages).
+O [repositório do MusicHub](https://github.com/YvlLima/MusicHub) reúne um frontend em HTML, CSS e JavaScript e um backend em Node.js com Express. A interface está em `public/`; as rotas e o middleware do servidor estão em `src/`.
 
-No entanto, reproduzir música na web traz desafios específicos que não surgem em aplicações web tradicionais de formulários e tabelas.
+Esta organização separa a apresentação dos dados da lógica executada no servidor. O frontend deste repositório não usa React.
 
----
+## Contas e dados
 
-## 3 Principais Desafios Técnicos Superados
+As dependências incluem JWT para autenticação, bcrypt para hashing de palavras-passe e o cliente `pg` para PostgreSQL. O ficheiro `schema.sql` descreve a estrutura da base de dados. As rotas incluem utilizadores, likes e avaliações.
 
-### 1. Gestão do Ciclo de Vida da `HTML5 Audio API`
-Trabalhar com a instância nativa de `new Audio()` dentro do ciclo de componentes do React exige cuidado redobrado com efeitos secundários e re-renders:
-- Criar a instância de áudio fora do estado reativo com `useRef` para evitar recriação a cada render do componente.
-- Registar e limpar ouvintes de eventos (`timeupdate`, `ended`, `canplaythrough`, `error`) no retorno da `useEffect` para prevenir memory leaks graves.
+## Verificação
 
-```javascript
-// Exemplo de padrão limpo com useRef para HTML5 Audio
-const audioRef = useRef(new Audio());
+O repositório contém testes de API e segurança com Jest e Supertest. Para consultar o que é verificado, lê a pasta `tests/` e os scripts em `package.json`. A existência destes testes não comprova, por si só, uma auditoria completa ou um resultado de execução atual.
 
-useEffect(() => {
-  const audio = audioRef.current;
-  const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
+## Explorar
 
-  audio.addEventListener('timeupdate', handleTimeUpdate);
-  return () => {
-    audio.removeEventListener('timeupdate', handleTimeUpdate);
-    audio.pause();
-  };
-}, []);
-```
-
-### 2. Sincronização e Scrubbing da Barra de Progresso
-Uma experiência de utilizador agradável exige que o utilizador possa arrastar a barra de progresso (timeline) sem que o áudio engasgue:
-- Separei o estado visual do arrasto (*isDragging*) do tempo real da faixa.
-- Só aplico o valor de `audio.currentTime` quando o utilizador larga o ponteiro do rato (`onPointerUp`), garantindo uma transição fluida.
-
-### 3. Deploy Contínuo e Edge Hosting no Cloudflare Pages
-A escolha do **Cloudflare Pages** proporcionou:
-- Tempos de carregamento quase instantâneos graças à CDN global distribuída na Edge.
-- Integração contínua com Git: qualquer commit faz deploy automático em menos de 30 segundos.
-
----
-
-## Principais Lições Aprendidas
-
-1. **Menos dependências, maior controlo:** Manipular as APIs nativas do browser (como a Audio API e Web APIs modernas) permite entender a fundo como a plataforma web realmente opera.
-2. **Performance é UI:** Uma interface só é verdadeiramente bonita se responder instantaneamente a cada clique ou gesto do utilizador.
-3. **Arquitetura modular poupa tempo:** Separar componentes de controlo, lista de faixas e visualizadores facilitou muito a manutenção posterior.
-
-O projeto está disponível em código aberto no meu GitHub e continuará a evoluir com novas funcionalidades!
+A [página do projeto](/projetos/musichub) reúne as funcionalidades e ligações ao código. Esta descrição corresponde à estrutura pública consultada em 25 de setembro de 2026; não apresenta benchmarks nem funcionalidades futuras como concluídas.

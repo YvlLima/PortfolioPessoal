@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Terminal as TerminalIcon } from 'lucide-react';
+import { projectsCaseStudies } from '../data/projectsData';
 
 export const TerminalWidget = ({ lang = 'pt', userEmail = 'goncalomartinslima2007@gmail.com', githubUrl = 'https://github.com/YvlLima', linkedinUrl = 'https://www.linkedin.com/in/gon%C3%A7alo-lima-532318428/?skipRedirect=true' }) => {
   const [inputVal, setInputVal] = useState('');
@@ -89,27 +90,17 @@ export const TerminalWidget = ({ lang = 'pt', userEmail = 'goncalomartinslima200
           ? `[Frontend] React, JavaScript (ES6+), HTML5, CSS3, Vite
 [Backend]  Node.js, C#, PHP, Discord.js, REST APIs
 [Sistemas] Cibersegurança, Redes TCP/IP, Linux, Administração
-[Tools]    Git, GitHub, VS Code, Rojo (Luau), Cloudflare Pages`
+[Tools]    Git, GitHub, VS Code, Godot / GDScript, Cloudflare Pages`
           : `[Frontend] React, JavaScript (ES6+), HTML5, CSS3, Vite
 [Backend]  Node.js, C#, PHP, Discord.js, REST APIs
 [Systems]  Cybersecurity, TCP/IP Networks, Linux, SysAdmin
-[Tools]    Git, GitHub, VS Code, Rojo (Luau), Cloudflare Pages`;
+[Tools]    Git, GitHub, VS Code, Godot / GDScript, Cloudflare Pages`;
         break;
 
       case 'projects':
       case 'projects --list':
       case 'projects -l':
-        outputText = lang === 'pt'
-          ? `1. Music Hub               [React / Cloudflare] Web App de áudio em tempo real
-2. Fazbear Nightshift      [Node.js / Discord]  Bot PvP com turnos e economia
-3. Galeria Piso Dois (PAP) [WordPress / PHP]   Galeria comunitária escolar
-4. BagLess                 [JavaScript / UI]    Utilitário de produtividade
-5. Portfólio Pessoal       [React + Vite]       SPA Cyberpunk com Spotlight 3D`
-          : `1. Music Hub               [React / Cloudflare] Real-time audio streaming app
-2. Fazbear Nightshift      [Node.js / Discord]  PvP turn-based Discord bot
-3. Galeria Piso Dois (PAP) [WordPress / PHP]   Student community gallery
-4. BagLess                 [JavaScript / UI]    Productivity & routine utility
-5. Personal Portfolio      [React + Vite]       Cyberpunk SPA with 3D Spotlight`;
+        outputText = projectsCaseStudies.map((project, i) => `${i + 1}. ${project.title} [${project.tags.slice(0, 2).join(' / ')}]\n   ${project.summary[lang]}`).join('\n');
         break;
 
       case 'contact':
@@ -167,7 +158,7 @@ export const TerminalWidget = ({ lang = 'pt', userEmail = 'goncalomartinslima200
   return (
     <div
       className="terminal-widget"
-      onClick={handleTerminalClick}
+      onClick={event => { if (!event.target.closest('button')) handleTerminalClick(); }}
       role="region"
       aria-label={lang === 'pt' ? 'Terminal interativo simulado' : 'Simulated interactive terminal'}
     >
@@ -187,6 +178,9 @@ export const TerminalWidget = ({ lang = 'pt', userEmail = 'goncalomartinslima200
         </div>
       </div>
 
+      <div className="terminal-examples" role="group" aria-label={lang === 'pt' ? 'Exemplos de comandos' : 'Command examples'}>
+        {['whoami', 'projects --list', 'help'].map(command => <button type="button" key={command} onClick={() => executeCommand(command)}>{command}</button>)}
+      </div>
       {/* Terminal Screen Body */}
       <div className="terminal-body" ref={terminalBodyRef}>
         <div className="terminal-output" aria-live="polite">
@@ -194,7 +188,7 @@ export const TerminalWidget = ({ lang = 'pt', userEmail = 'goncalomartinslima200
             if (item.type === 'system') {
               return (
                 <div key={idx} className="terminal-line system-line">
-                  {item.content}
+                  {lang === 'pt' ? 'Gonçalo Lima · Web, bots e jogos.\nExperimenta um dos comandos acima.' : 'Gonçalo Lima · Web, bots and games.\nTry one of the commands above.'}
                 </div>
               );
             }
@@ -218,6 +212,7 @@ export const TerminalWidget = ({ lang = 'pt', userEmail = 'goncalomartinslima200
         <div className="terminal-input-row">
           <span className="terminal-prompt" aria-hidden="true">goncalo@portfolio:~$</span>
           <input
+            placeholder="help"
             ref={inputRef}
             type="text"
             className="terminal-input"

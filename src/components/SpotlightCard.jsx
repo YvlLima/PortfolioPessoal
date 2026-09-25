@@ -15,6 +15,7 @@ export const SpotlightCard = ({
   const latestEventRef = useRef(null);
 
   const handleMouseMove = (e) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if (!cardRef.current) return;
     latestEventRef.current = { clientX: e.clientX, clientY: e.clientY };
 

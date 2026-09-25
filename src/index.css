@@ -17,7 +17,7 @@
   
   --text-primary: #f3f4f6;
   --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
+  --text-muted: #a1a8b3;
   
   --border-color: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(100, 255, 218, 0.3);
@@ -46,7 +46,7 @@
   --bg-card-hover: #f1f5f9;
   --bg-glass: rgba(255, 255, 255, 0.9);
   
-  --accent: #0d9488;
+  --accent: #08776d;
   --accent-light: #0f766e;
   --accent-glow: rgba(13, 148, 136, 0.16);
   --accent-dim: rgba(13, 148, 136, 0.4);
@@ -4784,3 +4784,101 @@ a, button, input, textarea, select {
 }
 
 
+
+/* Portfolio refinement: compact hero, readable evidence and accessible controls. */
+.hero-section { min-height: auto; padding-top: calc(var(--nav-height) + 3rem); padding-bottom: 3rem; }
+.hero-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 2.5rem; }
+.hero-title { font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.35; }
+.hero-description { margin-top: 1.25rem; margin-bottom: 1.5rem; }
+.hero-cta { gap: .75rem; }
+.hero-cta .btn { padding: .75rem 1rem; }
+.terminal-widget { height: 330px; }
+.terminal-examples { display: flex; flex-wrap: wrap; gap: .5rem; padding: .75rem 1rem; border-bottom: 1px solid var(--border-color); }
+.terminal-examples button { padding: .4rem .65rem; border: 1px solid var(--border-hover); border-radius: 6px; color: var(--accent); background: var(--bg-secondary); font-family: var(--font-code); }
+.terminal-input { min-width: 0; }
+.terminal-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.terminal-input-row { margin-top: 1rem; }
+.project-card-v2 { cursor: default; }
+.project-card-body-v2 { padding-bottom: 1rem; }
+.project-desc-v2 { color: var(--text-secondary); }
+.project-category { font-family: var(--font-code); font-size: .8rem; color: var(--accent); }
+.project-window-bar { gap: .65rem; flex-wrap: wrap; }
+.project-badge-pill { white-space: normal; }
+.project-actions-row { flex-wrap: wrap; }
+.project-action-btn { min-height: 40px; }
+.project-page-wrapper { padding-top: calc(var(--nav-height) + 2rem); }
+.project-detail-container { max-width: 940px; }
+.projects-page { padding-top: 2rem; }
+.case-study-header-links { margin-top: 1.5rem; flex-wrap: wrap; }
+.case-study-section { margin-top: 2.5rem; }
+.project-feature-list { padding-left: 1.3rem; color: var(--text-secondary); }
+.project-feature-list li { padding: .4rem 0; }
+.project-source-list { display: flex; flex-wrap: wrap; list-style: none; gap: .75rem; }
+.project-source-list a { display: inline-flex; align-items: center; gap: .5rem; padding: .6rem .8rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; color: var(--accent); overflow-wrap: anywhere; }
+.github-live-wrapper { margin: 2rem 0 4rem; }
+.github-status { color: var(--text-secondary); font-size: .85rem; padding: 0 0 1rem; }
+.github-error { padding: .75rem; border: 1px solid var(--border-hover); border-radius: 8px; margin-bottom: .75rem; color: var(--text-primary); }
+.github-repo-name { overflow-wrap: anywhere; }
+.github-repo-footer { flex-wrap: wrap; gap: .75rem; }
+.skill-with-evidence { min-width: 0; }
+.skill-evidence { display: block; padding: .65rem .3rem; font-size: .78rem; text-align: center; color: var(--accent); }
+.skip-link { position: fixed; top: -100px; left: 1rem; z-index: 10000; padding: .8rem 1rem; background: var(--bg-primary); color: var(--accent); border: 2px solid var(--accent); }
+.skip-link:focus { top: .75rem; }
+@media (max-width: 960px) {
+  .nav-menu:not(.open) { visibility: hidden; }
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  .hero-section { padding-top: calc(var(--nav-height) + 1.75rem); padding-bottom: 1.5rem; }
+  .project-detail-container { width: 100%; }
+  .case-study-footer-nav { flex-wrap: wrap; }
+}
+@media (max-width: 480px) {
+  .hero-cta .btn { flex: 1 1 auto; }
+  .terminal-widget { height: 300px; }
+  .terminal-body { padding: .85rem; }
+  .terminal-input-row .terminal-prompt { font-size: .72rem; }
+  .project-source-list a { max-width: 100%; font-size: .8rem; }
+  .case-study-header-inner { padding: 1.25rem; }
+  .github-activity-header { flex-direction: column; align-items: flex-start; gap: .4rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .fade-in-section { opacity: 1 !important; transform: none !important; }
+  .spotlight-card { transform: none !important; will-change: auto !important; }
+  .simple-cursor-dot, .simple-cursor-ring, .ambient-follower, .click-ripple { display: none !important; }
+}
+
+#projetos { padding-top: 2.5rem; }
+
+.project-feature-tagged {
+  list-style: none;
+  padding: 0.45rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-left: -1.3rem;
+  color: var(--text-secondary);
+}
+
+.feature-status-tag {
+  display: inline-block;
+  font-family: var(--font-code);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+  line-height: 1.4;
+  margin-top: 0.15rem;
+}
+
+.tag-implemented {
+  background: rgba(100, 255, 218, 0.12);
+  color: var(--accent);
+  border: 1px solid rgba(100, 255, 218, 0.3);
+}
+
+.tag-planned {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}

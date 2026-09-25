@@ -57,6 +57,7 @@ export const Hero = ({
             {/* Right Column: Fake Interactive Terminal CLI */}
             <div className="hero-terminal-col">
               <TerminalWidget
+                key={lang}
                 lang={lang}
                 userEmail={userEmail}
                 githubUrl={githubUrl}

@@ -51,6 +51,7 @@ export const Blog = ({
                 <SpotlightCard
                   key={post.slug}
                   className="blog-card"
+                  lang={post.language}
                   onClick={() => onSelectPost(post)}
                   aria-label={`${lang === 'pt' ? 'Ler artigo' : 'Read article'}: ${post.title}`}
                   title={lang === 'pt' ? 'Clique para ler o artigo completo' : 'Click to read full article'}
@@ -64,7 +65,7 @@ export const Blog = ({
                     <span className="blog-meta-dot">•</span>
                     <span className="blog-meta-item">
                       <Clock size={13} aria-hidden="true" />
-                      <span>{post.readTime} {t.blog.readTime}</span>
+                      <span>{post.readTime} {t.blog.readTime}{post.language !== lang ? ' · PT' : ''}</span>
                     </span>
                   </div>
 
