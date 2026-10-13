@@ -56,7 +56,10 @@ export default async function handler(request, response) {
     }
     if (action !== 'content') return fail(404, 'Operação desconhecida.');
     if (!storageConfigured()) return fail(503, 'O armazenamento ainda não está configurado.');
-    if (method('GET')) return response.status(200).json(await readNowContent());
+    if (method('GET')) {
+      const { content, revision, updatedAt } = await readNowContent();
+      return response.status(200).json({ content, revision, updatedAt });
+    }
     if (!method('PUT')) return fail(405, 'Método não permitido.');
     if (!validMutation(request,session)) return fail(403, 'Pedido de publicação inválido.');
     if (!request.headers['content-type']?.startsWith('application/json')) return fail(415, 'Formato inválido.');
@@ -68,8 +71,8 @@ export default async function handler(request, response) {
       if (body.revision !== null && (typeof body.revision !== 'string' || body.revision.length > 200)) return fail(400,'Versão inválida.');
     } catch (error) { return fail(400,error.message || 'Dados inválidos.'); }
     const current = await readNowContent();
-    if (current.revision !== body.revision) return fail(409, 'Os projetos foram alterados noutra janela. Recarrega o painel antes de publicar.');
-    try { return response.status(200).json(await writeNowContent(content,body.revision)); }
+    if (current.revision !== body.revision && current.legacyRevision !== body.revision) return fail(409, 'Os projetos foram alterados noutra janela. Recarrega o painel antes de publicar.');
+    try { return response.status(200).json(await writeNowContent(content,current.storageRevision)); }
     catch (error) {
       if (error instanceof BlobPreconditionFailedError || /already exists/i.test(error.message)) return fail(409,'Os projetos foram alterados noutra janela. Recarrega o painel.');
       throw error;
