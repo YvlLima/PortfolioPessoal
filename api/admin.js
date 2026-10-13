@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { BlobPreconditionFailedError, BlobAlreadyExistsError } from '@vercel/blob';
 import { OWNER_ID, SESSION_AGE, adminOrigin, authConfigured, storageConfigured, randomToken, constantEqual, signToken, verifyToken, cookie, readCookie, sessionFrom, validMutation } from '../server/adminAuth.js';
 import { readNowContent, writeNowContent } from '../server/nowStore.js';
 import { validateNowContent } from '../src/utils/nowContent.js';
@@ -70,10 +71,11 @@ export default async function handler(request, response) {
     if (current.revision !== body.revision) return fail(409, 'Os projetos foram alterados noutra janela. Recarrega o painel antes de publicar.');
     try { return response.status(200).json(await writeNowContent(content,body.revision)); }
     catch (error) {
-      if (error.name === 'BlobPreconditionFailedError' || error.name === 'BlobAlreadyExistsError') return fail(409,'Os projetos foram alterados noutra janela. Recarrega o painel.');
+      if (error instanceof BlobPreconditionFailedError || error instanceof BlobAlreadyExistsError) return fail(409,'Os projetos foram alterados noutra janela. Recarrega o painel.');
       throw error;
     }
-  } catch {
+  } catch (error) {
+    console.error('portfolio_admin_failure', { action, name: error.name, message: String(error.message).replace(/(?:Bearer\s+\S+|vercel_blob_rw_\S+|gh[opsu]_[A-Za-z0-9_]+)/gi, '[redacted]').slice(0, 300) });
     if (action === 'callback') return redirect('/admin?error=login');
     return fail(503,'O serviço está temporariamente indisponível. Tenta novamente.');
   }
