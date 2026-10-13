@@ -13,6 +13,7 @@ import GitHubLive from './components/GitHubLive';
 import Now from './components/Now';
 import Blog from './components/Blog';
 const BlogPost = lazy(() => import('./components/BlogPost'));
+const Admin = lazy(() => import('./components/Admin'));
 const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
 const ProjectsList = lazy(() => import('./components/ProjectsList'));
 const ProjectCaseStudy = lazy(() => import('./components/ProjectCaseStudy'));
@@ -31,7 +32,7 @@ import { useLanguage } from './hooks/useLanguage';
 import { getAboutStatsList } from './data/aboutStats';
 import { skillsList, getSoftSkills } from './data/skills';
 import { getProjects } from './data/projects';
-import { getNowProjects } from './data/nowProjects';
+import { getNowProjects } from './data/nowProjects.jsx';
 import { getTimelineItems, getCertifications } from './data/timeline';
 import { getRecommendationLetters } from './data/recommendations';
 import { getCaseStudyBySlug } from './data/projectsData';
@@ -477,7 +478,7 @@ function PortfolioContent() {
 export default function App() {
   return (
     <LanguageProvider>
-      <Suspense fallback={<p role="status">A carregar / Loading…</p>}><PortfolioContent /></Suspense>
+      <Suspense fallback={<p role="status">A carregar / Loading…</p>}>{window.location.pathname.replace(/\/$/, '') === '/admin' ? <Admin /> : <PortfolioContent />}</Suspense>
     </LanguageProvider>
   );
 }

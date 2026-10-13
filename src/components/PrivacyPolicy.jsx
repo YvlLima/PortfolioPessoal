@@ -105,6 +105,7 @@ export const PrivacyPolicy = ({
                       ? 'Nome, email, assunto e mensagem, recolhidos unicamente mediante submissão voluntária pelo utilizador.'
                       : 'Name, email address, subject, and message content, collected only upon voluntary submission by the user.'}
                   </li>
+                  <li><strong>{isPt ? 'Administração:' : 'Administration:'}</strong> {isPt ? 'O login reservado ao proprietário verifica a identidade da conta GitHub e usa cookies de sessão para permitir editar os projetos. O GitHub trata a autenticação e a Vercel aloja o conteúdo.' : 'Owner-only login verifies the GitHub account identity and uses session cookies to allow project editing. GitHub handles authentication and Vercel hosts the content.'}</li>
                 </ul>
               </div>
             </SpotlightCard>
@@ -154,6 +155,8 @@ export const PrivacyPolicy = ({
                       </tr>
                     </thead>
                     <tbody>
+                      <tr><td><code>__Host-portfolio-session</code></td><td>{isPt ? 'Técnico / Essencial' : 'Technical / Essential'}</td><td>{isPt ? 'Manter a sessão de administração do proprietário' : 'Maintain the owner’s administration session'}</td><td>{isPt ? 'Até 8 horas' : 'Up to 8 hours'}</td></tr>
+                      <tr><td><code>__Host-portfolio-oauth</code></td><td>{isPt ? 'Técnico / Essencial' : 'Technical / Essential'}</td><td>{isPt ? 'Proteger o processo de login com GitHub' : 'Protect the GitHub login flow'}</td><td>{isPt ? 'Até 10 minutos' : 'Up to 10 minutes'}</td></tr>
                       <tr>
                         <td><code>portfolio-theme</code></td>
                         <td>{isPt ? 'Técnico / Essencial' : 'Technical / Essential'}</td>

@@ -11,6 +11,8 @@ export const Footer = ({ t, onOpenPrivacy, onOpenProjectsList }) => {
           {t.footer.sub}
         </p>
         <div className="footer-privacy-row">
+          <a href="/admin" className="footer-privacy-link">Admin</a>
+          <span style={{ color: 'var(--text-muted)' }}>•</span>
           <a
             href="/projetos"
             onClick={(e) => {

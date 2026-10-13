@@ -20,3 +20,13 @@ If you are developing a production application, we recommend using TypeScript wi
 `npm test` verifica dados de projetos, traduções, metadados, parsing de artigos e estados do GitHub. `npm run lint` e `npm run build` validam o código. As páginas secundárias são carregadas dinamicamente, e os artigos têm URL `/blog/slug`. O formulário confirma a resposta do serviço de envio, tem timeout e mantém a mensagem quando falha. O cursor respeita movimento reduzido e volta ao cursor nativo quando a animação não está ativa.
 
 A informação do Sengoku descreve o protótipo verificado neste workspace; publicação e disponibilidade de uma build externa são verificações separadas.
+
+## Administração da secção Agora
+
+Abre `/admin` ou o link Admin no rodapé e entra com GitHub. Só a identidade GitHub `171242459` (YvlLima) pode editar. O painel gere títulos, descrições, estado, etiquetas, ícones, ligações, ordem e visibilidade em PT/EN. Os textos em inglês vazios usam português. Publicar grava o conjunto de cartões; os visitantes recebem apenas os cartões visíveis. O armazenamento está separado dos deploys.
+
+Na Vercel, a aplicação usa `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` e `ADMIN_SESSION_SECRET` (pelo menos 32 caracteres aleatórios) exclusivamente no servidor. Nunca prefixar estas variáveis com `VITE_`. A origem é `https://www.goncalolima.pt`, configurável por `ADMIN_ORIGIN`. A URI de retorno da aplicação OAuth é `https://www.goncalolima.pt/api/admin?action=callback`. A aplicação não solicita permissões de repositório. Cookies HttpOnly/Secure, OAuth com state e PKCE, verificação de identidade e proteção CSRF controlam as escritas.
+
+Um Blob privado ligado ao projeto fornece `BLOB_STORE_ID` e autenticação OIDC automática da Vercel. Não é necessário gerar um token estático. O documento `portfolio/now-content.json` é lido sem cache; escritas condicionais com ETag impedem que uma janela sobreponha alterações de outra. Até à primeira publicação, o painel importa o conteúdo inicial do portfólio. Falhas de gravação mantêm o rascunho no painel e nunca mostram sucesso.
+
+`tests/admin.test.js` verifica autenticação, restrição de proprietário, PKCE, CSRF e validação de conteúdo. `node tests/fixtures/admin-preview.mjs` serve um ambiente local isolado para testar a interface na porta 5180; a fixture usa dados em memória e não faz parte da aplicação publicada.
