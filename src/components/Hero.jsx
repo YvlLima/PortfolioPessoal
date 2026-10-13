@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Sparkles, ChevronRight, Download } from 'lucide-react';
 import FadeInSection from './FadeInSection';
 import TerminalWidget from './TerminalWidget';
+import ExploreMap from './ExploreMap';
 
 export const Hero = ({
   t,
@@ -10,6 +11,7 @@ export const Hero = ({
   githubUrl,
   linkedinUrl
 }) => {
+  const [mode, setMode] = useState('explore');
   return (
     <section id="hero" className="hero-section">
       <div className="container">
@@ -56,6 +58,12 @@ export const Hero = ({
 
             {/* Right Column: Fake Interactive Terminal CLI */}
             <div className="hero-terminal-col">
+              <div className="hero-mode-switch" role="group" aria-label={lang === 'pt' ? 'Modo de exploração' : 'Exploration mode'}>
+                <button type="button" aria-pressed={mode === 'explore'} onClick={() => setMode('explore')}>{lang === 'pt' ? 'Explorar' : 'Explore'}</button>
+                <button type="button" aria-pressed={mode === 'terminal'} onClick={() => setMode('terminal')}>Terminal</button>
+              </div>
+              <div hidden={mode !== 'explore'}><ExploreMap lang={lang} /></div>
+              <div hidden={mode !== 'terminal'}>
               <TerminalWidget
                 key={lang}
                 lang={lang}
@@ -63,6 +71,7 @@ export const Hero = ({
                 githubUrl={githubUrl}
                 linkedinUrl={linkedinUrl}
               />
+              </div>
             </div>
           </div>
         </FadeInSection>

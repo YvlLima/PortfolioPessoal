@@ -5,6 +5,10 @@ export const FadeInSection = ({ children, className = '' }) => {
   const domRef = useRef(null);
 
   useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setIsVisible(true);
+      return;
+    }
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -23,7 +27,7 @@ export const FadeInSection = ({ children, className = '' }) => {
     }
 
     return () => {
-      if (current) observer.unobserve(current);
+      observer.disconnect();
     };
   }, []);
 

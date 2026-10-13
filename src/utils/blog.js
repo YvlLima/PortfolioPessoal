@@ -22,7 +22,7 @@ export function parseMarkdownPost(filepath, rawContent) {
 
   const yamlStr = match[1];
   const content = match[2].trim();
-  const data = {};
+  const data = Object.create(null);
 
   yamlStr.split(/\r?\n/).forEach((line) => {
     const colonIdx = line.indexOf(':');
@@ -51,10 +51,10 @@ export function parseMarkdownPost(filepath, rawContent) {
   return {
     slug,
     title: data.title || slug,
-    date: data.date || '',
+    date: /^\d{4}-\d{2}-\d{2}$/.test(data.date || '') && Number.isFinite(Date.parse(data.date)) && new Date(data.date).toISOString().slice(0,10) === data.date ? data.date : '',
     excerpt: data.excerpt || '',
     tags: Array.isArray(data.tags) ? data.tags : [],
-    readTime: data.readTime || '3',
+    readTime: /^\d+$/.test(data.readTime || '') && Number(data.readTime) > 0 ? data.readTime : String(Math.max(1, Math.ceil(content.split(/\s+/).length / 200))),
     author: data.author || 'Gonçalo Lima',
     content
   };
@@ -70,5 +70,5 @@ export function getAllPosts(lang = 'pt') {
 
   // Sort descending by date (newest first)
   const localized = posts.filter(post => post.language === lang || (post.language === 'pt' && !posts.some(other => other.slug === post.slug && other.language === lang)));
-  return localized.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+  return localized.sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0) || a.slug.localeCompare(b.slug));
 }

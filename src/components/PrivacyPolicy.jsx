@@ -11,14 +11,7 @@ export const PrivacyPolicy = ({
 }) => {
   // Scroll to top when privacy page opens
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.title = lang === 'pt'
-      ? 'Política de Privacidade | Gonçalo Lima'
-      : 'Privacy Policy | Gonçalo Lima';
-
-    return () => {
-      document.title = 'Gonçalo Lima | Cibersegurança & Dev Júnior';
-    };
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }, [lang]);
 
   const isPt = lang === 'pt';
@@ -294,7 +287,7 @@ export const PrivacyPolicy = ({
                 onBack();
                 setTimeout(() => {
                   const el = document.getElementById('contacto');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  if (el) el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
                 }, 100);
               }}
             >

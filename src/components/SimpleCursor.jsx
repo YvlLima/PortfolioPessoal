@@ -1,78 +1,41 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useEffect, useRef } from 'react';
+import useReducedMotion from '../hooks/useReducedMotion';
 export const SimpleCursor = () => {
-  const [position, setPosition] = useState({ x: -100, y: -100 });
-  const [ringPosition, setRingPosition] = useState({ x: -100, y: -100 });
-  const [isHovering, setIsHovering] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isTouch, setIsTouch] = useState(false);
-
+  const dot = useRef(null), ring = useRef(null);
+  const reducedMotion = useReducedMotion();
   useEffect(() => {
-    // Check if user is on a touch device / coarse pointer
-    const touchCheck = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
-    if (touchCheck) {
-      setIsTouch(true);
-      return;
-    }
-
-    const handleMouseMove = (e) => {
-      setIsVisible(true);
-      setPosition({ x: e.clientX, y: e.clientY });
-
-      const target = e.target;
-      const isInteractive = target.closest(
-        'a, button, .spotlight-card, .project-card, .skill-card, .stat-card, .timeline-content, .email-box, .social-icon-btn, .lang-toggle, .filter-btn'
-      );
-      setIsHovering(!!isInteractive);
+    if (reducedMotion || window.matchMedia('(pointer: coarse)').matches) return;
+    let frame = 0, target = {x:-100,y:-100}, position = {...target};
+    const animate = () => {
+      frame = 0;
+      if (!ring.current) return;
+      position.x += (target.x-position.x)*0.35; position.y += (target.y-position.y)*0.35;
+      ring.current.style.left = `${position.x}px`; ring.current.style.top = `${position.y}px`;
+      if (Math.abs(target.x-position.x)+Math.abs(target.y-position.y)>0.25) frame=requestAnimationFrame(animate);
     };
-
-    const handleMouseDown = () => setIsClicking(true);
-    const handleMouseUp = () => setIsClicking(false);
-    const handleMouseLeave = () => setIsVisible(false);
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('mouseleave', handleMouseLeave);
+    const move = event => {
+      if (!dot.current || !ring.current) return;
+      target={x:event.clientX,y:event.clientY};
+      dot.current.style.left=`${target.x}px`; dot.current.style.top=`${target.y}px`;
+      dot.current.style.visibility=ring.current.style.visibility='visible';
+      document.body.classList.add('has-custom-cursor');
+      ring.current.classList.toggle('is-hovering',!!event.target.closest('a,button,input,textarea,[role="button"]'));
+      if (!frame) frame=requestAnimationFrame(animate);
     };
-  }, []);
-
-  // Fast snappy lerp factor (0.35) so it feels zero-lag
-  useEffect(() => {
-    if (isTouch) return;
-    let animationFrameId;
-    const followMouse = () => {
-      setRingPosition((prev) => ({
-        x: prev.x + (position.x - prev.x) * 0.35,
-        y: prev.y + (position.y - prev.y) * 0.35,
-      }));
-      animationFrameId = requestAnimationFrame(followMouse);
+    const down=()=>ring.current?.classList.add('is-clicking');
+    const up=()=>ring.current?.classList.remove('is-clicking');
+    const hide=()=>{
+      if(dot.current&&ring.current) dot.current.style.visibility=ring.current.style.visibility='hidden';
+      document.body.classList.remove('has-custom-cursor'); cancelAnimationFrame(frame); frame=0;
     };
-    animationFrameId = requestAnimationFrame(followMouse);
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [position, isTouch]);
-
-  if (isTouch || !isVisible) return null;
-
-  return (
-    <>
-      <div
-        className="simple-cursor-dot"
-        style={{ left: `${position.x}px`, top: `${position.y}px` }}
-      />
-      <div
-        className={`simple-cursor-ring ${isHovering ? 'is-hovering' : ''} ${isClicking ? 'is-clicking' : ''}`}
-        style={{ left: `${ringPosition.x}px`, top: `${ringPosition.y}px` }}
-      />
-    </>
-  );
+    window.addEventListener('mousemove',move,{passive:true}); window.addEventListener('mousedown',down); window.addEventListener('mouseup',up);
+    window.addEventListener('blur',hide); document.addEventListener('mouseleave',hide); document.addEventListener('visibilitychange',hide);
+    return ()=>{
+      hide(); window.removeEventListener('mousemove',move); window.removeEventListener('mousedown',down); window.removeEventListener('mouseup',up);
+      window.removeEventListener('blur',hide); document.removeEventListener('mouseleave',hide); document.removeEventListener('visibilitychange',hide);
+    };
+  },[reducedMotion]);
+  if(reducedMotion) return null;
+  return <><div ref={dot} aria-hidden="true" className="simple-cursor-dot" style={{visibility:'hidden'}} /><div ref={ring} aria-hidden="true" className="simple-cursor-ring" style={{visibility:'hidden'}} /></>;
 };
-
 export default SimpleCursor;

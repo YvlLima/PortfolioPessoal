@@ -7,7 +7,7 @@ export const AmbientFollowerLight = () => {
   const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
-    const touchCheck = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+    const touchCheck = window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
     if (touchCheck) {
       setIsTouch(true);
       return;

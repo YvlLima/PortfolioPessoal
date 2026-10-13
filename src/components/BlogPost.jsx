@@ -13,13 +13,14 @@ export const BlogPost = ({
 }) => {
   // Scroll to top when post opens
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }, [post]);
 
   const formatBlogDate = (dateStr) => {
     if (!dateStr) return '';
     try {
       const date = new Date(dateStr);
+      if (!Number.isFinite(date.getTime())) return dateStr;
       return date.toLocaleDateString(lang === 'pt' ? 'pt-PT' : 'en-US', {
         day: 'numeric',
         month: 'long',

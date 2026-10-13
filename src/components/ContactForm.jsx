@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Mail, Copy, Check, Send, FolderGit2 } from 'lucide-react';
 import FadeInSection from './FadeInSection';
 import SpotlightCard from './SpotlightCard';
@@ -36,14 +36,26 @@ export const ContactForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationError, setValidationError] = useState('');
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(userEmail);
-    setCopiedEmail(true);
-    setTimeout(() => setCopiedEmail(false), 2500);
+  const copyTimer = useRef();
+  const successTimer = useRef();
+  const requestController = useRef();
+  useEffect(() => () => {
+    clearTimeout(copyTimer.current); clearTimeout(successTimer.current); requestController.current?.abort();
+  }, []);
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(userEmail);
+      setCopiedEmail(true);
+      clearTimeout(copyTimer.current);
+      copyTimer.current = setTimeout(() => setCopiedEmail(false), 2500);
+    } catch {
+      setValidationError(lang === 'pt' ? 'Não foi possível copiar. Podes selecionar o endereço de e-mail.' : 'Copy failed. You can select the email address.');
+    }
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     setValidationError('');
 
     // 1. Honeypot check: If bot filled the hidden field, pretend to succeed silently
@@ -51,7 +63,8 @@ export const ContactForm = ({
       setFormSubmitted(true);
       setFormState({ name: '', email: '', subject: '', message: '' });
       setHoneypot('');
-      setTimeout(() => setFormSubmitted(false), 6000);
+      clearTimeout(successTimer.current);
+      successTimer.current = setTimeout(() => setFormSubmitted(false), 6000);
       return;
     }
 
@@ -72,9 +85,13 @@ export const ContactForm = ({
     }
 
     setIsSubmitting(true);
+    const controller = new AbortController();
+    requestController.current = controller;
+    const timeout = setTimeout(() => controller.abort(), 12000);
     try {
       const response = await fetch(`https://formsubmit.co/ajax/${userEmail}`, {
         method: 'POST',
+        signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
@@ -91,17 +108,21 @@ export const ContactForm = ({
         })
       });
 
-      if (response.ok) {
+      const result = await response.json();
+      if (response.ok && (result.success === true || result.success === 'true')) {
         setFormSubmitted(true);
         setFormState({ name: '', email: '', subject: '', message: '' });
-        setTimeout(() => setFormSubmitted(false), 6000);
+        clearTimeout(successTimer.current);
+      successTimer.current = setTimeout(() => setFormSubmitted(false), 6000);
       } else {
-        window.location.href = `mailto:${userEmail}?subject=${encodeURIComponent(trimmedSubject)}&body=${encodeURIComponent(`Nome: ${trimmedName}\nEmail: ${trimmedEmail}\n\nMensagem:\n${trimmedMessage}`)}`;
+        throw new Error('Submission rejected');
       }
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
-      window.location.href = `mailto:${userEmail}?subject=${encodeURIComponent(trimmedSubject)}&body=${encodeURIComponent(`Nome: ${trimmedName}\nEmail: ${trimmedEmail}\n\nMensagem:\n${trimmedMessage}`)}`;
+      setValidationError(lang === 'pt' ? 'O envio falhou. A mensagem foi mantida; podes contactar-me pelo e-mail acima.' : 'Sending failed. Your message is preserved; you can contact me using the email above.');
     } finally {
+      clearTimeout(timeout);
+      requestController.current = null;
       setIsSubmitting(false);
     }
   };
@@ -130,10 +151,10 @@ export const ContactForm = ({
                 </p>
               </div>
 
-              <div className="email-box" onClick={copyToClipboard} title="Clique para copiar email">
+              <button type="button" className="email-box" onClick={copyToClipboard} title="Clique para copiar email">
                 <span>{userEmail}</span>
                 {copiedEmail ? <Check size={18} color="var(--accent)" /> : <Copy size={18} />}
-              </div>
+              </button>
 
               {copiedEmail && (
                 <span style={{ fontSize: '0.8rem', color: 'var(--accent)', fontFamily: 'var(--font-code)' }}>

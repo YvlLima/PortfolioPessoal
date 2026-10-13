@@ -9,7 +9,7 @@ export const getNowProjects = (lang = 'pt') => {
       title: sengoku.title,
       category: 'games',
       status: sengoku.status[lang],
-      badge: lang === 'pt' ? 'Protótipo publicado · Godot 4.4+' : 'Published prototype · Godot 4.4+',
+      badge: `${sengoku.status[lang]} · Godot 4.4+`,
       iconName: 'Gamepad2',
       shortDesc: sengoku.summary,
       fullDesc: sengoku.context,

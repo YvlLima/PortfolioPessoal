@@ -14,16 +14,16 @@ test('projectsCaseStudies contains Sengoku with category games and verified deta
   assert.ok(sengoku.evidence.includes('sengoku/world'));
 });
 
-test('Sengoku features explicitly distinguish implemented from planned features', () => {
+test('Sengoku describes tested local features without claiming publication', () => {
   const sengoku = getCaseStudyBySlug('sengoku');
   const ptFeatures = sengoku.features.pt;
   const enFeatures = sengoku.features.en;
-  
+
   assert.ok(ptFeatures.some(f => f.startsWith('Implementado:')));
-  assert.ok(ptFeatures.some(f => f.startsWith('Planeado:')));
+  assert.ok(sengoku.scope.pt.includes('local'));
   assert.ok(enFeatures.some(f => f.startsWith('Implemented:')));
-  assert.ok(enFeatures.some(f => f.startsWith('Planned:')));
-  
+  assert.ok(sengoku.scope.en.includes('not been verified'));
+
   // No generic unverified combat claim without planned label
   assert.ok(!ptFeatures.includes('Combate, animais e ciclo de dia/noite'));
 });
@@ -62,14 +62,14 @@ test('all projects have required fields and bilingual content', () => {
 test('nowProjects returns verified information without claiming false continuous dev', () => {
   const ptNow = getNowProjects('pt');
   const enNow = getNowProjects('en');
-  
+
   assert.equal(ptNow.length, 2);
   assert.equal(enNow.length, 2);
-  
+
   const sengokuItem = ptNow.find(item => item.slug === 'sengoku');
   assert.ok(sengokuItem, 'Sengoku must be in Now section');
-  assert.equal(sengokuItem.status, 'Protótipo publicado');
-  
+  assert.equal(sengokuItem.status, 'Protótipo local');
+
   const academicItem = ptNow.find(item => item.id === 'now-academic');
   assert.ok(academicItem, 'Academic item must be in Now section');
   assert.ok(academicItem.status.includes('Em frequência'));

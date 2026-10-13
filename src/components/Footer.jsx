@@ -5,7 +5,7 @@ export const Footer = ({ t, onOpenPrivacy, onOpenProjectsList }) => {
     <footer className="footer">
       <div className="container">
         <p>
-          {t.footer.designedBy} <span style={{ color: 'var(--accent)' }}>Gonçalo Lima</span> — 2026
+          {t.footer.designedBy} <span style={{ color: 'var(--accent)' }}>Gonçalo Lima</span> — {new Date().getFullYear()}
         </p>
         <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: 'var(--text-muted)' }}>
           {t.footer.sub}

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { pageMetadata } from './utils/metadata.js';
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 
 // Components
 import SimpleCursor from './components/SimpleCursor';
@@ -11,10 +12,10 @@ import Projects from './components/Projects';
 import GitHubLive from './components/GitHubLive';
 import Now from './components/Now';
 import Blog from './components/Blog';
-import BlogPost from './components/BlogPost';
-import PrivacyPolicy from './components/PrivacyPolicy';
-import ProjectsList from './components/ProjectsList';
-import ProjectCaseStudy from './components/ProjectCaseStudy';
+const BlogPost = lazy(() => import('./components/BlogPost'));
+const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
+const ProjectsList = lazy(() => import('./components/ProjectsList'));
+const ProjectCaseStudy = lazy(() => import('./components/ProjectCaseStudy'));
 import Education from './components/Education';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
@@ -67,6 +68,10 @@ const getCaseStudyRoute = (path, hash) => {
   return null;
 };
 
+const blogRoute = () => {
+  const match = window.location.pathname.match(/^\/blog\/([a-z0-9_-]+)\/?$/) || window.location.hash.match(/^#blog\/([a-z0-9_-]+)$/);
+  return match ? { slug: match[1] } : null;
+};
 function PortfolioContent() {
   const { toggleTheme, isDark } = useTheme();
   const reducedMotion = useReducedMotion();
@@ -75,7 +80,7 @@ function PortfolioContent() {
   const [activeSection, setActiveSection] = useState('hero');
   const [ripples, setRipples] = useState([]);
   const [selectedInfoModal, setSelectedInfoModal] = useState(null);
-  const [selectedBlogPost, setSelectedBlogPost] = useState(null);
+  const [selectedBlogPost, setSelectedBlogPost] = useState(blogRoute);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(() => {
     if (typeof window !== 'undefined') {
       return isPrivacyRoute(window.location.pathname, window.location.hash);
@@ -98,8 +103,8 @@ function PortfolioContent() {
       setIsPrivacyOpen(isPriv);
       setCaseStudyRoute(csRoute);
 
+      setSelectedBlogPost(isPriv || csRoute ? null : blogRoute());
       if (isPriv || csRoute) {
-        setSelectedBlogPost(null);
 
         setSelectedInfoModal(null);
       }
@@ -281,6 +286,17 @@ function PortfolioContent() {
   const certifications = getCertifications(lang);
   const recommendationLetters = getRecommendationLetters(lang);
 
+  useEffect(() => {
+    const post = selectedBlogPost ? getAllPosts(lang).find(post => post.slug === selectedBlogPost.slug) || selectedBlogPost : null;
+    const meta = pageMetadata({ lang, seo: t.seo, privacy: isPrivacyOpen, project: caseStudyRoute?.type === 'detail' ? getCaseStudyBySlug(caseStudyRoute.slug) : null, projectList: caseStudyRoute?.type === 'list', post });
+    document.title = meta.title;
+    for (const selector of ['meta[name="description"]','meta[property="og:description"]','meta[name="twitter:description"]']) document.querySelector(selector)?.setAttribute('content',meta.description);
+    for (const selector of ['meta[property="og:title"]','meta[name="twitter:title"]']) document.querySelector(selector)?.setAttribute('content',meta.title);
+    const url = new URL(meta.path, window.location.origin).href;
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href',url);
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content',url);
+  }, [lang, t.seo, isPrivacyOpen, caseStudyRoute, selectedBlogPost]);
+
   const activeNavSection = isPrivacyOpen
     ? ''
     : caseStudyRoute
@@ -350,6 +366,7 @@ function PortfolioContent() {
             post={blogPosts.find(post => post.slug === selectedBlogPost.slug) || selectedBlogPost}
             onBack={() => {
               setSelectedBlogPost(null);
+              window.history.pushState({}, '', '/#blog');
               setTimeout(() => {
                 const el = document.getElementById('blog');
                 if (el) el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
@@ -412,7 +429,7 @@ function PortfolioContent() {
             {/* 6. Blog & Artigos em Markdown */}
             <Blog
               posts={blogPosts}
-              onSelectPost={(post) => setSelectedBlogPost(post)}
+              onSelectPost={(post) => { setSelectedBlogPost(post); window.history.pushState({}, '', `/blog/${post.slug}`); }}
               t={t}
               lang={lang}
             />
@@ -460,7 +477,7 @@ function PortfolioContent() {
 export default function App() {
   return (
     <LanguageProvider>
-      <PortfolioContent />
+      <Suspense fallback={<p role="status">A carregar / Loading…</p>}><PortfolioContent /></Suspense>
     </LanguageProvider>
   );
 }

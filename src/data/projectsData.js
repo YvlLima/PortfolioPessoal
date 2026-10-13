@@ -15,8 +15,8 @@ export const projectsCaseStudies = [
       "en": "A 3D survival game set in feudal Japan, with a procedural world, inventory and building."
     },
     "status": {
-      "pt": "Protótipo publicado",
-      "en": "Published prototype"
+      "pt": "Protótipo local",
+      "en": "Local prototype"
     },
     "context": {
       "pt": "Exploração de sistemas de jogo interligados: o mundo, os recursos e as ações do jogador partilham uma sessão de sobrevivência em terceira pessoa.",
@@ -29,9 +29,9 @@ export const projectsCaseStudies = [
         "Implementado: Inventário modular de 30 espaços (peso, arrastar e largar, divisão de pilhas com Shift e descarte)",
         "Implementado: Recolha de recursos no terreno (madeira, pedra, bambu, bagas), crafting transacional e fogueira de acampamento com descanso",
         "Implementado: Relógio e ciclo dinâmico de dia/noite com iluminação ambiente progressiva",
-        "Planeado: Sistema de combate corpo a corpo com katana, bloqueio e esquiva",
-        "Planeado: Fauna selvagem com IA (javali, veado, lobo) e NPCs interativos",
-        "Planeado: Barras vitais de sobrevivência (fome, sede, vida) e persistência em ficheiro de save"
+        "Implementado: Sistema de combate corpo a corpo com katana, bloqueio e esquiva",
+        "Implementado: Fauna selvagem com IA (javali, veado, lobo) e NPCs interativos",
+        "Implementado: Barras vitais de sobrevivência (fome, sede, vida) e persistência em ficheiro de save"
       ],
       "en": [
         "Implemented: Procedural chunk-based terrain generation (deterministic FastNoiseLite) and biomes",
@@ -39,9 +39,9 @@ export const projectsCaseStudies = [
         "Implemented: 30-slot modular inventory (weight limits, drag-and-drop, Shift stack splitting and dropping)",
         "Implemented: In-world resource gathering (wood, stone, bamboo, berries), transactional crafting and campfire placement with rest mechanics",
         "Implemented: Dynamic day/night cycle and game clock with ambient lighting transitions",
-        "Planned: Katana melee combat system, blocking and dodge rolls",
-        "Planned: Wildlife AI (wild boar, deer, wolf) and interactive NPCs",
-        "Planned: Vital survival bars (hunger, thirst, health) and persistent file saves"
+        "Implemented: Katana melee combat system, blocking and dodge rolls",
+        "Implemented: Wildlife AI (wild boar, deer, wolf) and interactive NPCs",
+        "Implemented: Vital survival bars (hunger, thirst, health) and persistent file saves"
       ]
     },
     "technical": {
@@ -49,8 +49,8 @@ export const projectsCaseStudies = [
       "en": "The Godot project separates world, player, inventory, combat and persistence into modules. EventBus, GameClock and WorldSettings autoloads coordinate events and shared state."
     },
     "scope": {
-      "pt": "O protótipo no repositório foca-se na geração de terreno, locomoção e no ciclo inicial de recolha, inventário e acampamento, validado por suites de teste locais no motor. Mecânicas avançadas de combate com lâminas, IA de fauna e sobrevivência estrita constam do documento de design como fases futuras e não estão ativas na build jogável atual. Não há demo web publicada (requer o motor Godot 4.4 localmente).",
-      "en": "The prototype in the repository focuses on terrain generation, locomotion and the core gathering, inventory and camping loop, verified by local engine test suites. Advanced blade combat, wildlife AI and full survival stats are specified in the design document as future phases and are not active in the current playable build. No public web demo is available (requires running Godot 4.4 locally)."
+      "pt": "O protótipo local inclui combate, fauna, NPCs, fome, sede e persistência, além de terreno procedural e inventário. Estas funcionalidades foram verificadas em testes locais no Godot 4.4. A publicação destas alterações ainda não foi verificada e não há demo web configurada neste workspace.",
+      "en": "The local prototype includes combat, wildlife, NPCs, hunger, thirst and persistence alongside procedural terrain and inventory. These features were verified in local Godot 4.4 tests. Publication of these changes has not been verified and this workspace has no configured web demo."
     },
     "links": {
       "github": "https://github.com/YvlLima/Sengoku"

@@ -13,6 +13,7 @@ export const Blog = ({
     if (!dateStr) return '';
     try {
       const date = new Date(dateStr);
+      if (!Number.isFinite(date.getTime())) return dateStr;
       return date.toLocaleDateString(lang === 'pt' ? 'pt-PT' : 'en-US', {
         day: 'numeric',
         month: 'short',

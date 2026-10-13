@@ -63,42 +63,6 @@ export const LanguageProvider = ({ children }) => {
     // 1. Update <html lang="...">
     document.documentElement.lang = language;
 
-    // 2. Update Document Title
-    const seo = activeTranslations.seo || {};
-    if (seo.title) {
-      // Only set main title if not on privacy page or sub-page with custom title
-      if (!window.location.pathname.includes('/privacidade')) {
-        document.title = seo.title;
-      }
-    }
-
-    // 3. Update Meta Description
-    if (seo.description) {
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute('content', seo.description);
-      }
-      const ogDesc = document.querySelector('meta[property="og:description"]');
-      if (ogDesc) {
-        ogDesc.setAttribute('content', seo.description);
-      }
-      const twitterDesc = document.querySelector('meta[name="twitter:description"]');
-      if (twitterDesc) {
-        twitterDesc.setAttribute('content', seo.description);
-      }
-    }
-
-    // 4. Update OpenGraph / Twitter Title
-    if (seo.title) {
-      const ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle) {
-        ogTitle.setAttribute('content', seo.title);
-      }
-      const twitterTitle = document.querySelector('meta[name="twitter:title"]');
-      if (twitterTitle) {
-        twitterTitle.setAttribute('content', seo.title);
-      }
-    }
   }, [language, activeTranslations]);
 
   const value = {
