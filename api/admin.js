@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { BlobPreconditionFailedError, BlobAlreadyExistsError } from '@vercel/blob';
+import { BlobPreconditionFailedError } from '@vercel/blob';
 import { OWNER_ID, SESSION_AGE, adminOrigin, authConfigured, storageConfigured, randomToken, constantEqual, signToken, verifyToken, cookie, readCookie, sessionFrom, validMutation } from '../server/adminAuth.js';
 import { readNowContent, writeNowContent } from '../server/nowStore.js';
 import { validateNowContent } from '../src/utils/nowContent.js';
@@ -71,7 +71,7 @@ export default async function handler(request, response) {
     if (current.revision !== body.revision) return fail(409, 'Os projetos foram alterados noutra janela. Recarrega o painel antes de publicar.');
     try { return response.status(200).json(await writeNowContent(content,body.revision)); }
     catch (error) {
-      if (error instanceof BlobPreconditionFailedError || error instanceof BlobAlreadyExistsError) return fail(409,'Os projetos foram alterados noutra janela. Recarrega o painel.');
+      if (error instanceof BlobPreconditionFailedError || /already exists/i.test(error.message)) return fail(409,'Os projetos foram alterados noutra janela. Recarrega o painel.');
       throw error;
     }
   } catch (error) {
